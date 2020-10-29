@@ -3,17 +3,17 @@
     "short_name": "PYG PWA",
     "icons": [
         {
-            "src": "/public/images/pyg192.png",
+            "src": "/images/pyg192.png",
             "sizes": "192x192",
             "type": "image/png"
         },
         {
-            "src": "/public/images/pyg384.png",
+            "src": "/images/pyg384.png",
             "sizes": "384x384",
             "type": "image/png"
         },
         {
-            "src": "/public/images/pyg512.png",
+            "src": "/images/pyg512.png",
             "sizes": "512x512",
             "type": "image/png"
         }
