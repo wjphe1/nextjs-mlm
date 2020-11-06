@@ -11,7 +11,7 @@ export default class MyApp extends App {
 
     state = {
         // global states here
-        name: "PYG TECH ASIA",
+        name: "REEZQA GLOBAL",
     }
 
     render () {

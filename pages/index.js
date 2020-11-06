@@ -1,17 +1,17 @@
 import Head from 'next/head'
-import Layout, { siteTitle } from '../components/layout'
-import utilStyles from '../styles/utils.module.scss'
+import Layout from '../components/layout'
+import utilStyles from '../styles/module/utils.module.scss'
 import React from 'react';
 import Link from 'next/link'
 
-export default class Home extends React.Component {
+class Home extends React.Component {
 
   render () {
     // use this.props.xxx to call global states
     return (
       <Layout home {...this.props}>
         <Head>
-          <title>{siteTitle}</title>
+          <title>{this.props.name}</title>
         </Head>
         <section className={utilStyles.headingMd}>
           <p>{this.props.name}</p>
@@ -21,3 +21,5 @@ export default class Home extends React.Component {
     )
   }
 }
+
+export default Home;
