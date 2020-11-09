@@ -1,0 +1,76 @@
+.slide {
+    width: 100%;
+    height: 400px;
+
+    img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+        border-radius: 5px;
+    }
+}
+
+.popular_nav {
+    width: 100%;
+    height: 400px;
+    background: #F13E3E;
+    border-radius: 5px;
+    padding: 20% 10%;
+    font-weight: bold;
+    font-size: 2rem;
+    line-height: 1;
+    color: #FFFFFF;
+    position: relative;
+    overflow: hidden;
+
+    svg {
+        position: absolute;
+        right: 30px;
+        bottom: 30px;
+    }
+}
+
+.prodcard {
+    background: #FFFFFF;
+    border-radius: 5px;
+    padding: 15px 15px 20px; 
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+
+    img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .prodtitle {
+        font-weight: bold;
+        font-size: 1.3rem;
+        padding: 10px 0;
+    }
+
+    p {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+    .keranjang {
+        border: 1px solid #FF6202;
+        color: #FF6202;
+        border-radius: 20px;
+        padding: 8px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .prodprice {
+        color: #FF6202;
+        font-weight: bold;
+        font-size: 1.4rem;
+    }
+}

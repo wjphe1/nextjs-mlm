@@ -1,4 +1,6 @@
 import '../styles/main.scss'
+import 'swiper/swiper.scss'
+import 'swiper/swiper-bundle.min.css'
 import React from 'react'
 import App from 'next/app'
 

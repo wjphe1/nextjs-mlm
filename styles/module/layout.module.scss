@@ -52,7 +52,7 @@
 }
 
 .topnav {
-    padding: 8px 25px;
+    padding: 12px 25px;
     background: white;
 
     a {
@@ -61,11 +61,50 @@
     }
 
     .active {
-        background: #FFF6EA;
+        background: #F2F2F2;
         border-radius: 18.5px;
     }
 }
 
 .backToHome {
     margin: 3rem 0 0;
+}
+
+.footer {
+    background: #FFFFFF;
+    padding: 20px 30px;
+
+    .foot_btn {
+        background: #FFFFFF;
+        border: 1px solid #ACACAC;
+        color: #ACACAC;
+        border-radius: 5px;
+        padding: 10px 15px;
+        text-align: left;
+        font-weight: 600;
+        margin-bottom: 15px;
+        width: 100%;
+    }
+
+    .foot_link_header {
+        color: #ACACAC;
+        font-weight: 700;
+        padding-bottom: 10px;
+        font-size: 1.1rem;
+    }
+
+    .foot_link {
+        font-size: 0.8rem;
+        padding: 2px 0;
+    }
+
+    .foot_login_btn {
+        border: 1px solid #FF6202;
+        color: #FF6202;
+        border-radius: 20px;
+        padding: 8px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
