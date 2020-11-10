@@ -2,37 +2,38 @@ import styles from '../styles/module/layout.module.scss'
 import util from '../styles/module/utils.module.scss'
 import Meta from './_meta'
 import Link from 'next/link'
+import cn from 'classnames'
 import { HiOutlineShoppingCart, HiOutlineUser, HiOutlineSearch } from 'react-icons/hi';
 
 export const siteTitle = 'REEZQA GLOBAL'
 
-export default function Layout({ children, home, name }) {
+export default function Layout({ children, page, name }) {
     return (
-        <div>
+        <div className="main-container">
             <Meta/>
 
             <header className={styles.header}>
                 <div className={`${styles.container} ${styles.flexcontent}`}>
                     <Link href="/"><a className={util.siteheader}>{name}</a></Link>
-                    <form className="position-relative">
+                    <form className="position-relative db-mn">
                         <input type="text" placeholder="Search product here" className={styles.search}/>
                         <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
                     </form>
                     <div className="d-flex">
-                        <Link href="#"><a className="d-flex align-items-center"><HiOutlineUser/> <span className="pl-2">MEMBERS LOGIN</span></a></Link>
+                        <Link href="#"><a className="d-flex align-items-center"><HiOutlineUser/> <span className="pl-2 db-mn">MEMBERS LOGIN</span></a></Link>
                         <span className="px-3">|</span>
-                        <Link href="#"><a className="d-flex align-items-center"><HiOutlineShoppingCart/> <span className="pl-2">MY CARTS</span></a></Link>
+                        <Link href="#"><a className="d-flex align-items-center"><HiOutlineShoppingCart/> <span className="pl-2 db-mn">MY CARTS</span></a></Link>
                     </div>
                 </div>
             </header>
             <nav className={`${styles.topnav} h-scroll`} style={{overflowX: 'auto', overflowY: 'hidden'}}>
                 <div className={`${styles.container} ${styles.flexcontent} w-100`}>
-                    <Link href="/"><a className={styles.active}>REEZQA STORE</a></Link>
-                    <Link href="/"><a>KEAHLIAN REEZQA</a></Link>
-                    <Link href="/"><a>FACEBOOK</a></Link>
-                    <Link href="/"><a>VIDEO TESTIMONI</a></Link>
-                    <Link href="/"><a>TESTIMONI</a></Link>
-                    <Link href="/"><a>STOKIS REEZQA</a></Link>
+                    <Link href="/"><a className={`${cn({[styles.active]: page === 'index'})}`}>REEZQA STORE</a></Link>
+                    <Link href="/keahlian"><a className={`${cn({[styles.active]: page === 'keahlian'})}`}>KEAHLIAN REEZQA</a></Link>
+                    <Link href="/"><a className={`${cn({[styles.active]: page === 'facebook'})}`}>FACEBOOK</a></Link>
+                    <Link href="/"><a className={`${cn({[styles.active]: page === 'video'})}`}>VIDEO TESTIMONI</a></Link>
+                    <Link href="/"><a className={`${cn({[styles.active]: page === 'testimoni'})}`}>TESTIMONI</a></Link>
+                    <Link href="/stokis"><a className={`${cn({[styles.active]: page === 'stokis'})}`}>STOKIS REEZQA</a></Link>
                 </div>
             </nav>
 
@@ -40,13 +41,13 @@ export default function Layout({ children, home, name }) {
 
             <div className={styles.footer}>
                 <div className={`${styles.container} row m-auto py-3`}>
-                    <div className="px-3 d-flex flex-column">
-                        <Link href="#"><a className={styles.foot_btn}>BANTUAN (Hubungi Kami)</a></Link>
-                        <Link href="#"><a className={styles.foot_btn}>FAQ (Tanya Jawab)</a></Link>
-                        <Link href="#"><a className={styles.foot_btn}>FEATURE DI TV1</a></Link>
-                        <Link href="#"><a className={styles.foot_btn}>SERTAI KAMI</a></Link>
+                    <div className="px-3 pb-3 d-flex flex-column">
+                        <a href="https://www.wasap.my/60197577763/" target="_blank" rel="noreferrer" className={styles.foot_btn}>BANTUAN (Hubungi Kami)</a>
+                        <Link href="/keahlian"><a className={styles.foot_btn}>FAQ (Tanya Jawab)</a></Link>
+                        <a href="https://www.facebook.com/1411841059123517/videos/388617562160167" target="_blank" rel="noreferrer" className={styles.foot_btn}>FEATURE DI TV1</a>
+                        <a href="https://api.whatsapp.com/send?phone=60197577763&text=Jadi%20Ahli%20Reezqa" target="_blank" rel="noreferrer" className={styles.foot_btn}>SERTAI KAMI</a>
                     </div>
-                    <div className="px-5 d-flex flex-column">
+                    <div className={`d-flex flex-column ${styles.xpadding}`}>
                         <span className={styles.foot_link_header}>REEZQA GLOBAL</span>
                         <Link href="#"><a className={styles.foot_link}>KEAHLIAN REEZQA</a></Link>
                         <Link href="#"><a className={styles.foot_link}>FACEBOOK</a></Link>
@@ -57,7 +58,7 @@ export default function Layout({ children, home, name }) {
                         <Link href="#"><a className={styles.foot_link}>VIDEO TESTIMONI</a></Link>
                         <Link href="#"><a className={styles.foot_link}>JUS SAKURA REEZQA</a></Link>
                     </div>
-                    <div className="px-3 d-flex flex-column">
+                    <div className={`d-flex flex-column ${styles.xpadding}`}>
                         <span className={styles.foot_link_header}>PRODUK</span>
                         <Link href="#"><a className={styles.foot_link}>B'COOL FUYOO</a></Link>
                         <Link href="#"><a className={styles.foot_link}>B'QUEENz MATTE</a></Link>

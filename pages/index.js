@@ -17,7 +17,7 @@ class Home extends React.Component {
   render () {
     // use this.props.xxx to call global states
     return (
-      <Layout home {...this.props}>
+      <Layout page={'index'} {...this.props}>
         <Head>
           <title>{this.props.name}</title>
         </Head>
@@ -67,7 +67,7 @@ class Home extends React.Component {
                 onSlideChange={() => console.log('slide change')}
               >
                 <SwiperSlide>
-                  <div className={styles.prodcard}>
+                  <div className={`${styles.prodcard} w-100 m-0`}>
                     <img src="/images/sample-2.png" alt="Reezqa-banner"/>
                     <div className={styles.prodtitle}>Kopi Reezqa</div>
                     <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
@@ -78,7 +78,7 @@ class Home extends React.Component {
                   </div>
                 </SwiperSlide>
                 <SwiperSlide>
-                  <div className={styles.prodcard}>
+                  <div className={`${styles.prodcard} w-100 m-0`}>
                     <img src="/images/sample-2.png" alt="Reezqa-banner"/>
                     <div className={styles.prodtitle}>Kopi Reezqa</div>
                     <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
@@ -89,7 +89,7 @@ class Home extends React.Component {
                   </div>
                 </SwiperSlide>
                 <SwiperSlide>
-                  <div className={styles.prodcard}>
+                  <div className={`${styles.prodcard} w-100 m-0`}>
                     <img src="/images/sample-2.png" alt="Reezqa-banner"/>
                     <div className={styles.prodtitle}>Kopi Reezqa</div>
                     <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
@@ -100,7 +100,7 @@ class Home extends React.Component {
                   </div>
                 </SwiperSlide>
                 <SwiperSlide>
-                  <div className={styles.prodcard}>
+                  <div className={`${styles.prodcard} w-100 m-0`}>
                     <img src="/images/sample-2.png" alt="Reezqa-banner"/>
                     <div className={styles.prodtitle}>Kopi Reezqa</div>
                     <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
@@ -111,7 +111,7 @@ class Home extends React.Component {
                   </div>
                 </SwiperSlide>
                 <SwiperSlide>
-                  <div className={styles.prodcard}>
+                  <div className={`${styles.prodcard} w-100 m-0`}>
                     <img src="/images/sample-2.png" alt="Reezqa-banner"/>
                     <div className={styles.prodtitle}>Kopi Reezqa</div>
                     <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
@@ -130,103 +130,76 @@ class Home extends React.Component {
           </div>
           <div className={`${utilStyles.headingXl} text-center py-4`}>SEMUA PRODUK</div>
           <div className="d-flex flex-wrap" style={{margin: '0 -1rem'}}>
-            <div className="w-25" style={{padding: '1rem'}}>
-              <div className={styles.prodcard}>
-                <img src="/images/sample-2.png" alt="Reezqa-banner"/>
-                <div className={styles.prodtitle}>Kopi Reezqa</div>
-                <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
-                <div className="d-flex align-items-center mt-auto flex-wrap">
-                  <Link href="#"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2">Keranjang</span></a></Link>
-                  <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
-                </div>
+            <div className={styles.prodcard}>
+              <img src="/images/sample-2.png" alt="Reezqa-banner"/>
+              <div className={styles.prodtitle}>Kopi Reezqa</div>
+              <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
+              <div className="d-flex align-items-center mt-auto flex-wrap">
+                <Link href="#"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2">Keranjang</span></a></Link>
+                <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
-            <div className="w-25" style={{padding: '1rem'}}>
-              <div className={styles.prodcard}>
-                <img src="/images/sample-2.png" alt="Reezqa-banner"/>
-                <div className={styles.prodtitle}>Kopi Reezqa</div>
-                <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
-                <div className="d-flex align-items-center mt-auto flex-wrap">
-                  <Link href="#"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2">Keranjang</span></a></Link>
-                  <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
-                </div>
+            <div className={styles.prodcard}>
+              <img src="/images/sample-2.png" alt="Reezqa-banner"/>
+              <div className={styles.prodtitle}>Kopi Reezqa</div>
+              <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
+              <div className="d-flex align-items-center mt-auto flex-wrap">
+                <Link href="#"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2">Keranjang</span></a></Link>
+                <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
-            <div className="w-25" style={{padding: '1rem'}}>
-              <div className={styles.prodcard}>
-                <img src="/images/sample-2.png" alt="Reezqa-banner"/>
-                <div className={styles.prodtitle}>Kopi Reezqa</div>
-                <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
-                <div className="d-flex align-items-center mt-auto flex-wrap">
-                  <Link href="#"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2">Keranjang</span></a></Link>
-                  <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
-                </div>
+            <div className={styles.prodcard}>
+              <img src="/images/sample-2.png" alt="Reezqa-banner"/>
+              <div className={styles.prodtitle}>Kopi Reezqa</div>
+              <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
+              <div className="d-flex align-items-center mt-auto flex-wrap">
+                <Link href="#"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2">Keranjang</span></a></Link>
+                <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
-            <div className="w-25" style={{padding: '1rem'}}>
-              <div className={styles.prodcard}>
-                <img src="/images/sample-2.png" alt="Reezqa-banner"/>
-                <div className={styles.prodtitle}>Kopi Reezqa</div>
-                <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
-                <div className="d-flex align-items-center mt-auto flex-wrap">
-                  <Link href="#"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2">Keranjang</span></a></Link>
-                  <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
-                </div>
+            <div className={styles.prodcard}>
+              <img src="/images/sample-2.png" alt="Reezqa-banner"/>
+              <div className={styles.prodtitle}>Kopi Reezqa</div>
+              <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
+              <div className="d-flex align-items-center mt-auto flex-wrap">
+                <Link href="#"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2">Keranjang</span></a></Link>
+                <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
-            <div className="w-25" style={{padding: '1rem'}}>
-              <div className={styles.prodcard}>
-                <img src="/images/sample-2.png" alt="Reezqa-banner"/>
-                <div className={styles.prodtitle}>Kopi Reezqa</div>
-                <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
-                <div className="d-flex align-items-center mt-auto flex-wrap">
-                  <Link href="#"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2">Keranjang</span></a></Link>
-                  <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
-                </div>
+            <div className={styles.prodcard}>
+              <img src="/images/sample-2.png" alt="Reezqa-banner"/>
+              <div className={styles.prodtitle}>Kopi Reezqa</div>
+              <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
+              <div className="d-flex align-items-center mt-auto flex-wrap">
+                <Link href="#"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2">Keranjang</span></a></Link>
+                <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
-            <div className="w-25" style={{padding: '1rem'}}>
-              <div className={styles.prodcard}>
-                <img src="/images/sample-2.png" alt="Reezqa-banner"/>
-                <div className={styles.prodtitle}>Kopi Reezqa</div>
-                <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
-                <div className="d-flex align-items-center mt-auto flex-wrap">
-                  <Link href="#"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2">Keranjang</span></a></Link>
-                  <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
-                </div>
+            <div className={styles.prodcard}>
+              <img src="/images/sample-2.png" alt="Reezqa-banner"/>
+              <div className={styles.prodtitle}>Kopi Reezqa</div>
+              <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
+              <div className="d-flex align-items-center mt-auto flex-wrap">
+                <Link href="#"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2">Keranjang</span></a></Link>
+                <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
-            <div className="w-25" style={{padding: '1rem'}}>
-              <div className={styles.prodcard}>
-                <img src="/images/sample-2.png" alt="Reezqa-banner"/>
-                <div className={styles.prodtitle}>Kopi Reezqa</div>
-                <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
-                <div className="d-flex align-items-center mt-auto flex-wrap">
-                  <Link href="#"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2">Keranjang</span></a></Link>
-                  <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
-                </div>
+            <div className={styles.prodcard}>
+              <img src="/images/sample-2.png" alt="Reezqa-banner"/>
+              <div className={styles.prodtitle}>Kopi Reezqa</div>
+              <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
+              <div className="d-flex align-items-center mt-auto flex-wrap">
+                <Link href="#"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2">Keranjang</span></a></Link>
+                <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
-            <div className="w-25" style={{padding: '1rem'}}>
-              <div className={styles.prodcard}>
-                <img src="/images/sample-2.png" alt="Reezqa-banner"/>
-                <div className={styles.prodtitle}>Kopi Reezqa</div>
-                <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
-                <div className="d-flex align-items-center mt-auto flex-wrap">
-                  <Link href="#"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2">Keranjang</span></a></Link>
-                  <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
-                </div>
-              </div>
-            </div>
-            <div className="w-25" style={{padding: '1rem'}}>
-              <div className={styles.prodcard}>
-                <img src="/images/sample-2.png" alt="Reezqa-banner"/>
-                <div className={styles.prodtitle}>Kopi Reezqa</div>
-                <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
-                <div className="d-flex align-items-center mt-auto flex-wrap">
-                  <Link href="#"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2">Keranjang</span></a></Link>
-                  <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
-                </div>
+            <div className={styles.prodcard}>
+              <img src="/images/sample-2.png" alt="Reezqa-banner"/>
+              <div className={styles.prodtitle}>Kopi Reezqa</div>
+              <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
+              <div className="d-flex align-items-center mt-auto flex-wrap">
+                <Link href="#"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2">Keranjang</span></a></Link>
+                <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
           </div>

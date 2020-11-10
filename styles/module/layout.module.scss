@@ -1,5 +1,5 @@
 .container {
-    max-width: 1600px;
+    max-width: 1400px;
     padding: 0;
     margin: 0 auto;
     width: 100%;
@@ -60,7 +60,7 @@
         white-space: nowrap;
     }
 
-    .active {
+    a:hover, .active {
         background: #F2F2F2;
         border-radius: 18.5px;
     }
@@ -86,6 +86,11 @@
         width: 100%;
     }
 
+    .foot_btn:hover {
+        border: 1px solid #FF6202;
+        color: #FF6202;
+    }
+
     .foot_link_header {
         color: #ACACAC;
         font-weight: 700;
@@ -98,6 +103,10 @@
         padding: 2px 0;
     }
 
+    .foot_link:hover {
+        color: #FF6202;
+    }
+
     .foot_login_btn {
         border: 1px solid #FF6202;
         color: #FF6202;
@@ -106,5 +115,16 @@
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+}
+
+.xpadding {
+    padding: 0 2rem;
+}
+
+@media (max-width: 768px) {
+    .xpadding {
+        padding: 0 1rem 1.5rem;
+        width: 100%;
     }
 }
