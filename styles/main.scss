@@ -76,3 +76,63 @@ p {
 .h-scroll::-webkit-scrollbar-thumb:hover { /* Handle on hover */
   background: rgb(199, 199, 199);
 }
+
+// SWIPER NAVIGATIONS
+
+.swiper-button-next {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%2217%22%20height%3D%228%22%20viewBox%3D%220%200%2017%208%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Cpath%20d%3D%22M16.3536%204.35355C16.5488%204.15829%2016.5488%203.84171%2016.3536%203.64645L13.1716%200.464466C12.9763%200.269204%2012.6597%200.269204%2012.4645%200.464466C12.2692%200.659728%2012.2692%200.976311%2012.4645%201.17157L15.2929%204L12.4645%206.82843C12.2692%207.02369%2012.2692%207.34027%2012.4645%207.53553C12.6597%207.7308%2012.9763%207.7308%2013.1716%207.53553L16.3536%204.35355ZM0%204.5H16V3.5H0V4.5Z%22%20fill%3D%22%23404040%22%2F%3E%0A%3C%2Fsvg%3E") !important;
+  right: 0 !important;
+}
+
+.swiper-button-prev {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%2217%22%20height%3D%228%22%20viewBox%3D%220%200%2017%208%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Cpath%20d%3D%22M0.646446%204.35355C0.451185%204.15829%200.451185%203.84171%200.646446%203.64645L3.82843%200.464466C4.02369%200.269204%204.34027%200.269204%204.53553%200.464466C4.7308%200.659728%204.7308%200.976311%204.53553%201.17157L1.70711%204L4.53553%206.82843C4.7308%207.02369%204.7308%207.34027%204.53553%207.53553C4.34027%207.7308%204.02369%207.7308%203.82843%207.53553L0.646446%204.35355ZM17%204.5H1V3.5H17V4.5Z%22%20fill%3D%22%23404040%22%2F%3E%0A%3C%2Fsvg%3E") !important;
+  left: 0 !important;
+}
+
+.swiper-button-next, .swiper-button-prev {
+  color: #404040 !important;
+  background: white;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px;
+  box-shadow: 0px 4px 4px rgba(114, 114, 114, 0.25);
+  height: 35px !important;
+  width: 35px !important;
+  border: none;
+  border-radius: 50%;
+  top: 55% !important;
+}
+
+.swiper-button-next:focus, .swiper-button-prev:focus {
+  outline: none;
+}
+
+.swiper-button-next:after, .swiper-button-prev:after {
+  display: none;
+}
+
+.swiper-button-disabled {
+  display: none !important;
+}
+
+.swiper-container {
+  padding: 0 1rem !important;
+  margin: 0 -1rem !important;
+}
+
+
+.tesrow {
+  margin: 15px;
+
+  .swiper-slide {
+      width: auto !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .tesrow {
+    .swiper-button-next, .swiper-button-prev {
+      display: none !important;
+    }
+  }
+}

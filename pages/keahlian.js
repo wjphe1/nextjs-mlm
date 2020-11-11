@@ -15,7 +15,7 @@ class Keahlian extends React.Component {
         <Head>
           <title>{this.props.name} - Keahlian Reezqa</title>
         </Head>
-        <section className="p-5">
+        <section className="py-5 px-4">
             <div className={styles.main}>
                 <div className={utilStyles.headingXl}>Keahlian Reeqza</div>
                 <div className="d-flex align-items-center">

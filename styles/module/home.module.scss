@@ -82,6 +82,41 @@
     box-shadow: 0px 25px 60px rgba(163, 163, 163, 0.25);
 }
 
+.catecard {
+    background: linear-gradient(206.65deg, #FF6202 16.71%, #FF0000 118.94%);
+    border-radius: 9px;
+    color: #FFFFFF;
+    width: 100%;
+    padding: 10px 25px;
+    height: 70px;
+    display: flex;
+    line-height: 1.1;
+    text-align: left;
+    align-items: center;
+    margin: 0 auto;
+    border: none;
+
+    .line {
+        background: #FFFFFF;
+        height: 2px;
+        transition: all 0.3s;
+        width: 0;
+        position: absolute;
+        left: 25px;
+        bottom: 12px;
+    }
+}
+
+.catecard:hover .line {
+    width: 25%;
+}
+
+.productwrap {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -0.5rem;
+}
+
 @media (max-width: 991px) {
     .prodcard {
         width: calc(50% - 1rem);

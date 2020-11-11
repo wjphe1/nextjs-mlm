@@ -21,9 +21,9 @@ class Home extends React.Component {
         <Head>
           <title>{this.props.name}</title>
         </Head>
-        <section className="p-5">
+        <section className="py-5 px-4">
           <Swiper
-            spaceBetween={50}
+            spaceBetween={30}
             slidesPerView={1}
             navigation
             pagination={{ clickable: true }}
@@ -59,8 +59,18 @@ class Home extends React.Component {
             </div>
             <div className="col-9">
               <Swiper
-                spaceBetween={30}
-                slidesPerView={3}
+                spaceBetween={20}
+                breakpoints={{
+                  640: {
+                    slidesPerView: 1,
+                  },
+                  768: {
+                    slidesPerView: 2,
+                  },
+                  1068: {
+                    slidesPerView: 3,
+                  }
+                }}
                 navigation
                 autoplay= {{ delay: 3000 }}
                 onSwiper={(swiper) => console.log(swiper)}
@@ -124,12 +134,33 @@ class Home extends React.Component {
               </Swiper>
             </div>
           </div>
-          <div className="p-5" style={{background: 'white'}}>
-            <div className={utilStyles.headingXl}>KOLESKI PRODUK FUYOO</div>
-            <div className="p-5"></div>
+          <div className={`${utilStyles.headingXl} pt-3`}>KOLESKI PRODUK FUYOO</div>
+          <div className="pt-3 pb-5">
+            <Swiper
+              spaceBetween={15}
+              breakpoints={{
+                376: { slidesPerView: 1 },
+                640: { slidesPerView: 2 },
+                768: { slidesPerView: 3 },
+                868: { slidesPerView: 4 },
+                1068: { slidesPerView: 5 },
+                1200: { slidesPerView: 6 }
+              }}
+              navigation
+              onSwiper={(swiper) => console.log(swiper)}
+              onSlideChange={() => console.log('slide change')}
+            >
+              <SwiperSlide><button className={styles.catecard}>B’COOL FUYOO B’COOL<div className={styles.line}></div></button></SwiperSlide>
+              <SwiperSlide><button className={styles.catecard}>B’QUEENZ MATTE<div className={styles.line}></div></button></SwiperSlide>
+              <SwiperSlide><button className={styles.catecard}>BB CREAM<div className={styles.line}></div></button></SwiperSlide>
+              <SwiperSlide><button className={styles.catecard}>JUS B KLEAR<div className={styles.line}></div></button></SwiperSlide>
+              <SwiperSlide><button className={styles.catecard}>JUS SAKURA<div className={styles.line}></div></button></SwiperSlide>
+              <SwiperSlide><button className={styles.catecard}>KOPI FUYOO<div className={styles.line}></div></button></SwiperSlide>
+              <SwiperSlide><button className={styles.catecard}>OXYGEN BUBBLE MASK<div className={styles.line}></div></button></SwiperSlide>
+              <SwiperSlide><button className={styles.catecard}>SABUN EMAS<div className={styles.line}></div></button></SwiperSlide>
+            </Swiper>
           </div>
-          <div className={`${utilStyles.headingXl} text-center py-4`}>SEMUA PRODUK</div>
-          <div className="d-flex flex-wrap" style={{margin: '0 -1rem'}}>
+          <div className={styles.productwrap}>
             <div className={styles.prodcard}>
               <img src="/images/sample-2.png" alt="Reezqa-banner"/>
               <div className={styles.prodtitle}>Kopi Reezqa</div>

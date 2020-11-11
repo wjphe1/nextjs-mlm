@@ -30,9 +30,9 @@ export default function Layout({ children, page, name }) {
                 <div className={`${styles.container} ${styles.flexcontent} w-100`}>
                     <Link href="/"><a className={`${cn({[styles.active]: page === 'index'})}`}>REEZQA STORE</a></Link>
                     <Link href="/keahlian"><a className={`${cn({[styles.active]: page === 'keahlian'})}`}>KEAHLIAN REEZQA</a></Link>
-                    <Link href="/"><a className={`${cn({[styles.active]: page === 'facebook'})}`}>FACEBOOK</a></Link>
-                    <Link href="/"><a className={`${cn({[styles.active]: page === 'video'})}`}>VIDEO TESTIMONI</a></Link>
-                    <Link href="/"><a className={`${cn({[styles.active]: page === 'testimoni'})}`}>TESTIMONI</a></Link>
+                    <a href="https://www.facebook.com/1411841059123517" target="_blank" rel="noreferrer" className={`${cn({[styles.active]: page === 'facebook'})}`}>FACEBOOK</a>
+                    <Link href="/video-testimoni"><a className={`${cn({[styles.active]: page === 'video'})}`}>VIDEO TESTIMONI</a></Link>
+                    <Link href="/testimoni"><a className={`${cn({[styles.active]: page === 'testimoni'})}`}>TESTIMONI</a></Link>
                     <Link href="/stokis"><a className={`${cn({[styles.active]: page === 'stokis'})}`}>STOKIS REEZQA</a></Link>
                 </div>
             </nav>
@@ -49,13 +49,13 @@ export default function Layout({ children, page, name }) {
                     </div>
                     <div className={`d-flex flex-column ${styles.xpadding}`}>
                         <span className={styles.foot_link_header}>REEZQA GLOBAL</span>
-                        <Link href="#"><a className={styles.foot_link}>KEAHLIAN REEZQA</a></Link>
-                        <Link href="#"><a className={styles.foot_link}>FACEBOOK</a></Link>
-                        <Link href="#"><a className={styles.foot_link}>STOKIS REEZQA</a></Link>
+                        <Link href="/keahlian"><a className={styles.foot_link}>KEAHLIAN REEZQA</a></Link>
+                        <a href="https://www.facebook.com/1411841059123517" target="_blank" rel="noreferrer" className={styles.foot_link}>FACEBOOK</a>
+                        <Link href="/stokis"><a className={styles.foot_link}>STOKIS REEZQA</a></Link>
                         <span className="pb-4"></span>
                         <span className={styles.foot_link_header}>TESTIMONI</span>
-                        <Link href="#"><a className={styles.foot_link}>PRODUK TESTIMONI</a></Link>
-                        <Link href="#"><a className={styles.foot_link}>VIDEO TESTIMONI</a></Link>
+                        <Link href="/testimoni"><a className={styles.foot_link}>PRODUK TESTIMONI</a></Link>
+                        <Link href="/video-testimoni"><a className={styles.foot_link}>VIDEO TESTIMONI</a></Link>
                         <Link href="#"><a className={styles.foot_link}>JUS SAKURA REEZQA</a></Link>
                     </div>
                     <div className={`d-flex flex-column ${styles.xpadding}`}>
