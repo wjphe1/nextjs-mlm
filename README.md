@@ -70,4 +70,5 @@ export default function Index() {
     ```
 6. **Images** : Please place new images in /public/images/.
 7. **General META** : General Meta tags are currently placed in /components/_meta.js.
+8. **Admin** : Pages under /admin/ must have a valid jwt to access.
 

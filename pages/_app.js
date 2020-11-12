@@ -1,3 +1,4 @@
+import 'bootstrap/dist/css/bootstrap.min.css'
 import '../styles/main.scss'
 import 'swiper/swiper.scss'
 import 'swiper/swiper-bundle.min.css'
@@ -14,7 +15,7 @@ export default class MyApp extends App {
 
     state = {
         // global states here
-        name: "REEZQA GLOBAL",
+        name: "REEZQA GLOBAL"
     }
 
     render () {

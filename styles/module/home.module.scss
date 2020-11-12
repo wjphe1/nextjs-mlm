@@ -1,6 +1,6 @@
 .slide {
     width: 100%;
-    height: 400px;
+    height: 100%;
 
     img {
         object-fit: cover;
@@ -34,17 +34,25 @@
     background: #FFFFFF;
     border-radius: 5px;
     padding: 15px 15px 20px; 
-    height: 400px;
     display: flex;
     flex-direction: column;
     width: calc(25% - 1rem);
     margin: 0.5rem;
     transition: all 0.3s;
 
-    img {
+    .prod_imgdiv {
         width: 100%;
-        height: 200px;
-        object-fit: cover;
+        padding-top: 100%;
+        position: relative;
+        
+        img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     }
 
     .prodtitle {
@@ -63,6 +71,7 @@
 
     .keranjang {
         border: 1px solid #FF6202;
+        background: #FFFFFF;
         color: #FF6202;
         border-radius: 20px;
         padding: 8px 20px;
@@ -83,7 +92,6 @@
 }
 
 .catecard {
-    background: linear-gradient(206.65deg, #FF6202 16.71%, #FF0000 118.94%);
     border-radius: 9px;
     color: #FFFFFF;
     width: 100%;
@@ -119,12 +127,16 @@
 
 @media (max-width: 991px) {
     .prodcard {
-        width: calc(50% - 1rem);
+        width: calc(33% - 1rem);
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .prodcard {
-        width: calc(100% - 1rem);
+        width: calc(50% - 1rem);
+
+        .keranjang {
+            padding: 8px;
+        }
     }
 }

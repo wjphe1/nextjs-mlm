@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Layout from '../components/layout'
 import Imglight from '../components/imgLightbox'
 import tstyles from '../styles/module/testimoni.module.scss'
-import utilStyles from '../styles/module/utils.module.scss'
+import utils from '../styles/module/utils.module.scss'
 import React from 'react';
 import Link from 'next/link';
 // Import Swiper React components
@@ -23,7 +23,7 @@ class Testimoni extends React.Component {
         </Head>
         <section className="py-5 px-3">
           <div className={tstyles.main} style={{borderRadius: 10}}>
-            <div className={utilStyles.headingXl}>Testimoni</div>
+            <div className={utils.h_xl}>Testimoni</div>
             <div className="tesrow">
               <Swiper
                 spaceBetween={15}

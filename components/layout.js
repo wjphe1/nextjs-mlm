@@ -1,5 +1,5 @@
 import styles from '../styles/module/layout.module.scss'
-import util from '../styles/module/utils.module.scss'
+import utils from '../styles/module/utils.module.scss'
 import Meta from './_meta'
 import Link from 'next/link'
 import cn from 'classnames'
@@ -7,35 +7,43 @@ import { HiOutlineShoppingCart, HiOutlineUser, HiOutlineSearch } from 'react-ico
 
 export const siteTitle = 'REEZQA GLOBAL'
 
-export default function Layout({ children, page, name }) {
+export default function Layout({ children, page, name, cart }) {
     return (
         <div className="main-container">
             <Meta/>
 
-            <header className={styles.header}>
-                <div className={`${styles.container} ${styles.flexcontent}`}>
-                    <Link href="/"><a className={util.siteheader}>{name}</a></Link>
-                    <form className="position-relative db-mn">
-                        <input type="text" placeholder="Search product here" className={styles.search}/>
-                        <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
-                    </form>
-                    <div className="d-flex">
-                        <Link href="#"><a className="d-flex align-items-center"><HiOutlineUser/> <span className="pl-2 db-mn">MEMBERS LOGIN</span></a></Link>
-                        <span className="px-3">|</span>
-                        <Link href="#"><a className="d-flex align-items-center"><HiOutlineShoppingCart/> <span className="pl-2 db-mn">MY CARTS</span></a></Link>
+            <div className="sticky-top">
+                <header className={styles.header}>
+                    <div className={`${styles.container} ${styles.flexcontent}`}>
+                        <Link href="/"><a className={utils.site_header}>{name}</a></Link>
+                        <form className="position-relative db-mn">
+                            <input type="text" placeholder="Search product here" className={styles.search}/>
+                            <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
+                        </form>
+                        <div className="d-flex" style={{ fontSize: '0.9rem', lineHeight: 1 }}>
+                            <Link href="#"><a className="d-flex align-items-center"><HiOutlineUser/> <span className="pl-2 db-mn">MEMBERS LOGIN</span></a></Link>
+                            <span className="px-3" style={{ fontSize: '1.4rem', lineHeight: 1 }}>|</span>
+                            <Link href="/cart">
+                                <a className={`${cn({[styles.activeCart]: cart && cart > 0})} d-flex align-items-center`}>
+                                    <HiOutlineShoppingCart/>
+                                    <span className="pl-2 db-mn">KERANJANG</span> 
+                                    {cart > 0 && <span className={styles.cartCount}>{cart}</span>}
+                                </a>
+                            </Link>
+                        </div>
                     </div>
-                </div>
-            </header>
-            <nav className={`${styles.topnav} h-scroll`} style={{overflowX: 'auto', overflowY: 'hidden'}}>
-                <div className={`${styles.container} ${styles.flexcontent} w-100`}>
-                    <Link href="/"><a className={`${cn({[styles.active]: page === 'index'})}`}>REEZQA STORE</a></Link>
-                    <Link href="/keahlian"><a className={`${cn({[styles.active]: page === 'keahlian'})}`}>KEAHLIAN REEZQA</a></Link>
-                    <a href="https://www.facebook.com/1411841059123517" target="_blank" rel="noreferrer" className={`${cn({[styles.active]: page === 'facebook'})}`}>FACEBOOK</a>
-                    <Link href="/video-testimoni"><a className={`${cn({[styles.active]: page === 'video'})}`}>VIDEO TESTIMONI</a></Link>
-                    <Link href="/testimoni"><a className={`${cn({[styles.active]: page === 'testimoni'})}`}>TESTIMONI</a></Link>
-                    <Link href="/stokis"><a className={`${cn({[styles.active]: page === 'stokis'})}`}>STOKIS REEZQA</a></Link>
-                </div>
-            </nav>
+                </header>
+                <nav className={`${styles.topnav} h-scroll`} style={{overflowX: 'auto', overflowY: 'hidden', fontSize: '0.9rem'}}>
+                    <div className={`${styles.container} ${styles.flexcontent} w-100`}>
+                        <Link href="/"><a className={`${cn({[styles.active]: page === 'index'})}`}>REEZQA STORE</a></Link>
+                        <Link href="/keahlian"><a className={`${cn({[styles.active]: page === 'keahlian'})}`}>KEAHLIAN REEZQA</a></Link>
+                        <a href="https://www.facebook.com/1411841059123517" target="_blank" rel="noreferrer" className={`${cn({[styles.active]: page === 'facebook'})}`}>FACEBOOK</a>
+                        <Link href="/video-testimoni"><a className={`${cn({[styles.active]: page === 'video'})}`}>VIDEO TESTIMONI</a></Link>
+                        <Link href="/testimoni"><a className={`${cn({[styles.active]: page === 'testimoni'})}`}>TESTIMONI</a></Link>
+                        <Link href="/stokis"><a className={`${cn({[styles.active]: page === 'stokis'})}`}>STOKIS REEZQA</a></Link>
+                    </div>
+                </nav>
+            </div>
 
             <main className={styles.container}>{children}</main>
 

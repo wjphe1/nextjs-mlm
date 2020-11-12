@@ -35,8 +35,6 @@ export default function Meta() {
             <meta property='og:site_name' content='REEZQA GLOBAL' />
             <meta property='og:url' content='https://yourdomain.com' />
             <meta property='og:image' content='https://yourdomain.com/images/apple-touch-icon.png' />
-
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous"></link>
         </Head>
     )
 }

@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Layout from '../components/layout'
 import styles from '../styles/module/blog.module.scss'
-import utilStyles from '../styles/module/utils.module.scss'
+import utils from '../styles/module/utils.module.scss'
 import React from 'react';
 import Link from 'next/link';
 import { HiOutlineShare } from 'react-icons/hi';
@@ -17,9 +17,9 @@ class Keahlian extends React.Component {
         </Head>
         <section className="py-5 px-4">
             <div className={styles.main}>
-                <div className={utilStyles.headingXl}>Keahlian Reeqza</div>
+                <div className={utils.h_xl}>Keahlian Reeqza</div>
                 <div className="d-flex align-items-center">
-                    <div className={utilStyles.headingMd}>Manfaat Menjadi Ejen REEZQA</div>
+                    <div className={utils.h_md}>Manfaat Menjadi Ejen REEZQA</div>
                     <button className={`${styles.sharebtn} ml-auto`}><HiOutlineShare/></button>
                 </div>
                 <img src="/images/sample.png" alt="keahlian" className="w-100 py-4"/>

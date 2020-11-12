@@ -49,6 +49,31 @@ p {
   color: #626262;
 }
 
+.border-b {
+  border-bottom: 1px solid #B8B8B8;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+input[type=checkbox]{
+  width: 20px; /*Desired width*/
+  height: 20px; /*Desired height*/
+  border: 1px solid #CDCDCD !important;
+  border-color: #CDCDCD !important;
+  cursor: pointer;
+  outline: none;
+}
+
 .df-mn { display: flex !important; }
 .db-mn { display: block !important; }
 .dn-mf, .dn-mb { display: none !important; }
@@ -57,9 +82,13 @@ p {
   .dn-mf { display: flex !important; }
   .dn-mb { display: block !important; }
   .df-mn, .db-mn { display: none !important; }
+  html, body {
+    line-height: 1.4;
+    font-size: 12px;
+  }
 }
 
-// Scrollbar
+// Scrollbar ------------------------------------------------------------------------
 .h-scroll::-webkit-scrollbar { /* width */
   height: 5px;
 }
@@ -77,7 +106,7 @@ p {
   background: rgb(199, 199, 199);
 }
 
-// SWIPER NAVIGATIONS
+// SWIPER NAVIGATIONS -----------------------------------------------------------
 
 .swiper-button-next {
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%2217%22%20height%3D%228%22%20viewBox%3D%220%200%2017%208%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Cpath%20d%3D%22M16.3536%204.35355C16.5488%204.15829%2016.5488%203.84171%2016.3536%203.64645L13.1716%200.464466C12.9763%200.269204%2012.6597%200.269204%2012.4645%200.464466C12.2692%200.659728%2012.2692%200.976311%2012.4645%201.17157L15.2929%204L12.4645%206.82843C12.2692%207.02369%2012.2692%207.34027%2012.4645%207.53553C12.6597%207.7308%2012.9763%207.7308%2013.1716%207.53553L16.3536%204.35355ZM0%204.5H16V3.5H0V4.5Z%22%20fill%3D%22%23404040%22%2F%3E%0A%3C%2Fsvg%3E") !important;
@@ -120,7 +149,6 @@ p {
   margin: 0 -1rem !important;
 }
 
-
 .tesrow {
   margin: 15px;
 
@@ -130,9 +158,58 @@ p {
 }
 
 @media (max-width: 768px) {
-  .tesrow {
+  .tesrow, .main-banner, .cate-swiper {
     .swiper-button-next, .swiper-button-prev {
       display: none !important;
     }
+  }
+}
+
+.main-banner  {
+  width: 100%;
+  padding-top: 35%; // 56.25% if want ratio 16 : 9
+  position: relative;
+
+  .swiper-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+}
+
+// Product Description Tabs ----------------------------------------------
+.prod-tabs {
+  background: #FFFFFF;
+  padding: 20px;
+  width: 100%;
+
+  .nav-tabs {
+    border-bottom: 1px solid #B9B9B9;
+    color: #9A9A9A;
+
+    .nav-link {
+      border: none;
+      margin: 0;
+      font-weight: 600;
+      width: 33%;
+      padding: 12px 0;
+      max-width: 150px;
+      text-align: center;
+      border-bottom: 3px solid #FFFFFF;
+    }
+
+    .nav-link:hover { color: #FF6202; }
+
+    .nav-link.active {
+      border: none;
+      border-bottom: 3px solid #FF6202;
+      color: #FF6202;
+    }
+  }
+
+  .tab-content {
+    padding: 30px 20px;
   }
 }

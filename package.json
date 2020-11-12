@@ -8,15 +8,21 @@
     "start": "next start"
   },
   "dependencies": {
+    "axios": "^0.21.0",
+    "bootstrap": "^4.5.3",
     "classnames": "^2.2.6",
+    "js-cookie": "^2.2.1",
     "next": "9.5.3",
     "next-pwa": "^3.1.5",
     "react": "16.13.1",
+    "react-bootstrap": "^1.4.0",
     "react-dom": "16.13.1",
     "react-icons": "^3.11.0",
+    "react-loading-skeleton": "^2.1.1",
     "react-modal-video": "^1.2.6",
     "sass": "^1.27.1",
     "simple-react-lightbox": "^3.3.4-2",
-    "swiper": "^6.3.5"
+    "swiper": "^6.3.5",
+    "swr": "^0.3.8"
   }
 }

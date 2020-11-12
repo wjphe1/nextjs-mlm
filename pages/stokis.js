@@ -1,10 +1,9 @@
 import Head from 'next/head'
 import Layout from '../components/layout'
 import styles from '../styles/module/blog.module.scss'
-import utilStyles from '../styles/module/utils.module.scss'
+import utils from '../styles/module/utils.module.scss'
 import React from 'react';
 import Link from 'next/link';
-import { HiOutlineShare } from 'react-icons/hi';
 
 class Stokis extends React.Component {
 
@@ -17,8 +16,8 @@ class Stokis extends React.Component {
         </Head>
         <section className="py-5 px-4">
           <div className={styles.main}>
-            <div className={utilStyles.headingXl}>STOKIS STOKIS REEZQA GLOBAL</div>
-            <div className={utilStyles.headingMd}>HEAD OFFICE JOHOR BAHRU - 0197577763 / 0137410099 </div>
+            <div className={utils.h_xl}>STOKIS STOKIS REEZQA GLOBAL</div>
+            <div className={utils.h_md}>HEAD OFFICE JOHOR BAHRU - 0197577763 / 0137410099 </div>
             <div className="row m-0 pt-5">
               <div className="col-md-4 pl-0 pb-3">
                 <img src="/images/sample-2.png" alt="stokis" style={{width: '100%', objectFit: 'cover', height: '100%', borderRadius: '12px'}}/>
@@ -40,7 +39,7 @@ class Stokis extends React.Component {
           </div>
           <div className="py-4"></div>
           <div className={styles.main}>
-            <div className={utilStyles.headingXl}>MASTER STOKIS KUALA LUMPUR &amp; SELANGOR</div>
+            <div className={utils.h_xl}>MASTER STOKIS KUALA LUMPUR &amp; SELANGOR</div>
             <p className="pt-5"><b>STOKIS-STOKIS DAERAH JOHOR BAHRU</b></p>
             <ol>
               <li>ROKIAH HUSIN (PASIR GUDANG) - 0127081532</li>

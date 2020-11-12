@@ -33,6 +33,7 @@
         height: 300px;
         margin: 1%;
         object-fit: cover;
+        cursor: pointer;
     }
 }
 
@@ -50,6 +51,7 @@
         position: relative;
         border: none;
         background: white;
+        cursor: pointer;
     }
 
     .vidframe {
@@ -68,6 +70,6 @@
 }
 
 @media (max-width: 768px) {
-    .imgtiles img, .vidtiles .vidbtn { width: 98%; }
+    .imgtiles img, .vidtiles .vidbtn { width: 98%; margin: 20px 1%; }
     .vidtiles .vidbtn { padding-top: 55.12% } // 98% * 56.25%
 }

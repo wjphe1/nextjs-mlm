@@ -27,9 +27,9 @@ class Videolight extends React.Component {
       <React.Fragment>
         <ModalVideo channel='youtube' isOpen={this.state.isOpen} videoId={this.state.id} onClose={() => this.setState({isOpen: false})} />
         <div className={styles.vidtiles}>
-            {link.map((u, i) =>
+            {link && link.map((u, i) =>
                 <button onClick={() => this.openModal(u.url)} key={i} className={styles.vidbtn}>
-                    <iframe className={styles.vidframe} src={"https://www.youtube.com/embed/"+u.url} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                    <iframe className={styles.vidframe} src={"https://www.youtube.com/embed/"+u.url} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
                 </button>
             )}
         </div>
