@@ -252,6 +252,33 @@ class Home extends React.Component {
                 <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
+            <div className={styles.prodcard}>
+              <Link href="/products/generic"><a><div className={styles.prod_imgdiv}><img src="/images/sample-2.png" alt="Reezqa-banner"/></div></a></Link>
+              <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
+              <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
+              <div className="d-flex align-items-center mt-auto flex-wrap">
+                <button onClick={() => this.setState({ cart: this.state.cart + 1 })} className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></button>
+                <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
+              </div>
+            </div>
+            <div className={styles.prodcard}>
+              <Link href="/products/generic"><a><div className={styles.prod_imgdiv}><img src="/images/sample-2.png" alt="Reezqa-banner"/></div></a></Link>
+              <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
+              <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
+              <div className="d-flex align-items-center mt-auto flex-wrap">
+                <button onClick={() => this.setState({ cart: this.state.cart + 1 })} className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></button>
+                <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
+              </div>
+            </div>
+            <div className={styles.prodcard}>
+              <Link href="/products/generic"><a><div className={styles.prod_imgdiv}><img src="/images/sample-2.png" alt="Reezqa-banner"/></div></a></Link>
+              <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
+              <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
+              <div className="d-flex align-items-center mt-auto flex-wrap">
+                <button onClick={() => this.setState({ cart: this.state.cart + 1 })} className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></button>
+                <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
+              </div>
+            </div>
           </div>
         </section>
       </Layout>
