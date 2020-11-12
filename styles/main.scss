@@ -37,7 +37,7 @@ a:active, button:active {
   transition: all 0.2s;
 }
 
-input:focus, button:focus {
+input:focus, button:focus, textarea:focus {
   outline: none;
 }
 
@@ -51,6 +51,10 @@ p {
 
 .border-b {
   border-bottom: 1px solid #B8B8B8;
+}
+
+.border-r-dot {
+  border-right: 2px dashed #B8B8B8;
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -72,20 +76,21 @@ input[type=checkbox]{
   border-color: #CDCDCD !important;
   cursor: pointer;
   outline: none;
+  flex: 0 0 20px;
 }
 
 .df-mn { display: flex !important; }
 .db-mn { display: block !important; }
 .dn-mf, .dn-mb { display: none !important; }
+.prx-5 { padding-left: 3rem !important; padding-right: 3rem !important; }
 
 @media (max-width: 768px) {
   .dn-mf { display: flex !important; }
   .dn-mb { display: block !important; }
   .df-mn, .db-mn { display: none !important; }
-  html, body {
-    line-height: 1.4;
-    font-size: 12px;
-  }
+  .prx-5 { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
+  html, body { line-height: 1.4; font-size: 12px; }
+  .border-r-dot { border-right: none; padding-bottom: 20px !important; }
 }
 
 // Scrollbar ------------------------------------------------------------------------
