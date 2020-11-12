@@ -160,7 +160,7 @@ class Home extends React.Component {
             <Swiper
               spaceBetween={15}
               breakpoints={{
-                374: { slidesPerView: 2.2 },
+                174: { slidesPerView: 2.2 },
                 768: { slidesPerView: 3.2 },
                 868: { slidesPerView: 4 },
                 1068: { slidesPerView: 5 },
