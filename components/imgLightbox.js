@@ -11,14 +11,14 @@ class Imglight extends React.Component {
             <div className={styles.imgtiles}>
                 <SimpleReactLightbox>
                     <SRLWrapper>
-                        <img src="images/sample.png" alt="Caption" />
-                        <img src="images/sample-2.png" alt="Another Caption" />
-                        <img src="images/sample.png" alt="Caption" />
-                        <img src="images/sample-2.png" alt="Another Caption" />
-                        <img src="images/sample.png" alt="Caption" />
-                        <img src="images/sample-2.png" alt="Another Caption" />
-                        <img src="images/sample.png" alt="Caption" />
-                        <img src="images/sample-2.png" alt="Another Caption" />
+                        <div className={styles.imgdiv}><img src="images/sample.png" alt="Caption" /></div>
+                        <div className={styles.imgdiv}><img src="images/sample-2.png" alt="Another Caption" /></div>
+                        <div className={styles.imgdiv}><img src="images/sample.png" alt="Caption" /></div>
+                        <div className={styles.imgdiv}><img src="images/sample-2.png" alt="Another Caption" /></div>
+                        <div className={styles.imgdiv}><img src="images/sample.png" alt="Caption" /></div>
+                        <div className={styles.imgdiv}><img src="images/sample-2.png" alt="Another Caption" /></div>
+                        <div className={styles.imgdiv}><img src="images/sample.png" alt="Caption" /></div>
+                        <div className={styles.imgdiv}><img src="images/sample-2.png" alt="Another Caption" /></div>
                     </SRLWrapper>
                 </SimpleReactLightbox>
             </div>

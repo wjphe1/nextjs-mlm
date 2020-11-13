@@ -21,7 +21,7 @@ export default function Layout({ children, page, name, cart }) {
                             <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
                         </form>
                         <div className="d-flex" style={{ fontSize: '0.9rem', lineHeight: 1 }}>
-                            <Link href="#"><a className="d-flex align-items-center"><HiOutlineUser/> <span className="pl-2 db-mn">MEMBERS LOGIN</span></a></Link>
+                            <Link href="/user/login"><a className={`${cn({[styles.activeLogin]: page === 'login'})} ${styles.login_btn}`}><HiOutlineUser/> <span className="pl-2 db-mn">MEMBERS LOGIN</span></a></Link>
                             <span className="px-3" style={{ fontSize: '1.4rem', lineHeight: 1 }}>|</span>
                             <Link href="/cart">
                                 <a className={`${cn({[styles.activeCart]: cart && cart > 0})} d-flex align-items-center`}>

@@ -103,7 +103,7 @@ class Home extends React.Component {
                     <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
                     <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
                     <div className="d-flex align-items-center mt-auto flex-wrap">
-                      <button onClick={() => this.setState({ cart: this.state.cart + 1 })} className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></button>
+                      <Link href="/products/generic"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
                       <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
                     </div>
                   </div>
@@ -114,7 +114,7 @@ class Home extends React.Component {
                     <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
                     <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
                     <div className="d-flex align-items-center mt-auto flex-wrap">
-                      <button onClick={() => this.setState({ cart: this.state.cart + 1 })} className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></button>
+                      <Link href="/products/generic"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
                       <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
                     </div>
                   </div>
@@ -125,7 +125,7 @@ class Home extends React.Component {
                     <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
                     <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
                     <div className="d-flex align-items-center mt-auto flex-wrap">
-                      <button onClick={() => this.setState({ cart: this.state.cart + 1 })} className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></button>
+                      <Link href="/products/generic"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
                       <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
                     </div>
                   </div>
@@ -136,7 +136,7 @@ class Home extends React.Component {
                     <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
                     <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
                     <div className="d-flex align-items-center mt-auto flex-wrap">
-                      <button onClick={() => this.setState({ cart: this.state.cart + 1 })} className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></button>
+                      <Link href="/products/generic"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
                       <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
                     </div>
                   </div>
@@ -147,7 +147,7 @@ class Home extends React.Component {
                     <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
                     <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
                     <div className="d-flex align-items-center mt-auto flex-wrap">
-                      <button onClick={() => this.setState({ cart: this.state.cart + 1 })} className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></button>
+                      <Link href="/products/generic"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
                       <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
                     </div>
                   </div>
@@ -171,7 +171,7 @@ class Home extends React.Component {
               onSlideChange={() => console.log('slide change')}
             >
               {cate && cate.map((u, i) => 
-                <SwiperSlide key={i}><button className={styles.catecard} style={{background: u.bg}}>{u.name}<div className={styles.line}></div></button></SwiperSlide>
+                <SwiperSlide key={i}><button className={styles.catecard} style={{background: u.bg}}><div><div>{u.name}</div><div className={styles.line}></div></div></button></SwiperSlide>
               )}
             </Swiper>
           </div>
@@ -181,7 +181,7 @@ class Home extends React.Component {
               <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
               <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
               <div className="d-flex align-items-center mt-auto flex-wrap">
-                <button onClick={() => this.setState({ cart: this.state.cart + 1 })} className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></button>
+                <Link href="/products/generic"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
                 <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
@@ -190,7 +190,7 @@ class Home extends React.Component {
               <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
               <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
               <div className="d-flex align-items-center mt-auto flex-wrap">
-                <button onClick={() => this.setState({ cart: this.state.cart + 1 })} className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></button>
+                <Link href="/products/generic"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
                 <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
@@ -199,7 +199,7 @@ class Home extends React.Component {
               <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
               <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
               <div className="d-flex align-items-center mt-auto flex-wrap">
-                <button onClick={() => this.setState({ cart: this.state.cart + 1 })} className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></button>
+                <Link href="/products/generic"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
                 <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
@@ -208,7 +208,7 @@ class Home extends React.Component {
               <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
               <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
               <div className="d-flex align-items-center mt-auto flex-wrap">
-                <button onClick={() => this.setState({ cart: this.state.cart + 1 })} className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></button>
+                <Link href="/products/generic"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
                 <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
@@ -221,7 +221,7 @@ class Home extends React.Component {
               <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
               <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
               <div className="d-flex align-items-center mt-auto flex-wrap">
-                <button onClick={() => this.setState({ cart: this.state.cart + 1 })} className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></button>
+                <Link href="/products/generic"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
                 <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
@@ -230,7 +230,7 @@ class Home extends React.Component {
               <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
               <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
               <div className="d-flex align-items-center mt-auto flex-wrap">
-                <button onClick={() => this.setState({ cart: this.state.cart + 1 })} className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></button>
+                <Link href="/products/generic"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
                 <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
@@ -239,7 +239,7 @@ class Home extends React.Component {
               <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
               <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
               <div className="d-flex align-items-center mt-auto flex-wrap">
-                <button onClick={() => this.setState({ cart: this.state.cart + 1 })} className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></button>
+                <Link href="/products/generic"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
                 <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
@@ -248,7 +248,7 @@ class Home extends React.Component {
               <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
               <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
               <div className="d-flex align-items-center mt-auto flex-wrap">
-                <button onClick={() => this.setState({ cart: this.state.cart + 1 })} className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></button>
+                <Link href="/products/generic"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
                 <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
@@ -257,7 +257,7 @@ class Home extends React.Component {
               <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
               <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
               <div className="d-flex align-items-center mt-auto flex-wrap">
-                <button onClick={() => this.setState({ cart: this.state.cart + 1 })} className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></button>
+                <Link href="/products/generic"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
                 <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
@@ -266,7 +266,7 @@ class Home extends React.Component {
               <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
               <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
               <div className="d-flex align-items-center mt-auto flex-wrap">
-                <button onClick={() => this.setState({ cart: this.state.cart + 1 })} className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></button>
+                <Link href="/products/generic"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
                 <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
@@ -275,7 +275,7 @@ class Home extends React.Component {
               <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
               <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
               <div className="d-flex align-items-center mt-auto flex-wrap">
-                <button onClick={() => this.setState({ cart: this.state.cart + 1 })} className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></button>
+                <Link href="/products/generic"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
                 <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>

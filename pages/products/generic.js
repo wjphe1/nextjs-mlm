@@ -9,6 +9,7 @@ import Tabs from 'react-bootstrap/Tabs'
 import Tab from 'react-bootstrap/Tab'
 import { BsCaretRightFill } from 'react-icons/bs';
 import { RiShareFill } from 'react-icons/ri';
+import { FcOk } from 'react-icons/fc';
 import { FiShoppingBag, FiSend, FiPlus, FiMinus } from 'react-icons/fi';
 
 
@@ -17,17 +18,26 @@ class FirstPost extends React.Component {
     super(props);
     this.state = {
       count: 1,
-      cart: 0
+      cart: 0,
+      snack: false,
     };
-    this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange (e) {
+  handleChange = (e) => {
     const value = parseInt(e.target.value);
     this.setState({
       [e.target.name]: value
     });
   }
+
+  addCart = () => {
+    this.setState({ 
+      cart: this.state.cart + 1,
+      snack: true,
+    })
+    setTimeout(() => { this.setState({ snack: false }) }, 3000);
+  }
+  
 
   render () {
     return (
@@ -60,7 +70,7 @@ class FirstPost extends React.Component {
                   </div>
                 </div>
                 <div className="d-flex align-items-center flex-wrap">
-                  <button onClick={() => this.setState({ cart: this.state.cart + 1 })} className={styles.keranjang}><FiShoppingBag/><span className="pl-2">Keranjang</span></button>
+                  <button onClick={this.addCart} className={styles.keranjang}><FiShoppingBag/><span className="pl-2">Keranjang</span></button>
                   <button className={styles.send_order}><FiSend/><span className="pl-2">Send Order</span></button>
                 </div>
               </div>
@@ -101,7 +111,7 @@ class FirstPost extends React.Component {
               <Link href="/products/generic"><a><div className={homes.prodtitle}>Kopi Reezqa</div></a></Link>
               <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
               <div className="d-flex align-items-center mt-auto flex-wrap">
-                <button className={homes.keranjang}><FiShoppingBag/><span className="pl-2">Keranjang</span></button>
+                <button className={homes.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></button>
                 <div className={`${homes.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
@@ -110,7 +120,7 @@ class FirstPost extends React.Component {
               <Link href="/products/generic"><a><div className={homes.prodtitle}>Kopi Reezqa</div></a></Link>
               <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
               <div className="d-flex align-items-center mt-auto flex-wrap">
-                <button className={homes.keranjang}><FiShoppingBag/><span className="pl-2">Keranjang</span></button>
+                <button className={homes.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></button>
                 <div className={`${homes.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
@@ -119,7 +129,7 @@ class FirstPost extends React.Component {
               <Link href="/products/generic"><a><div className={homes.prodtitle}>Kopi Reezqa</div></a></Link>
               <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
               <div className="d-flex align-items-center mt-auto flex-wrap">
-                <button className={homes.keranjang}><FiShoppingBag/><span className="pl-2">Keranjang</span></button>
+                <button className={homes.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></button>
                 <div className={`${homes.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
@@ -128,11 +138,12 @@ class FirstPost extends React.Component {
               <Link href="/products/generic"><a><div className={homes.prodtitle}>Kopi Reezqa</div></a></Link>
               <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
               <div className="d-flex align-items-center mt-auto flex-wrap">
-                <button className={homes.keranjang}><FiShoppingBag/><span className="pl-2">Keranjang</span></button>
+                <button className={homes.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></button>
                 <div className={`${homes.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
           </div>
+          <div id="snackbar" className={(this.state.snack ? 'show' : '')}><FcOk/> <span className="ml-2">Added to Cart</span></div>
         </section>
       </Layout>
     )

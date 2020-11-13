@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
+import Adminlog from '../login'
 
 //api here is an axios instance which has the baseURL set according to the env.
 import api from './api';
@@ -59,7 +60,7 @@ export const ProtectRoute = ({ children }) => {
     const router = useRouter()
     const { isAuthenticated, isLoading } = useAuth();
     if (isLoading || (!isAuthenticated && router.pathname !== '/admin/login')){
-      return <div>Login here</div>; 
+      return <Adminlog/>; 
     }
     return children;
 };

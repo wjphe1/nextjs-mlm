@@ -90,10 +90,9 @@ input[type=checkbox]{
   .df-mn, .db-mn { display: none !important; }
   .prx-5 { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
   html, body { line-height: 1.4; font-size: 12px; }
-  .border-r-dot { border-right: none; padding-bottom: 20px !important; }
 }
 
-// Scrollbar ------------------------------------------------------------------------
+// ---------------------------------------------- Scrollbar ---------------------------------------------------------
 .h-scroll::-webkit-scrollbar { /* width */
   height: 5px;
 }
@@ -111,7 +110,7 @@ input[type=checkbox]{
   background: rgb(199, 199, 199);
 }
 
-// SWIPER NAVIGATIONS -----------------------------------------------------------
+// ---------------------------------------------- SWIPER NAVIGATIONS -----------------------------------------------------
 
 .swiper-button-next {
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%2217%22%20height%3D%228%22%20viewBox%3D%220%200%2017%208%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Cpath%20d%3D%22M16.3536%204.35355C16.5488%204.15829%2016.5488%203.84171%2016.3536%203.64645L13.1716%200.464466C12.9763%200.269204%2012.6597%200.269204%2012.4645%200.464466C12.2692%200.659728%2012.2692%200.976311%2012.4645%201.17157L15.2929%204L12.4645%206.82843C12.2692%207.02369%2012.2692%207.34027%2012.4645%207.53553C12.6597%207.7308%2012.9763%207.7308%2013.1716%207.53553L16.3536%204.35355ZM0%204.5H16V3.5H0V4.5Z%22%20fill%3D%22%23404040%22%2F%3E%0A%3C%2Fsvg%3E") !important;
@@ -184,7 +183,7 @@ input[type=checkbox]{
   }
 }
 
-// Product Description Tabs ----------------------------------------------
+// ---------------------------------------------- Product Description Tabs ----------------------------------------------
 .prod-tabs {
   background: #FFFFFF;
   padding: 20px;
@@ -217,4 +216,55 @@ input[type=checkbox]{
   .tab-content {
     padding: 30px 20px;
   }
+}
+
+// ---------------------------------------------- Snackbar ------------------------------------------------------------
+/* The snackbar - position it at the bottom and in the middle of the screen */
+#snackbar {
+  visibility: hidden; /* Hidden by default. Visible on click */
+  min-width: 250px; /* Set a default minimum width */
+  margin-left: -125px; /* Divide value of min-width by 2 */
+  background-color: #333; /* Black background color */
+  color: #fff; /* White text color */
+  text-align: center; /* Centered text */
+  border-radius: 16px; /* Rounded borders */
+  padding: 16px; /* Padding */
+  position: fixed; /* Sit on top of the screen */
+  z-index: 1; /* Add a z-index if needed */
+  left: 50%; /* Center the snackbar */
+  bottom: 30px; /* 30px from the bottom */
+  svg { font-size: 1.5rem; }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Show the snackbar when clicking on a button (class added with JavaScript) */
+#snackbar.show {
+  visibility: visible; /* Show the snackbar */
+  /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+  However, delay the fade out process for 2.5 seconds */
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
 }

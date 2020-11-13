@@ -15,6 +15,7 @@
     padding: 15px 25px;
     border-bottom: 1px solid #C9C9C9;
     background: white;
+    font-weight: 500;
 
     svg {
         height: 1.3rem;
@@ -48,6 +49,18 @@
         svg {
             height: 45%;
         }
+    }
+
+    .login_btn {
+        display: flex;
+        align-items: center;
+        margin: -7px -10px;
+        padding: 7px 10px;
+    }
+
+    .login_btn:hover, .activeLogin {
+        background: #F2F2F2;
+        border-radius: 18.5px;
     }
 }
 

@@ -113,11 +113,11 @@ class FirstPost extends React.Component {
           {/* Total Price */}
           <div className={`${styles.main_lg} p-0 mb-3`}>
             <div className="prx-5 pt-5 pb-4 align-items-center row m-0">
-              <div className="col-md-9 p-0 border-r-dot">
+              <div className="col-9 p-0 border-r-dot">
                 <div className={utils.hightext_md}>Sila semak senarai barangan yang telah anda pilih sebelum Send Order</div>
                 <div className={`pt-2 ${utils.text_md}`}>*   Jumlah barangan di sebelah dalah tidak termasuk caj penghantaran.<br/>** Caj Penghantaran seunit - SM: RM 7 / SS: RM10</div>
               </div>
-              <div className="col-md-3 p-0 m-0">
+              <div className="col-3 p-0 m-0">
                 <div className={`text-center ${utils.text_lg}`}>Jumlah Barangan</div>
                 <div className={`text-center ${utils.hightext_xl}`}>RM 10.00</div>
               </div>

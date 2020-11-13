@@ -33,7 +33,7 @@
 .prodcard {
     background: #FFFFFF;
     border-radius: 5px;
-    padding: 15px 15px 20px; 
+    padding: 15px; 
     display: flex;
     flex-direction: column;
     width: calc(25% - 1rem);
@@ -109,14 +109,14 @@
         height: 2px;
         transition: all 0.3s;
         width: 0;
-        position: absolute;
-        left: 25px;
-        bottom: 12px;
+        margin-top: 3px;
     }
 }
 
-.catecard:hover .line {
-    width: 25%;
+.catecard:hover {
+    .line {
+        width: 40%;
+    }
 }
 
 .productwrap {
