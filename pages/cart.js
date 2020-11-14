@@ -18,10 +18,9 @@ class FirstPost extends React.Component {
       count: 1,
       cart: 0
     };
-    this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange (e) {
+  handleChange = (e) => {
     const value = parseInt(e.target.value);
     this.setState({
       [e.target.name]: value

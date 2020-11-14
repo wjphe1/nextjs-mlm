@@ -1,4 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
+import "react-datepicker/dist/react-datepicker.css";
 import '../styles/main.scss'
 import 'swiper/swiper.scss'
 import 'swiper/swiper-bundle.min.css'

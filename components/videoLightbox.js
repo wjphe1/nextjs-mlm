@@ -12,7 +12,6 @@ class Videolight extends React.Component {
       isOpen: false,
       id: null,
     }
-    this.openModal = this.openModal.bind(this)
   }
 
   openModal = (url) => {

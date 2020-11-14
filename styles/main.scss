@@ -1,8 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Arial, Segoe UI, Roboto, Oxygen, Ubuntu,
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, Arial, Segoe UI, Roboto, Oxygen, Ubuntu,
     Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   line-height: 1.6;
   font-size: 14px;
@@ -70,8 +71,8 @@ input[type=number] {
 }
 
 input[type=checkbox]{
-  width: 20px; /*Desired width*/
-  height: 20px; /*Desired height*/
+  width: 1.2rem; /*Desired width*/
+  height: 1.2rem; /*Desired height*/
   border: 1px solid #CDCDCD !important;
   border-color: #CDCDCD !important;
   cursor: pointer;
@@ -267,4 +268,133 @@ input[type=checkbox]{
 @keyframes fadeout {
   from {bottom: 30px; opacity: 1;}
   to {bottom: 0; opacity: 0;}
+}
+
+// --------------------------------- DatePicker ---------------------------------
+.start-date, .end-date {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #5F5F5F;
+  font-weight: 600;
+  width: 100px;
+}
+
+.calendar-icon {
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #E0E0E0;
+}
+
+.date-div {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: 25px;
+}
+
+.date-div:hover {
+  background: #F2F2F2;
+}
+
+@media (min-width: 767px) {
+  .calendar-margin {
+    top: 5px !important;
+    left: -80px !important;
+  }
+}
+
+// ---------------------------------------------- Admin Reports Tabs ----------------------------------------------
+.admin-reports-tabs {
+  width: 100%;
+
+  .nav-tabs {
+    color: #969696;
+    padding: 20px 0;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    border-bottom: 1px solid #C0C0C0;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+
+    .nav-link {
+      border: none;
+      margin: 0 10px 0 0;
+      padding: 8px 20px;
+      text-align: center;
+      border-radius: 25px;
+      border: 1px solid #969696;
+      white-space: nowrap;
+    }
+
+    .nav-link:hover { 
+      border: 1px solid #FF6202;
+      color: #FF6202; 
+    }
+
+    .nav-link.active {
+      border: none;
+      background: #FF6202;
+      border: 1px solid #FF6202;
+      color: #FFFFFF;
+    }
+  }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .nav-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab-content {
+    padding: 20px 0;
+  }
+}
+
+// -------------------------------- Table Accordian -------------------------------
+.table-cell-collapse {
+  .card {
+    border: none;
+  }
+
+  .card-header, .card-body {
+    padding: 0;
+    background: none;
+    cursor: pointer;
+    border: none;
+  }
+
+  svg {
+    color: #C4C4C4;
+    margin-left: 20px;
+  }
+}
+
+.table-cell-dropdown, .dropdown-toggle:focus {
+  .dropdown-toggle {
+    background: none;
+    color: #FF6202;
+    font-size: 1.5rem;
+    padding: 0;
+    border: none;
+    display: flex;
+  }
+
+  .dropdown-toggle::after {
+    content: none;
+  }
+
+  .show .btn-primary.dropdown-toggle, .btn-primary.dropdown-toggle:active {
+    background-color: #FFFFFF;
+    color: #FF6202;
+  }
+
+  .show .btn-primary.dropdown-toggle:focus, .btn-primary.dropdown-toggle:focus, .btn-primary.dropdown-toggle:active {
+    box-shadow: none !important;
+    border-color: none !important;
+  }
 }
