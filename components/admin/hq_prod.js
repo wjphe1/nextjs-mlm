@@ -5,7 +5,7 @@ import utils from '../../styles/module/utils.module.scss'
 import DatePicker from "react-datepicker";
 import { FiCalendar } from 'react-icons/fi';
 import { HiOutlineSearch } from 'react-icons/hi';
-import { BsFillCaretDownFill, BsThreeDots } from 'react-icons/bs';
+import { BsFillCaretDownFill, BsThreeDots, BsThreeDotsVertical } from 'react-icons/bs';
 import Tabs from 'react-bootstrap/Tabs'
 import Tab from 'react-bootstrap/Tab'
 import Table from 'react-bootstrap/Table'
@@ -70,7 +70,7 @@ class HQprod extends React.Component {
                       <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
                     </form>
                   </div>
-                  <Table responsive="lg">
+                  <Table responsive>
                     <thead>
                       <tr>
                         <th className="pl-4">Product Name</th>
@@ -120,7 +120,7 @@ class HQprod extends React.Component {
                       </DropdownButton>
                     </div>
                   </div>
-                  <Table responsive="md">
+                  <Table responsive>
                     <thead>
                       <tr>
                         <th className="pl-4"><input type="checkbox"/></th>
@@ -134,7 +134,7 @@ class HQprod extends React.Component {
                       <tr>
                         <td className="pl-4"><input type="checkbox"/></td>
                         <td className="font-weight-bold">Kopi Reezqa</td>
-                        <td className="font-weight-bold">100</td>
+                        <td>100</td>
                         <td className="table-cell-collapse">
                           <Accordion>
                             <Card>
@@ -165,8 +165,87 @@ class HQprod extends React.Component {
                 </div>
               </Tab>
               <Tab eventKey="pending" title="● Pending Fulfilment">
+                <div className={styles.table}>
+                  <div className="d-flex align-items-center p-3 flex-wrap">
+                    <form className={`py-2 ${styles.search_div}`}>
+                      <input type="text" placeholder="Search category here" className={styles.search}/>
+                      <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
+                    </form>
+                    <div className="d-flex align-items-center ml-auto flex-nowrap">
+                      <div className="px-3 font-weight-bold">Action</div>
+                      <button className={`ml-3 mr-2 ${styles.tbtn}`}>Ship Out</button>
+                      <button className={`mr-3 ml-2 ${styles.tbtn_reverse}`}>Delivered</button>
+                      <div className="table-cell-dropdown">
+                        <Dropdown>
+                          <Dropdown.Toggle>
+                            <BsThreeDotsVertical/>
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu>
+                            <Dropdown.Item href="/">Edit</Dropdown.Item>
+                            <Dropdown.Item as="button">Delete</Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </div>
+                    </div>
+                  </div>
+                  <Table responsive>
+                    <thead>
+                      <tr>
+                        <th className="pl-4">Transfer ID</th>
+                        <th>Member ID</th>
+                        <th>Delivery Address</th>
+                        <th>Transfer Summary</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="font-weight-bold pl-4">X1896747d</td>
+                        <td className="font-weight-bold">Member1902</td>
+                        <td className="text-truncate" style={{ maxWidth: 200 }}>2, USJ height, Subang Jaya, Malaysia</td>
+                        <td><button className={styles.modal_btn}>View</button></td>
+                        <td><button className={styles.status_yellow} disabled>To Ship</button></td>
+                      </tr>
+                    </tbody>
+                  </Table>
+                </div>
               </Tab>
               <Tab eventKey="past" title="● Past Transfer">
+                <div className={styles.table}>
+                  <div className="d-flex align-items-center p-3">
+                    <form className={styles.search_div}>
+                      <input type="text" placeholder="Search category here" className={styles.search}/>
+                      <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
+                    </form>
+                  </div>
+                  <Table responsive>
+                    <thead>
+                      <tr>
+                        <th className="pl-4">Transfer ID</th>
+                        <th>Member ID</th>
+                        <th>Delivery Address</th>
+                        <th>Transfer Summary</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="font-weight-bold pl-4">X1896747d</td>
+                        <td className="font-weight-bold">Member1902</td>
+                        <td className="text-truncate" style={{ maxWidth: 200 }}>2, USJ height, Subang Jaya, Malaysia</td>
+                        <td><button className={styles.modal_btn}>View</button></td>
+                        <td><button className={styles.status_green} disabled>Successfully Delivered</button></td>
+                      </tr>
+                      <tr>
+                        <td className="font-weight-bold pl-4">X1896547e</td>
+                        <td className="font-weight-bold">Member3714</td>
+                        <td className="text-truncate" style={{ maxWidth: 200 }}>B-17-01, Koi Kinrara, Jalan Pipit, Puchong, Malaysia</td>
+                        <td><button className={styles.modal_btn}>View</button></td>
+                        <td><button className={styles.status_red} disabled>Fulfilment Cancelled</button></td>
+                      </tr>
+                    </tbody>
+                  </Table>
+                </div>
               </Tab>
             </Tabs>
           </div>

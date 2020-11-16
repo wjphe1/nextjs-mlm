@@ -108,7 +108,7 @@ class Users extends React.Component {
                     <div className={styles.thead}>Transaction History</div>
                     <button className={`ml-auto ${styles.tbtn}`}>Generate Invoice</button>
                   </div>
-                  <Table responsive="md">
+                  <Table responsive>
                     <thead>
                       <tr>
                         <th className="pl-4"><input type="checkbox"/></th>

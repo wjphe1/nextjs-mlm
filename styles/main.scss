@@ -80,6 +80,10 @@ input[type=checkbox]{
   flex: 0 0 20px;
 }
 
+table {
+  margin-bottom: 0 !important;
+}
+
 .df-mn { display: flex !important; }
 .db-mn { display: block !important; }
 .dn-mf, .dn-mb { display: none !important; }

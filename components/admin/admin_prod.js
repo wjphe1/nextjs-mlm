@@ -70,7 +70,7 @@ class Admprod extends React.Component {
                     </form>
                     <Link to href="/admin/new/product"><a className={`ml-auto ${styles.tbtn}`}>New Product</a></Link>
                   </div>
-                  <Table responsive="md">
+                  <Table responsive>
                     <thead>
                       <tr>
                         <th className="pl-4"><input type="checkbox"/></th>
@@ -177,7 +177,7 @@ class Admprod extends React.Component {
                     </form>
                     <Link to href="/admin/new/category"><a className={`ml-auto ${styles.tbtn}`}>New Category</a></Link>
                   </div>
-                  <Table responsive="md">
+                  <Table responsive>
                     <thead>
                       <tr>
                         <th className="pl-4"><input type="checkbox"/></th>

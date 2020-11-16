@@ -38,6 +38,24 @@
         border-radius: 5px;
         padding: 10px 20px;
         transition: all 0.2s;
+        white-space: nowrap;
+    }
+
+    .tbtn_reverse {
+        color: #FF6202;
+        border: 1px solid #FF6202;
+        box-sizing: border-box;
+        box-shadow: 0px 5px 20px rgba(167, 167, 167, 0.21);
+        background: #FFFFFF;
+        border-radius: 5px;
+        padding: 10px 20px;
+        transition: all 0.2s;
+        white-space: nowrap;
+    }
+
+    .tbtn_reverse:hover {
+        color: #fa7d30;
+        border: 1px solid #fa7d30;
     }
 
     .tbtn:hover {
@@ -119,4 +137,37 @@
     margin: 0 0 20px;
     white-space: nowrap;
     overflow: hidden;
+}
+
+.modal_btn {
+    border: none;
+    background: none;
+    color: #FF6202;
+}
+
+.status_green {
+    background: #ACFFB9;
+    border-radius: 20px;
+    padding: 8px 15px;
+    color: #65BF73;
+    display: flex;
+    border: none;
+}
+
+.status_red {
+    background: #ffcfcf;
+    border-radius: 20px;
+    padding: 8px 15px;
+    color: #FF0202;
+    display: flex;
+    border: none;
+}
+
+.status_yellow {
+    background: #FFFCAC;
+    border-radius: 20px;
+    padding: 8px 15px;
+    color: #BF9665;
+    display: flex;
+    border: none;
 }
