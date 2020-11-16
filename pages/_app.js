@@ -1,9 +1,10 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import "react-datepicker/dist/react-datepicker.css";
-import '../styles/main.scss'
+import '../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import 'swiper/swiper.scss'
 import 'swiper/swiper-bundle.min.css'
 import 'react-modal-video/scss/modal-video.scss'
+import '../styles/main.scss'
 import React from 'react'
 import App from 'next/app'
 

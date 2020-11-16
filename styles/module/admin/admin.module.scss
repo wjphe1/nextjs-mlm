@@ -37,9 +37,14 @@
         color: #FFFFFF;
         border-radius: 5px;
         padding: 10px 20px;
+        transition: all 0.2s;
     }
 
-    input[type="checkbox"] {
+    .tbtn:hover {
+        background: #fa7d30;
+    }
+
+    input[type="checkbox"], th, td {
         vertical-align: middle;
     }
 
@@ -96,4 +101,22 @@
             }
         }
     }
+
+    .teditor {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        min-height: 150px;
+    }
+}
+
+.level {
+    background: #FFFFFF;
+    border: 1px solid #E5E5E5;
+    font-weight: 700;
+    border-radius: 8px;
+    padding: 12px 15px;
+    width: 100%;
+    margin: 0 0 20px;
+    white-space: nowrap;
+    overflow: hidden;
 }

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from '../../styles/module/admin/layout.module.scss'
 import Link from 'next/link'
 import cn from 'classnames'
-import { AuthProvider, ProtectRoute } from './auth/auth'
+import { AuthProvider, ProtectRoute } from '../auth/auth'
 import { HiMenu, HiUserGroup } from 'react-icons/hi'
 import { FaUserAlt } from 'react-icons/fa'
 import { RiPieChart2Fill, RiShoppingBagFill } from 'react-icons/ri'

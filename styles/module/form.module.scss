@@ -24,6 +24,46 @@
     margin: 0 0 20px;
 }
 
+.field_light {
+    background: #FFFFFF;
+    border: 1px solid #E5E5E5;
+    border-radius: 5px;
+    padding: 12px 15px;
+    width: 100%;
+    margin: 0 0 20px;
+}
+
+.field_file {
+    background: #FFFFFF;
+    border: 2px dashed #E5E5E5;
+    border-radius: 5px;
+    color: #E5E5E5;
+    padding: 12px 15px;
+    width: 100%;
+    height: 150px;
+    max-width: 300px;
+    max-height: 300px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.img_preview {
+    width: 100%;
+    max-width: 300px;
+    max-height: 300px;
+}
+
+.remove_img_btn {
+    border: 1px solid #FF6202;
+    border-radius: 5px;
+    color: #FF6202;
+    background: white;
+    margin-top: 10px;
+}
+
 .submit {
     background: #0149FF;
     border-radius: 8px;
@@ -32,4 +72,24 @@
     width: 150px;
     padding: 10px;
     font-weight: 600;
+}
+
+.price_rm {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0 20px;
+    font-weight: 700;
+    border-radius: 5px 0 0 5px;    
+    border: 1px solid #E5E5E5;
+    border-right: none;
+}
+
+.field_price {
+    background: #FFFFFF;
+    border: 1px solid #E5E5E5;
+    padding: 12px 15px;
+    border-radius: 0 5px 5px 0;
+    width: 100%;
+    margin: 0 0 20px;
 }
