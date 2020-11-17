@@ -108,7 +108,7 @@ class Newprod extends React.Component {
                             </div>
                             <div className="col-md-6 px-2">
                                 <label>Product Categories</label>
-                                <select type="text" placeholder="E.g.: Skin Care Beauty" className={form.field_light}>
+                                <select type="text" className={form.field_light}>
                                     <option>Skin Care</option>
                                     <option>Others</option>
                                 </select>

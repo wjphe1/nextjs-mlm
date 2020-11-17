@@ -89,7 +89,7 @@ table {
 .dn-mf, .dn-mb { display: none !important; }
 .prx-5 { padding-left: 3rem !important; padding-right: 3rem !important; }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .dn-mf { display: flex !important; }
   .dn-mb { display: block !important; }
   .df-mn, .db-mn { display: none !important; }
@@ -166,7 +166,7 @@ table {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .tesrow, .main-banner, .cate-swiper {
     .swiper-button-next, .swiper-button-prev {
       display: none !important;
@@ -337,10 +337,10 @@ table {
   background: #F2F2F2;
 }
 
-@media (min-width: 767px) {
+@media (min-width: 768px) {
   .calendar-margin {
     top: 5px !important;
-    left: -80px !important;
+    left: -85px !important;
   }
 }
 
@@ -411,6 +411,12 @@ table {
 }
 
 // -------------------------------- Table Dropdown -------------------------------
+
+.table-responsive .dropdown-menu {
+  position: fixed !important;
+  z-index: 1;
+}
+
 .table-cell-dropdown, .dropdown-toggle:focus {
   .dropdown-toggle {
     background: none;
@@ -503,4 +509,14 @@ table {
     font-weight: bold;
     color: #FF6202;
   }
+}
+
+// ---------------------------------- Modal ---------------------------------------------
+.modal-content, .modal-header, .modal-footer {
+  border: none;
+  padding: 1rem;
+}
+
+.modal-backdrop.show {
+  opacity: 0.8;
 }
