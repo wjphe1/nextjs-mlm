@@ -3,6 +3,7 @@ import Link from 'next/link'
 import React from 'react'
 import Layout from '../../components/admin/layout'
 import Admrpt from '../../components/admin/admin_report'
+import Othrpt from '../../components/admin/others_report'
 
 class Reports extends React.Component {
   constructor(props) {
@@ -29,6 +30,7 @@ class Reports extends React.Component {
         </Head>
 
         <Admrpt/>
+        <Othrpt/>
       </Layout>
     )
   }

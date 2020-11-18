@@ -23,6 +23,12 @@
     margin: 1rem 0;
 }
 
+.h_md_n {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    font-weight: 700;
+}
+
 .h_md {
     font-size: 1.1rem;
     line-height: 1.5;
@@ -46,6 +52,16 @@
     font-size: 1.1rem;
     font-weight: 600;
     color: #FF6202;
+
+    svg {
+        font-size: 1.3rem;
+        color: #FFAD7A;
+    }
+}
+
+.hightext_sm {
+    font-size: 0.9rem;
+    color: #FF6202;
 }
 
 .text_lg {
@@ -55,6 +71,10 @@
 
 .text_md {
     font-size: 0.9rem;
+}
+
+.text_sm {
+    font-size: 0.7rem;
 }
 
 .modal_header {

@@ -3,7 +3,7 @@ import Link from 'next/link'
 import React from 'react'
 import Layout from '../../components/admin/layout'
 import Admprod from '../../components/admin/admin_prod'
-import HQprod from '../../components/admin/hq_prod'
+import Othprod from '../../components/admin/others_prod'
 
 class Products extends React.Component {
   constructor(props) {
@@ -29,7 +29,7 @@ class Products extends React.Component {
           <title>{this.props.name} - Admin Products</title>
         </Head>
         <Admprod/>
-        <HQprod/>
+        <Othprod/>
       </Layout>
     )
   }

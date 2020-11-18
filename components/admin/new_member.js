@@ -81,7 +81,7 @@ class Newmemb extends React.Component {
                         <div className="row m-0 px-3 pt-4 pb-4">
                             <div className="col-md-6 px-2">
                                 <label>Profile Photo</label>
-                                <div className="d-flex align-items-center flex-column">
+                                <div className="d-flex align-items-center">
                                     {this.state.imagePreviewUrl ? $imagePreview :
                                     <label htmlFor="file-upload" className={form.field_file}>Upload your Photo here</label>}
                                     <input id="file-upload" name="prod_img" type="file" onChange={(e)=>this.imgChange(e)} className="d-none"/>

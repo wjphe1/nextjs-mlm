@@ -23,7 +23,7 @@ class Newcate extends React.Component {
     return (
       <section className="py-5 px-4">
         <div className="row m-0">
-          <div className={`${styles.table} col-md-8 mb-4 p-0`}>
+          <div className={`${styles.table} col-lg-8 mb-4 p-0`}>
             <div className="d-flex align-items-center p-4 border-bottom">
               <div className={styles.thead}>Product Category</div>
             </div>
@@ -32,8 +32,8 @@ class Newcate extends React.Component {
               <input type="text" placeholder="E.g.: Skin Care Beauty" className={form.field_light} style={{ maxWidth: 400 }}/>
             </div>
           </div>
-          <div className="col-md-4">
-            <div className={`d-flex flex-column align-items-center p-4 ${styles.table}`}>
+          <div className="col-lg-4 d-flex align-items-start">
+            <div className={`${styles.table} ${styles.submitdiv}`}>
               <button className={styles.tbtn}>Create Category</button>
               <Link href={{ pathname: '/admin/products', query: { tab: 'category' } }}><a className="pt-3" style={{color: "#FF6202"}}><MdCancel/> Discard</a></Link>
             </div>

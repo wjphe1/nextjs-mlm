@@ -3,17 +3,16 @@ import React from 'react'
 import styles from '../../styles/module/admin/admin.module.scss'
 import utils from '../../styles/module/utils.module.scss'
 import Stocktransfer from './stock_transfer'
+import Pending from './pending_transfer'
+import Past from './past_transfer'
 import DatePicker from "react-datepicker";
 import { FiCalendar } from 'react-icons/fi';
 import { HiOutlineSearch } from 'react-icons/hi';
-import { BsFillCaretDownFill, BsThreeDots, BsThreeDotsVertical } from 'react-icons/bs';
 import Tabs from 'react-bootstrap/Tabs'
 import Tab from 'react-bootstrap/Tab'
 import Table from 'react-bootstrap/Table'
-import Accordion from 'react-bootstrap/Accordion'
-import Card from 'react-bootstrap/Card'
-import Dropdown from 'react-bootstrap/Dropdown'
-import DropdownButton from 'react-bootstrap/DropdownButton'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Popover from 'react-bootstrap/Popover'
 
 class HQprod extends React.Component {
   constructor(props) {
@@ -64,7 +63,7 @@ class HQprod extends React.Component {
           <div className="admin-reports-tabs">
             <Tabs defaultActiveKey="inventory" id="uncontrolled-tab-example">
               <Tab eventKey="inventory" title="● Inventory">   
-                <div className={styles.table}>
+                <div className={`${styles.table} mb-4`}>
                   <div className="d-flex align-items-center p-3">
                     <form className={styles.search_div}>
                       <input type="text" placeholder="Search product here" className={styles.search}/>
@@ -98,92 +97,42 @@ class HQprod extends React.Component {
                     </tbody>
                   </Table>
                 </div>
+
+                <div className={styles.table}>
+                  <div className="d-flex align-items-center p-3">
+                    <div className={styles.thead}>History</div>
+                  </div>
+                  <Table responsive>
+                    <thead>
+                      <tr>
+                        <th className="pl-4">Product Name</th>
+                        <th>Inventory Changes</th>
+                        <th>Changed At</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="pl-4 font-weight-bold">Kopi Reezqa</td>
+                        <td>-100</td>
+                        <td>11 Oct 2020</td>
+                      </tr>
+                      <tr>
+                        <td className="pl-4 font-weight-bold">Kopi Reezqa</td>
+                        <td>+50</td>
+                        <td>10 Oct 2020</td>
+                      </tr>
+                    </tbody>
+                  </Table>
+                </div>
               </Tab>
               <Tab eventKey="transfer" title="● Stock Transfer">
                 <Stocktransfer/>
               </Tab>
               <Tab eventKey="pending" title="● Pending Fulfilment">
-                <div className={styles.table}>
-                  <div className="d-flex align-items-center p-3 flex-wrap">
-                    <form className={styles.search_div}>
-                      <input type="text" placeholder="Search category here" className={styles.search}/>
-                      <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
-                    </form>
-                    <div className="d-flex align-items-center ml-auto flex-nowrap py-2">
-                      <div className="px-3 font-weight-bold">Action</div>
-                      <button className={`ml-3 mr-2 py-2 ${styles.tbtn}`}>Ship Out</button>
-                      <button className={`mr-3 ml-2 py-2 ${styles.tbtn_reverse}`}>Delivered</button>
-                      <div className="table-cell-dropdown">
-                        <Dropdown>
-                          <Dropdown.Toggle>
-                            <BsThreeDotsVertical/>
-                          </Dropdown.Toggle>
-                          <Dropdown.Menu>
-                            <Dropdown.Item href="/">Edit</Dropdown.Item>
-                            <Dropdown.Item as="button">Delete</Dropdown.Item>
-                          </Dropdown.Menu>
-                        </Dropdown>
-                      </div>
-                    </div>
-                  </div>
-                  <Table responsive>
-                    <thead>
-                      <tr>
-                        <th className="pl-4">Transfer ID</th>
-                        <th>Member ID</th>
-                        <th>Delivery Address</th>
-                        <th>Transfer Summary</th>
-                        <th>Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className={styles.cell_center}>
-                        <td className="font-weight-bold pl-4">X1896747d</td>
-                        <td className="font-weight-bold">Member1902</td>
-                        <td className="text-truncate" style={{ maxWidth: 200 }}>2, USJ height, Subang Jaya, Malaysia</td>
-                        <td><button className={styles.modal_btn}>View</button></td>
-                        <td><button className={styles.status_yellow} disabled>To Ship</button></td>
-                      </tr>
-                    </tbody>
-                  </Table>
-                </div>
+                <Pending/>
               </Tab>
               <Tab eventKey="past" title="● Past Transfer">
-                <div className={styles.table}>
-                  <div className="d-flex align-items-center p-3">
-                    <form className={styles.search_div}>
-                      <input type="text" placeholder="Search category here" className={styles.search}/>
-                      <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
-                    </form>
-                  </div>
-                  <Table responsive>
-                    <thead>
-                      <tr>
-                        <th className="pl-4">Transfer ID</th>
-                        <th>Member ID</th>
-                        <th>Delivery Address</th>
-                        <th>Transfer Summary</th>
-                        <th>Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className={styles.cell_center}>
-                        <td className="font-weight-bold pl-4">X1896747d</td>
-                        <td className="font-weight-bold">Member1902</td>
-                        <td className="text-truncate" style={{ maxWidth: 200 }}>2, USJ height, Subang Jaya, Malaysia</td>
-                        <td><button className={styles.modal_btn}>View</button></td>
-                        <td><button className={styles.status_green} disabled>Successfully Delivered</button></td>
-                      </tr>
-                      <tr className={styles.cell_center}>
-                        <td className="font-weight-bold pl-4">X1896547e</td>
-                        <td className="font-weight-bold">Member3714</td>
-                        <td className="text-truncate" style={{ maxWidth: 200 }}>B-17-01, Koi Kinrara, Jalan Pipit, Puchong, Malaysia</td>
-                        <td><button className={styles.modal_btn}>View</button></td>
-                        <td><button className={styles.status_red} disabled>Fulfilment Cancelled</button></td>
-                      </tr>
-                    </tbody>
-                  </Table>
-                </div>
+                <Past/>
               </Tab>
             </Tabs>
           </div>

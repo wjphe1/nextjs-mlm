@@ -127,9 +127,8 @@ class Stocktransfer extends React.Component {
                     <thead>
                         <tr>
                             <th className="pl-4"><input type="checkbox" onChange={this.checkProduct}/></th>
-                            <th>Product Name</th>
-                            <th>Inventory</th>
-                            <th>E-Points</th>
+                            <th style={{ width: '30%' }}>Product Name</th>
+                            <th style={{ width: '30%' }}>Inventory</th>
                             <th>Role Based Pricing (MYR)</th>
                         </tr>
                     </thead>
@@ -137,20 +136,8 @@ class Stocktransfer extends React.Component {
                         {this.state.productlist.length && this.state.productlist.map((u, i) => 
                             <tr key={i}>
                                 <td className="pl-4"><input type="checkbox" checked={this.state.products_check[i]} onChange={() => this.checkProduct(i)}/></td>
-                                <td className="font-weight-bold">{u.name}</td>
-                                <td>{u.inventory}</td>
-                                <td className="table-cell-collapse">
-                                    <Accordion>
-                                        <Card>
-                                        <Accordion.Toggle as={Card.Header} eventKey="0">
-                                            100 For MS <BsFillCaretDownFill/>
-                                        </Accordion.Toggle>
-                                        <Accordion.Collapse eventKey="0">
-                                            <Card.Body>20 For S<br/>10 For A</Card.Body>
-                                        </Accordion.Collapse>
-                                        </Card>
-                                    </Accordion>
-                                </td>
+                                <td className="font-weight-bold" style={{ width: '30%' }}>{u.name}</td>
+                                <td style={{ width: '30%' }}>{u.inventory}</td>
                                 <td className="table-cell-collapse">
                                 <Accordion>
                                     <Card>
@@ -167,13 +154,7 @@ class Stocktransfer extends React.Component {
                         )}
                     </tbody>
                 </Table>
-                <Modal
-                    show={this.state.show}
-                    onHide={() => this.setState({ show: false })}
-                    size="lg"
-                    aria-labelledby="fulfilment-modal"
-                    centered
-                >
+                <Modal show={this.state.show} onHide={() => this.setState({ show: false })} size="lg" aria-labelledby="fulfilment-modal" centered>
                     <Modal.Header>
                         <div className={utils.modal_header}>
                             New Transfer to {this.state.member ? <span>Member</span> : <span>Non-member</span>} {this.state.fulfilment ? <span>with</span> : <span>without</span>} Fulfilment
@@ -229,7 +210,7 @@ class Stocktransfer extends React.Component {
                     </Modal.Body>
                     <Modal.Footer>
                         <button className={styles.tbtn_reverse_borderless} onClick={() => this.setState({ show: false })}><MdCancel/> Discard</button>
-                        <button className={styles.tbtn}>Transfer Now</button>
+                        <button className={`px-5 ${styles.tbtn}`}>Transfer Now</button>
                     </Modal.Footer>
                 </Modal>
             </div>

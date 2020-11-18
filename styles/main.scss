@@ -97,6 +97,19 @@ table {
   html, body { line-height: 1.4; font-size: 12px; }
 }
 
+#popover-positioned-top {
+  bottom: 10px !important;
+  border: none;
+  border-radius: 7px;
+  box-shadow: 0px 2px 15px rgba(124, 124, 124, 0.25);
+  max-width: 150px;
+  text-align: center;
+  
+  .arrow:before {
+    border-color: transparent !important;
+  }
+}
+
 // ---------------------------------------------- Scrollbar ---------------------------------------------------------
 .h-scroll::-webkit-scrollbar { /* width */
   height: 5px;
@@ -223,8 +236,8 @@ table {
   }
 }
 
-// ---------------------------------------------- Admin New Product Tabs ----------------------------------------------
-.admin-new-prod-tabs {
+// ---------------------------------------------- Admin Generic Tabs ----------------------------------------------
+.admin-generic-tabs {
   background: #FFFFFF;
   border: 1px solid #E5E5E5;
   border-radius: 5px;
@@ -243,6 +256,7 @@ table {
       max-width: calc(33% - 15px);
       text-align: center;
       border-bottom: 3px solid #FFFFFF;
+      white-space: nowrap;
     }
 
     .nav-link:hover { color: #FF6202; }
@@ -251,6 +265,17 @@ table {
       border: none;
       border-bottom: 3px solid #FF6202;
       color: #FF6202;
+    }
+  }
+}
+
+.admin-generic-tabs.report-tabs {
+  .nav-tabs {
+    padding: 10px calc(3rem - 15px) 0;
+    border-bottom: none;
+
+    .nav-link {
+      max-width: calc(50% - 30px);
     }
   }
 }
