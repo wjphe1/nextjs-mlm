@@ -8,9 +8,13 @@ body {
   line-height: 1.6;
   font-size: 14px;
   font-weight: 500;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.025rem;
   background: #FFFFFF;
   color: #2B2B2B;
+}
+
+button {
+  letter-spacing: 0.025rem;
 }
 
 .main-container {
@@ -201,6 +205,16 @@ table {
   }
 }
 
+.grey-bg {
+  background: #fff2ea;
+}
+
+.field-datepicker {
+  .react-datepicker-wrapper {
+    width: 100%;
+  }
+}
+
 // ---------------------------------------------- Product Description Tabs ----------------------------------------------
 .prod-tabs {
   background: #FFFFFF;
@@ -233,50 +247,6 @@ table {
 
   .tab-content {
     padding: 30px 20px;
-  }
-}
-
-// ---------------------------------------------- Admin Generic Tabs ----------------------------------------------
-.admin-generic-tabs {
-  background: #FFFFFF;
-  border: 1px solid #E5E5E5;
-  border-radius: 5px;
-  margin: 0 1.5rem;
-
-  .nav-tabs {
-    border-bottom: 1px solid #E5E5E5;
-    padding: 10px 10px 0;
-
-    .nav-link {
-      border: none;
-      font-weight: 600;
-      font-size: 0.9rem;
-      margin: 0 15px;
-      padding: 5px 0;
-      max-width: calc(33% - 15px);
-      text-align: center;
-      border-bottom: 3px solid #FFFFFF;
-      white-space: nowrap;
-    }
-
-    .nav-link:hover { color: #FF6202; }
-
-    .nav-link.active {
-      border: none;
-      border-bottom: 3px solid #FF6202;
-      color: #FF6202;
-    }
-  }
-}
-
-.admin-generic-tabs.report-tabs {
-  .nav-tabs {
-    padding: 10px calc(3rem - 15px) 0;
-    border-bottom: none;
-
-    .nav-link {
-      max-width: calc(50% - 30px);
-    }
   }
 }
 
@@ -384,13 +354,13 @@ table {
     scrollbar-width: none;  /* Firefox */
 
     .nav-link {
-      border: none;
       margin: 0 10px 0 0;
       padding: 8px 20px;
       text-align: center;
       border-radius: 25px;
       border: 1px solid #969696;
       white-space: nowrap;
+      font-weight: normal;
     }
 
     .nav-link:hover { 
@@ -399,7 +369,6 @@ table {
     }
 
     .nav-link.active {
-      border: none;
       background: #FF6202;
       border: 1px solid #FF6202;
       color: #FFFFFF;
@@ -413,6 +382,65 @@ table {
 
   .tab-content {
     padding: 20px 0;
+  }
+}
+
+// ---------------------------------------------- Admin Generic Tabs ----------------------------------------------
+.admin-generic-tabs {
+  background: #FFFFFF;
+  border: 1px solid #E5E5E5;
+  border-radius: 5px;
+  margin: 0 1.5rem;
+
+  .nav-tabs {
+    border-bottom: 1px solid #E5E5E5;
+    padding: 10px 10px 0;
+    flex-wrap: nowrap;
+    overflow: auto;
+
+    .nav-link {
+      border: none;
+      font-weight: 600;
+      margin: 0 15px;
+      padding: 5px 0;
+      text-align: center;
+      border-bottom: 3px solid #FFFFFF;
+      white-space: nowrap;
+      border-radius: 0;
+    }
+
+    .nav-link:hover { 
+      color: #FF6202; 
+      border: none;
+    }
+
+    .nav-link.active {
+      border: none;
+      border-bottom: 3px solid #FF6202;
+      color: #FF6202;
+      background: #FFFFFF;
+    }
+  }
+
+  .tab-content {
+    padding: 0;
+  }
+}
+
+.admin-generic-tabs.report-tabs {
+  .nav-tabs {
+    padding: 20px calc(3rem - 15px) 0;
+    border-bottom: none;
+
+    .nav-link {
+      padding: 10px 0;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .admin-generic-tabs .nav-tabs .nav-link {
+    font-size: 0.9rem;
   }
 }
 
@@ -544,4 +572,12 @@ table {
 
 .modal-backdrop.show {
   opacity: 0.8;
+}
+
+.modal-content.pnl-form-modal {
+  padding: 0;
+
+  .modal-header, .modal-body {
+    padding: 0;
+  }
 }

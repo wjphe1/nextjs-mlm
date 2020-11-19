@@ -67,7 +67,7 @@ class Users extends React.Component {
                       <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
                     </form>
                     <div className="d-flex align-items-center ml-auto flex-nowrap py-2">
-                      <div className="px-3 font-weight-bold">Action</div>
+                      <div className="font-weight-bold">Action</div>
                       <button className={`ml-3 mr-2 py-2 ${styles.tbtn}`}>Approve</button>
                       <button className={`mr-3 ml-2 py-2 ${styles.tbtn_reverse}`}>Reject</button>
                     </div>

@@ -66,14 +66,14 @@ class Past extends React.Component {
                         <td className="font-weight-bold">Member1902</td>
                         <td className="text-truncate" style={{ maxWidth: 200 }}>2, USJ height, Subang Jaya, Malaysia</td>
                         <td><button className={styles.modal_btn} onClick={() => this.setState({ show: true })}>View</button></td>
-                        <td className="text-right"><button className={`mx-3 ${styles.tbtn}`} style={{ width: 120 }}>Flag</button></td>
+                        <td className="text-right"><button className={`mx-3 ${styles.tbtn}`}>Flag</button></td>
                     </tr>
                     <tr className={styles.cell_center} style={{ background: '#FFF6F0' }}>
                         <td className="font-weight-bold pl-4">X1896547e</td>
                         <td className="font-weight-bold">Member3714</td>
                         <td className="text-truncate" style={{ maxWidth: 200 }}>B-17-01, Koi Kinrara, Jalan Pipit, Puchong, Malaysia</td>
                         <td><button className={styles.modal_btn} onClick={() => this.setState({ show: true })}>View</button></td>
-                        <td className="text-right"><button className={`mx-3 ${styles.tbtn_flag}`} style={{ width: 120 }}>Unflag</button></td>
+                        <td className="text-right"><button className={`mx-3 ${styles.tbtn_flag}`}>Unflag</button></td>
                     </tr>
                 </tbody>
             </Table>
