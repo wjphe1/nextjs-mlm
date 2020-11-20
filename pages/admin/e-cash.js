@@ -3,11 +3,8 @@ import Link from 'next/link'
 import React from 'react'
 import cn from 'classnames'
 import styles from '../../styles/module/admin/admin.module.scss'
-import utils from '../../styles/module/utils.module.scss'
 import Layout from '../../components/admin/layout'
-import Aepoints from '../../components/admin/admin_epoints'
-import DatePicker from "react-datepicker";
-import { FiCalendar } from 'react-icons/fi';
+import Aecash from '../../components/admin/admin_ecash'
 
 class Ecash extends React.Component {
     static getInitialProps({ pathname }){
@@ -17,8 +14,6 @@ class Ecash extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            startDate: new Date(),
-            endDate: (new Date()).setDate(new Date().getDate()+1)
         };
     }
 
@@ -71,6 +66,10 @@ class Ecash extends React.Component {
             <rect x="28" y="30" width="12" height="12" fill="#FFD9C2"/>
         </svg><span className="pt-2">P&amp;L</span></a></Link>
 
+        const linktabs = <div className={styles.huge_btns_div}>
+            {tab1svg} {tab2svg} {tab3svg} {tab4svg}
+        </div>
+
         return (
         <Layout page={'reports'} {...this.props}>
             <Head>
@@ -78,27 +77,7 @@ class Ecash extends React.Component {
             </Head>
 
             <section className="py-5 px-4">
-                <div className="d-flex align-items-center flex-wrap">
-                    <div className={utils.h_xl}>Report Overview</div>
-                    {/* Date Pickers */}
-                    <div className="ml-auto d-flex align-items-center flex-wrap">
-                        <div className="date-div mr-2">
-                            <span className="calendar-icon"><FiCalendar/></span>
-                            <span className="pl-2 pr-1">From</span>
-                            <DatePicker dateFormat="d MMM yyyy" className="start-date" calendarClassName="calendar-margin" selected={this.state.startDate} onChange={(date) => this.setState({startDate: date})} selectsStart startDate={this.state.startDate} endDate={this.state.endDate} showMonthDropdown showYearDropdown dropdownMode="select" />
-                        </div>
-                        <div className="date-div">
-                            <span className="calendar-icon"><FiCalendar/></span>
-                            <span className="pl-2 pr-1">To</span>
-                            <DatePicker dateFormat="d MMM yyyy" className="end-date" calendarClassName="calendar-margin" selected={this.state.endDate} onChange={(date) => this.setState({endDate: date})} selectsEnd startDate={this.state.startDate} endDate={this.state.endDate} minDate={this.state.startDate} showMonthDropdown showYearDropdown dropdownMode="select" />
-                        </div>
-                    </div>
-                </div>
-
-                <div className={styles.huge_btns_div}>
-                    {tab1svg} {tab2svg} {tab3svg} {tab4svg}
-                </div>
-                <Aepoints/>
+                <Aecash links={linktabs}/>
             </section>
         </Layout>
         )

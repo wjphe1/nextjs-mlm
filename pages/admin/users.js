@@ -43,16 +43,16 @@ class Users extends React.Component {
             <div className={utils.h_xl}>Members Management</div>
             {/* Date Pickers */}
             <div className="ml-auto d-flex align-items-center flex-wrap">
-              <div className="date-div mr-2">
+              <label className="date-div">
                 <span className="calendar-icon"><FiCalendar/></span>
                 <span className="pl-2 pr-1">From</span>
-                <DatePicker dateFormat="d MMM yyyy" className="start-date" calendarClassName="calendar-margin" selected={this.state.startDate} onChange={(date) => this.setState({startDate: date})} selectsStart startDate={this.state.startDate} endDate={this.state.endDate} showMonthDropdown showYearDropdown dropdownMode="select" />
-              </div>
-              <div className="date-div">
+                <DatePicker placeholderText="--/--/--" dateFormat="d MMM yyyy" className="start-date" selected={this.state.startDate} onChange={(date) => this.setState({startDate: date})} selectsStart startDate={this.state.startDate} endDate={this.state.endDate} showMonthDropdown showYearDropdown dropdownMode="select" />
+              </label>
+              <label className="date-div">
                 <span className="calendar-icon"><FiCalendar/></span>
                 <span className="pl-2 pr-1">To</span>
-                <DatePicker dateFormat="d MMM yyyy" className="end-date" calendarClassName="calendar-margin" selected={this.state.endDate} onChange={(date) => this.setState({endDate: date})} selectsEnd startDate={this.state.startDate} endDate={this.state.endDate} minDate={this.state.startDate} showMonthDropdown showYearDropdown dropdownMode="select" />
-              </div>
+                <DatePicker placeholderText="--/--/--" dateFormat="d MMM yyyy" className="end-date" selected={this.state.endDate} onChange={(date) => this.setState({endDate: date})} selectsEnd startDate={this.state.startDate} endDate={this.state.endDate} minDate={this.state.startDate} showMonthDropdown showYearDropdown dropdownMode="select" />
+              </label>
             </div>
           </div>
 

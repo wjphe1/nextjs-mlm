@@ -31,10 +31,12 @@ class Asales extends React.Component {
                     <div className={styles.thead}>Transaction History</div>
                     <button className={`ml-auto ${styles.tbtn}`}>Export</button>
                 </div>
-                <button disabled className={`my-3 mx-4 ${styles.sale_info}`}>
-                    <div className={utils.text_md}>Summary of Sales</div>
-                    <div className={utils.hightext_lg}>RM 1,200.00</div>
-                </button>
+                <div className="py-2">
+                    <button disabled className={`my-3 mx-4 ${styles.sale_info}`}>
+                        <div className={utils.text_md}>Summary of Sales</div>
+                        <div className={utils.hightext_lg}>RM 1,200.00</div>
+                    </button>
+                </div>
                 <Table responsive>
                     <thead>
                         <tr>

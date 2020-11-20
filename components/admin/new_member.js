@@ -3,8 +3,6 @@ import React from 'react'
 import styles from '../../styles/module/admin/admin.module.scss'
 import form from '../../styles/module/form.module.scss'
 import { MdCancel } from 'react-icons/md'
-import { convertToRaw } from 'draft-js'
-import draftToHtml from 'draftjs-to-html'
 
 class Newmemb extends React.Component {
     constructor(props) {
@@ -25,27 +23,6 @@ class Newmemb extends React.Component {
             [e.target.name]: value
         });
     }
-
-    descChange = (editorState) => {
-        const changes = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-        this.setState({
-          desc: changes,
-        });
-    };
-
-    deliChange = (editorState) => {
-        const changes = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-        this.setState({
-          deli: changes,
-        });
-    };
-
-    orderChange = (editorState) => {
-        const changes = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-        this.setState({
-          order: changes,
-        });
-    };
 
     imgChange = (e) => {
         e.preventDefault();

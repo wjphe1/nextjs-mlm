@@ -13,8 +13,6 @@ class Apnl extends React.Component {
         super(props);
         this.state = {
             show: false,
-            startDate: new Date(),
-            endDate: (new Date()).setDate(new Date().getDate()+1)
         };
     }
 

@@ -18,7 +18,7 @@ class Pnlform extends React.Component {
             endDate: (new Date()).setDate(new Date().getDate()+30),
             expenses: [{
                 name: '',
-                date: new Date(),
+                date: '',
                 amount: '',
                 remarks: '',
             }],
@@ -82,17 +82,17 @@ class Pnlform extends React.Component {
                             <div className="py-3 row" style={{ margin: '0 -0.5rem' }}>
                                 <div className="col-6 p-0">
                                     <div className={`pl-2 ${utils.text_md}`}>From Date</div>
-                                    <div className="date-div">
+                                    <label className="date-div">
                                         <span className="calendar-icon mr-2"><FiCalendar/></span>
                                         <DatePicker dateFormat="d MMM yyyy" className="start-date" selected={this.state.startDate} onChange={(date) => this.setState({startDate: date})} selectsStart startDate={this.state.startDate} endDate={this.state.endDate} showMonthDropdown showYearDropdown dropdownMode="select" />
-                                    </div>
+                                    </label>
                                 </div>
                                 <div className="col-6 p-0">
                                     <div className={`pl-2 ${utils.text_md}`}>To Date</div>
-                                    <div className="date-div">
+                                    <label className="date-div">
                                         <span className="calendar-icon mr-2"><FiCalendar/></span>
                                         <DatePicker dateFormat="d MMM yyyy" className="end-date" selected={this.state.endDate} onChange={(date) => this.setState({endDate: date})} selectsEnd startDate={this.state.startDate} endDate={this.state.endDate} minDate={this.state.startDate} showMonthDropdown showYearDropdown dropdownMode="select" />
-                                    </div>
+                                    </label>
                                 </div>
                             </div>
                             <div className="position-relative">
@@ -114,7 +114,7 @@ class Pnlform extends React.Component {
                                     </div>
                                     <div className="col-6 pl-2 pr-0 field-datepicker">
                                         <label>Expenses Date</label>
-                                        <DatePicker dateFormat="d MMM yyyy" className={form.field_light} selected={u.date} onChange={(date) => this.changeExpenses(i, 'date', date)} maxDate={this.state.endDate} minDate={this.state.startDate} />
+                                        <DatePicker placeholderText="--/--/--" dateFormat="d MMM yyyy" className={form.field_light} selected={u.date} onChange={(date) => this.changeExpenses(i, 'date', date)} maxDate={this.state.endDate} minDate={this.state.startDate} />
                                     </div>
                                 </div>
                                 <div className="m-0 row">

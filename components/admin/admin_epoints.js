@@ -8,6 +8,8 @@ import Tabs from 'react-bootstrap/Tabs'
 import Tab from 'react-bootstrap/Tab'
 import Table from 'react-bootstrap/Table'
 import Modal from 'react-bootstrap/Modal'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Popover from 'react-bootstrap/Popover'
 
 class Aepoints extends React.Component {
   constructor(props) {
@@ -42,12 +44,23 @@ class Aepoints extends React.Component {
                     </div>
                     <Table responsive>
                       <thead>
-                        <tr>
+                        <tr className={styles.cell_center}>
                           <th className="pl-4"><input type="checkbox"/></th>
                           <th>Member ID</th>
                           <th>Redeem At</th>
                           <th>Redeem Amount</th>
-                          <th>Payout</th>
+                          <th className="d-flex align-items-center">Payout 
+                            <OverlayTrigger trigger="click" placement='top'
+                              overlay={
+                                <Popover id="popover-positioned-top">
+                                  <Popover.Content>
+                                    All the pay our rate had been deducted by the RM 0.50 transaction fees
+                                  </Popover.Content>
+                                </Popover>
+                              }>
+                              <button className={`ml-2 ${styles.popover}`}>?</button>
+                            </OverlayTrigger>
+                          </th>
                           <th>Status</th>
                           <th>Slip</th>
                         </tr>
@@ -80,12 +93,23 @@ class Aepoints extends React.Component {
                     </div>
                     <Table responsive>
                       <thead>
-                        <tr>
+                        <tr className={styles.cell_center}>
                           <th className="pl-4"><input type="checkbox"/></th>
                           <th>Member ID</th>
                           <th>Paid At</th>
                           <th>Redeem Amount</th>
-                          <th>Payout</th>
+                          <th className="d-flex align-items-center">Payout 
+                            <OverlayTrigger trigger="click" placement='top'
+                              overlay={
+                                <Popover id="popover-positioned-top">
+                                  <Popover.Content>
+                                    All the pay our rate had been deducted by the RM 0.50 transaction fees
+                                  </Popover.Content>
+                                </Popover>
+                              }>
+                              <button className={`ml-2 ${styles.popover}`}>?</button>
+                            </OverlayTrigger>
+                          </th>
                           <th>Status</th>
                           <th>Slip</th>
                         </tr>
@@ -181,7 +205,7 @@ class Aepoints extends React.Component {
                       <label className="pb-2">Minimum Points to be Eligible for Monthly incentives</label>
                       <form className="position-relative" style={{ maxWidth: 400 }}>
                         <input type="number" className={form.field_light} style={{ paddingRight: 140 }}/>
-                        <input type="submit" className={styles.tbtn} style={{ position: 'absolute', top: 3, right: 3 }}/>
+                        <input type="submit" value="Save" className={styles.tbtn} style={{ position: 'absolute', top: 3, right: 3 }}/>
                       </form>
                     </div>
                   </Tab>
