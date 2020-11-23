@@ -72,6 +72,14 @@
     width: 150px;
     padding: 10px;
     font-weight: 600;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    min-height: 43px;
+}
+
+.submit:active {
+    opacity: 0.5;
 }
 
 .price_rm {
@@ -92,4 +100,112 @@
     border-radius: 0 5px 5px 0;
     width: 100%;
     margin: 0 0 20px;
+}
+
+.notice_error {
+    background: #FFC2C2;
+    border: 1px solid #FF0202;
+    border-radius: 9px;
+    color: #FF0202;
+    display: flex;
+    align-items: center;
+    padding: 15px 10px;
+
+    .nexcl {
+        border-radius: 50%;
+        color: #FFFFFF;
+        background: #FF0202;
+        height: 25px;
+        width: 25px;
+        flex: 0 0 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+    }
+
+    .nclose {
+        border: none;
+        background: none;
+        border-left: 1px solid #FF0202;
+        color: #FF0202;
+        align-self: stretch;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        min-width: 45px;
+    }
+}
+
+.notice_success {
+    background: #C7FFC2;
+    border: 1px solid #02FF86;
+    border-radius: 9px;
+    color: #00783F;
+    display: flex;
+    align-items: center;
+    padding: 15px 10px;
+
+    .sexcl {
+        border-radius: 50%;
+        color: #FFFFFF;
+        background: #00783F;
+        height: 25px;
+        width: 25px;
+        flex: 0 0 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+    }
+
+    .sclose {
+        border: none;
+        background: none;
+        border-left: 1px solid #00783F;
+        color: #00783F;
+        align-self: stretch;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        min-width: 45px;
+    }
+}
+
+.notice_warning {
+    background: #FFEAC2;
+    border: 1px solid #FFB802;
+    border-radius: 9px;
+    color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    padding: 15px 10px;
+
+    .wexcl {
+        border-radius: 50%;
+        color: #FFFFFF;
+        background: #FFB802;
+        height: 25px;
+        width: 25px;
+        flex: 0 0 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+    }
+
+    .wclose {
+        border: none;
+        background: none;
+        border-left: 1px solid #FFB802;
+        color: rgba(0, 0, 0, 0.6);
+        align-self: stretch;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        min-width: 45px;
+    }
 }

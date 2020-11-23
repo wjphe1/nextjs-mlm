@@ -4,6 +4,7 @@ import styles from '../../styles/module/admin/admin.module.scss'
 import utils from '../../styles/module/utils.module.scss'
 import form from '../../styles/module/form.module.scss'
 import Ecashph from './payout_history_ecash'
+import Referral from './referral_ecash'
 import { MdCancel } from 'react-icons/md'
 import Tabs from 'react-bootstrap/Tabs'
 import Tab from 'react-bootstrap/Tab'
@@ -229,6 +230,9 @@ class Aecash extends React.Component {
               </Tab>
               <Tab eventKey="history" title="Payout History">
                 <Ecashph/>
+              </Tab>
+              <Tab eventKey="settings" title="Settings">
+                <Referral/>
               </Tab>
             </Tabs>
           </div>

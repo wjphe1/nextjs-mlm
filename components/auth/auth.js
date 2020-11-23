@@ -18,38 +18,19 @@ export const AuthProvider = ({ children }) => {
         async function loadUserFromCookies() {
             const token = Cookies.get('token')
             if (token) {
-                console.log("Got a token in the cookies, let's see if it is valid")
+                console.log("Got a token in the cookies, validating...")
                 api.defaults.headers.Authorization = token
                 const user = JSON.parse(Cookies.get('user'))
                 if (user) setUser(user);
-                console.log("Got user", user)
+                console.log(`Current user ${user.full_name} logged in as ${user.role}`)
             }
             setLoading(false)
         }
         loadUserFromCookies()
     }, [])
 
-    const login = async (email, password) => {
-        const { data: token } = await api.post('auth/login', { email, password })
-        if (token) {
-            console.log("Got token")
-            Cookies.set('token', token, { expires: 60 })
-            api.defaults.headers.Authorization = `Bearer ${token.token}`
-            const { data: user } = await api.get('users/me')
-            setUser(user)
-            console.log("Got user", user)
-        }
-    }
-
-    const logout = (email, password) => {
-        Cookies.remove('token')
-        setUser(null)
-        delete api.defaults.headers.Authorization
-    }
-
-
     return (
-        <AuthContext.Provider value={{ isAuthenticated: !!user, user, login, loading, logout }}>
+        <AuthContext.Provider value={{ isAuthenticated: !!user, loading }}>
             {children}
         </AuthContext.Provider>
     )

@@ -3,6 +3,10 @@ import { withRouter } from 'next/router'
 import React from 'react'
 import styles from '../../styles/module/admin/admin.module.scss'
 import utils from '../../styles/module/utils.module.scss'
+import form from '../../styles/module/form.module.scss'
+import dateTime from '../dateTime'
+import api from '../auth/api'
+import routes from '../auth/routes'
 import DatePicker from "react-datepicker";
 import { FiCalendar } from 'react-icons/fi';
 import { HiOutlineSearch } from 'react-icons/hi';
@@ -13,13 +17,19 @@ import Table from 'react-bootstrap/Table'
 import Accordion from 'react-bootstrap/Accordion'
 import Card from 'react-bootstrap/Card'
 import Dropdown from 'react-bootstrap/Dropdown'
+import Spinner from 'react-bootstrap/Spinner'
 
 class Admprod extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
       startDate: new Date(),
-      endDate: (new Date()).setDate(new Date().getDate()+1)
+      endDate: (new Date()).setDate(new Date().getDate()+1),
+      prodlist: [],
+      isloaded: false,
+      error: false,
+      toast: true,
     };
   }
 
@@ -32,7 +42,18 @@ class Admprod extends React.Component {
   }
 
   componentDidMount() {
-    //console.log(this.props.router)
+    api.get(routes.products)
+      .then(res => {
+        const rows = res.data.products
+        console.log(rows)
+        this.setState({ prodlist: rows, isloaded: true })
+      })
+      .catch(err => {
+        console.log(err.response.data)
+        const msg = err.response.data;
+        this.setState({ err_msg: msg, isloaded: true, error: true })
+      })
+    
   }
 
   render () {
@@ -62,6 +83,13 @@ class Admprod extends React.Component {
           <div className="admin-reports-tabs">
             <Tabs defaultActiveKey={dtab} id="uncontrolled-tab-example">
               <Tab eventKey="list" title="● Product List">   
+                {(this.props.router.query.newprod && this.state.toast) && <div className={`mb-4 ${form.notice_success}`}>
+                  <div className="col-10 d-flex align-items-center">
+                    <span className={form.sexcl}>✓</span>
+                    <span><b>Congratulations -</b> Product was created successfully</span>
+                  </div>
+                  <div onClick={() => this.setState({ toast: false })} className={`col-2 ${form.sclose}`}>Close</div>
+                </div>}
                 <div className={styles.table}>
                   <div className="d-flex align-items-center p-3">
                     <form className={styles.search_div}>
@@ -70,7 +98,7 @@ class Admprod extends React.Component {
                     </form>
                     <Link to href="/admin/new/product"><a className={`ml-auto ${styles.tbtn}`}>New Product</a></Link>
                   </div>
-                  <Table responsive>
+                  {this.state.isloaded ? <Table responsive>
                     <thead>
                       <tr>
                         <th className="pl-4"><input type="checkbox"/></th>
@@ -82,33 +110,26 @@ class Admprod extends React.Component {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
+                      {this.state.prodlist.map((u, i) => <tr key={i}>
                         <td className="pl-4"><input type="checkbox"/></td>
-                        <td className="font-weight-bold">Kopi Reeqza</td>
-                        <td>20 Oct 2020 11.30 AM</td>
+                        <td className="font-weight-bold">{u.name}</td>
+                        <td>{dateTime(u.created_at)}</td>
+                        <td className="table-cell-collapse">{u.epoint}</td>
                         <td className="table-cell-collapse">
-                          <Accordion>
+                          {u.product_prices.length && <Accordion>
                             <Card>
                               <Accordion.Toggle as={Card.Header} eventKey="0">
-                                100 For MS <BsFillCaretDownFill/>
+                                {u.product_prices[0].price} For MS <BsFillCaretDownFill/>
                               </Accordion.Toggle>
                               <Accordion.Collapse eventKey="0">
-                                <Card.Body>20 For S<br/>10 For A</Card.Body>
+                                <Card.Body>
+                                  {u.product_prices[1].price} For S<br/>
+                                  {u.product_prices[2].price} For A<br/>
+                                  {u.product_prices[3].price} For C<br/>
+                                </Card.Body>
                               </Accordion.Collapse>
                             </Card>
-                          </Accordion>
-                        </td>
-                        <td className="table-cell-collapse">
-                          <Accordion>
-                            <Card>
-                              <Accordion.Toggle as={Card.Header} eventKey="0">
-                                300 For MS <BsFillCaretDownFill/>
-                              </Accordion.Toggle>
-                              <Accordion.Collapse eventKey="0">
-                                <Card.Body>250 For S<br/>150 For A</Card.Body>
-                              </Accordion.Collapse>
-                            </Card>
-                          </Accordion>
+                          </Accordion>}
                         </td>
                         <td className="table-cell-dropdown">
                           <Dropdown>
@@ -122,50 +143,9 @@ class Admprod extends React.Component {
                             </Dropdown.Menu>
                           </Dropdown>
                         </td>
-                      </tr>
-                      <tr>
-                        <td className="pl-4"><input type="checkbox"/></td>
-                        <td className="font-weight-bold">Kopi Reeqza</td>
-                        <td>20 Oct 2020 11.30 AM</td>
-                        <td className="table-cell-collapse">
-                          <Accordion>
-                            <Card>
-                              <Accordion.Toggle as={Card.Header} eventKey="0">
-                                100 For MS <BsFillCaretDownFill/>
-                              </Accordion.Toggle>
-                              <Accordion.Collapse eventKey="0">
-                                <Card.Body>20 For S<br/>10 For A</Card.Body>
-                              </Accordion.Collapse>
-                            </Card>
-                          </Accordion>
-                        </td>
-                        <td className="table-cell-collapse">
-                          <Accordion>
-                            <Card>
-                              <Accordion.Toggle as={Card.Header} eventKey="0">
-                                300 For MS <BsFillCaretDownFill/>
-                              </Accordion.Toggle>
-                              <Accordion.Collapse eventKey="0">
-                                <Card.Body>250 For S<br/>150 For A</Card.Body>
-                              </Accordion.Collapse>
-                            </Card>
-                          </Accordion>
-                        </td>
-                        <td className="table-cell-dropdown">
-                          <Dropdown>
-                            <Dropdown.Toggle>
-                              <BsThreeDots/>
-                            </Dropdown.Toggle>
-
-                            <Dropdown.Menu>
-                              <Dropdown.Item href="/">Edit</Dropdown.Item>
-                              <Dropdown.Item as="button">Delete</Dropdown.Item>
-                            </Dropdown.Menu>
-                          </Dropdown>
-                        </td>
-                      </tr>
+                      </tr>)}
                     </tbody>
-                  </Table>
+                  </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
                 </div>
               </Tab>
               <Tab eventKey="category" title="● Product Category">

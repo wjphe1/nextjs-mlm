@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
+import Router from 'next/router'
 import styles from '../../styles/module/admin/admin.module.scss'
 import form from '../../styles/module/form.module.scss'
 import { MdCancel } from 'react-icons/md'
@@ -8,6 +9,9 @@ import { convertToRaw } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
 import Tabs from 'react-bootstrap/Tabs'
 import Tab from 'react-bootstrap/Tab'
+import api from '../auth/api'
+import routes from '../auth/routes'
+import Spinner from 'react-bootstrap/Spinner'
 
 const Editor = dynamic(
     () => import('react-draft-wysiwyg').then(mod => mod.Editor),
@@ -18,19 +22,40 @@ class Newprod extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            name: '',
+            category: 'Skin Care',
             image: '',
+            sku: '',
             imagePreviewUrl: '',
             desc: null,
             deli: null,
             order: null,
+            ecashone: '',
+            ecashtwo: '',
+            ecashthree: '',
+            pricems: '',
+            prices: '',
+            pricea: '',
+            pricec: '',
+            epoint: '',
+            isloaded: true,
+            error: false,
+            err_msg: {},
         };
     }
 
-    handleChange = (e) => {
-        console.log(e)
-        const value = parseInt(e.target.value);
+    changeStr = (e) => {
         this.setState({
-            [e.target.name]: value
+          [e.target.name]: e.target.value
+        });
+    }
+    
+    changeNum = (e) => {
+        var value = '';
+        if(e.target.value || e.target.value === '0') { value = parseFloat(e.target.value) }
+        console.log(value)
+        this.setState({
+          [e.target.name]: value
         });
     }
 
@@ -69,6 +94,69 @@ class Newprod extends React.Component {
         reader.readAsDataURL(file)
     }
 
+    submitProd = (e) => {
+        e.preventDefault();
+        let vm = this;
+        vm.setState({ isloaded: false })
+        const postdata = {
+            product: {
+                name: this.state.name,
+                category: this.state.category,
+                description: this.state.desc,
+                delivery_description: this.state.deli,
+                order_description: this.state.order,
+                sku: this.state.sku,
+                epoint: this.state.epoint,
+                photo: this.state.image,
+                product_prices_attributes: [
+                    {
+                        role: 'MASTER_STOKIS',
+                        price: this.state.pricems
+                    },
+                    {
+                        role: 'STOKIS',
+                        price: this.state.prices
+                    },
+                    {
+                        role: 'AGENT',
+                        price: this.state.pricea
+                    },
+                    {
+                        role: 'CONSUMER',
+                        price: this.state.pricec
+                    }
+                ],
+                product_ecash_rewards_attributes: [
+                    {
+                        level: 0,
+                        ecash: this.state.ecashone
+                    },
+                    {
+                        level: 1,
+                        ecash: this.state.ecashtwo
+                    },
+                    {
+                        level: 2,
+                        ecash: this.state.ecashthree
+                    },
+                ]
+            }
+        }
+        api.post(routes.products, postdata)
+        .then(res => {
+            //console.log(res)
+            Router.push({
+                pathname: '/admin/products',
+                query: { newprod: true },
+            })
+        })
+        .catch(err => {
+            //console.log(err.response.data)
+            const msg = err.response.data;
+            vm.setState({ err_msg: msg, isloaded: true, error: true })
+        })
+    }
+
     render () {
 
         let $imagePreview = null;
@@ -82,6 +170,17 @@ class Newprod extends React.Component {
         <section className="py-5 px-4">
             <div className="row m-0">
                 <div className="col-lg-8 p-0 mb-4">
+                    {this.state.error && <div className={`mb-4 ${form.notice_error}`}>
+                        <div className="col-10 d-flex align-items-center">
+                            <span className={form.nexcl}>!</span> 
+                            <ul className="m-0 pl-4">
+                                {this.state.err_msg.error && Object.keys(this.state.err_msg.error).map(key =>
+                                    <li value={key} key={key}>{`${key}: ${this.state.err_msg.error[key][0]}`}</li>
+                                )}
+                            </ul>
+                        </div> 
+                        <div onClick={() => this.setState({ error: false })} className={`col-2 ${form.nclose}`}>Close</div>
+                    </div>}
                     <div className={`${styles.table} mb-2 pb-4`}>
                         <div className="d-flex align-items-center p-4 border-bottom">
                             <div className={styles.thead}>Product Details</div>
@@ -100,16 +199,20 @@ class Newprod extends React.Component {
                             </div>
                         </div>
                         <div className="row m-0 px-3">
-                            <div className="col-md-6 px-2">
+                            <div className="col-md-4 px-2">
                                 <label>Product Name</label>
-                                <input type="text" placeholder="E.g.: Kopi Reezqa" className={form.field_light}/>
+                                <input name="name" onChange={this.changeStr} value={this.state.name} type="text" placeholder="E.g.: Kopi Reezqa" className={form.field_light}/>
                             </div>
-                            <div className="col-md-6 px-2">
+                            <div className="col-md-4 px-2">
                                 <label>Product Categories</label>
-                                <select type="text" className={form.field_light}>
+                                <select name="category" onChange={this.changeStr} value={this.state.category} type="text" className={form.field_light}>
                                     <option>Skin Care</option>
                                     <option>Others</option>
                                 </select>
+                            </div>
+                            <div className="col-md-4 px-2">
+                                <label>SKUs</label>
+                                <input name="sku" onChange={this.changeStr} value={this.state.sku} type="text" placeholder="E.g.: K124453" className={form.field_light}/>
                             </div>
                         </div>
                         <div className="px-4 py-2">Product Description</div>
@@ -128,74 +231,7 @@ class Newprod extends React.Component {
                         </div>
                     </div>
                     <div className="row" style={{margin: '0 -5px'}}>
-                        <div className="col-lg-6 mb-2" style={{padding: '0 5px'}}>
-                            <div className={`${styles.table} h-100`}>
-                                <div className="d-flex align-items-center p-4 border-bottom">
-                                    <div className={styles.thead}>E-Cash (Member)</div>
-                                </div>
-                                <div className="row m-0 py-3 flex-nowrap">
-                                    <div className="col-3 pl-4 pr-0">
-                                        <div className="py-2">Level</div>
-                                        <div className={styles.level}>1</div>
-                                        <div className={styles.level}>2</div>
-                                        <div className={styles.level}>3</div>
-                                        <div className={styles.level}>4</div>
-                                    </div>
-                                    <div className="col-9 pr-4">
-                                        <div className="py-2 text-nowrap">E-Cash Earned</div>
-                                        <div className="row m-0 flex-nowrap">
-                                            <div className={`${form.price_rm} col-4`}>RM</div>
-                                            <div className="col-8 p-0"><input className={form.field_price} type="number" placeholder="E.g. 15"/></div>
-                                        </div>
-                                        <div className="row m-0 flex-nowrap">
-                                            <div className={`${form.price_rm} col-4`}>RM</div>
-                                            <div className="col-8 p-0"><input className={form.field_price} type="number" placeholder="E.g. 15"/></div>
-                                        </div>
-                                        <div className="row m-0 flex-nowrap">
-                                            <div className={`${form.price_rm} col-4`}>RM</div>
-                                            <div className="col-8 p-0"><input className={form.field_price} type="number" placeholder="E.g. 15"/></div>
-                                        </div>
-                                        <div className="row m-0 flex-nowrap">
-                                            <div className={`${form.price_rm} col-4`}>RM</div>
-                                            <div className="col-8 p-0"><input className={form.field_price} type="number" placeholder="E.g. 15"/></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-lg-6 mb-2" style={{padding: '0 5px'}}>
-                            <div className={`${styles.table} h-100`}>
-                                <div className="d-flex align-items-center p-4 border-bottom">
-                                    <div className={styles.thead}>E-Cash (Product)</div>
-                                </div>
-                                <div className="row m-0 py-3 flex-nowrap">
-                                    <div className="col-3 pl-4 pr-0">
-                                        <div className="py-2">Level</div>
-                                        <div className={styles.level}>1</div>
-                                        <div className={styles.level}>2</div>
-                                        <div className={styles.level}>3</div>
-                                    </div>
-                                    <div className="col-9 pr-4">
-                                        <div className="py-2 text-nowrap">E-Cash Earned</div>
-                                        <div className="row m-0 flex-nowrap">
-                                            <div className={`${form.price_rm} col-4`}>RM</div>
-                                            <div className="col-8 p-0"><input className={form.field_price} type="number" placeholder="E.g. 15"/></div>
-                                        </div>
-                                        <div className="row m-0 flex-nowrap">
-                                            <div className={`${form.price_rm} col-4`}>RM</div>
-                                            <div className="col-8 p-0"><input className={form.field_price} type="number" placeholder="E.g. 15"/></div>
-                                        </div>
-                                        <div className="row m-0 flex-nowrap">
-                                            <div className={`${form.price_rm} col-4`}>RM</div>
-                                            <div className="col-8 p-0"><input className={form.field_price} type="number" placeholder="E.g. 15"/></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row" style={{margin: '0 -5px'}}>
-                        <div className="col-lg-6 mb-2" style={{padding: '0 5px'}}>
+                    <div className="col-md-6 mb-2" style={{padding: '0 5px'}}>
                             <div className={`${styles.table} h-100`}>
                                 <div className="d-flex align-items-center p-4 border-bottom">
                                     <div className={styles.thead}>Price Settings</div>
@@ -236,39 +272,67 @@ class Newprod extends React.Component {
                                         <div className="py-2 text-nowrap">Product Price</div>
                                         <div className="row m-0 flex-nowrap">
                                             <div className={`${form.price_rm} col-4`}>RM</div>
-                                            <div className="col-8 p-0"><input className={form.field_price} type="number" placeholder="E.g. 15"/></div>
+                                            <div className="col-8 p-0"><input name="pricems" onChange={this.changeNum} value={this.state.pricems} className={form.field_price} type="number" placeholder="E.g. 15"/></div>
                                         </div>
                                         <div className="row m-0 flex-nowrap">
                                             <div className={`${form.price_rm} col-4`}>RM</div>
-                                            <div className="col-8 p-0"><input className={form.field_price} type="number" placeholder="E.g. 15"/></div>
+                                            <div className="col-8 p-0"><input name="prices" onChange={this.changeNum} value={this.state.prices} className={form.field_price} type="number" placeholder="E.g. 15"/></div>
                                         </div>
                                         <div className="row m-0 flex-nowrap">
                                             <div className={`${form.price_rm} col-4`}>RM</div>
-                                            <div className="col-8 p-0"><input className={form.field_price} type="number" placeholder="E.g. 15"/></div>
+                                            <div className="col-8 p-0"><input name="pricea" onChange={this.changeNum} value={this.state.pricea} className={form.field_price} type="number" placeholder="E.g. 15"/></div>
                                         </div>
                                         <div className="row m-0 flex-nowrap">
                                             <div className={`${form.price_rm} col-4`}>RM</div>
-                                            <div className="col-8 p-0"><input className={form.field_price} type="number" placeholder="E.g. 15"/></div>
+                                            <div className="col-8 p-0"><input name="pricec" onChange={this.changeNum} value={this.state.pricec} className={form.field_price} type="number" placeholder="E.g. 15"/></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="col-lg-6 mb-2" style={{padding: '0 5px'}}>
+                        <div className="col-md-6 mb-2" style={{padding: '0 5px'}}>
                             <div className={`${styles.table} h-100`}>
                                 <div className="d-flex align-items-center p-4 border-bottom">
-                                    <div className={styles.thead}>E-Points</div>
+                                    <div className={styles.thead}>E-Cash (Product)</div>
                                 </div>
-                                <div className="p-4">
-                                    <input type="text" placeholder="E.g. 100" className={form.field_light}/>
+                                <div className="row m-0 py-3 flex-nowrap">
+                                    <div className="col-3 pl-4 pr-0">
+                                        <div className="py-2">Level</div>
+                                        <div className={styles.level}>1</div>
+                                        <div className={styles.level}>2</div>
+                                        <div className={styles.level}>3</div>
+                                    </div>
+                                    <div className="col-9 pr-4">
+                                        <div className="py-2 text-nowrap">E-Cash Earned</div>
+                                        <div className="row m-0 flex-nowrap">
+                                            <div className={`${form.price_rm} col-4`}>RM</div>
+                                            <div className="col-8 p-0"><input name="ecashone" onChange={this.changeNum} value={this.state.ecashone} className={form.field_price} type="number" placeholder="E.g. 15"/></div>
+                                        </div>
+                                        <div className="row m-0 flex-nowrap">
+                                            <div className={`${form.price_rm} col-4`}>RM</div>
+                                            <div className="col-8 p-0"><input name="ecashtwo" onChange={this.changeNum} value={this.state.ecashtwo} className={form.field_price} type="number" placeholder="E.g. 15"/></div>
+                                        </div>
+                                        <div className="row m-0 flex-nowrap">
+                                            <div className={`${form.price_rm} col-4`}>RM</div>
+                                            <div className="col-8 p-0"><input name="ecashthree" onChange={this.changeNum} value={this.state.ecashthree} className={form.field_price} type="number" placeholder="E.g. 15"/></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div className={`${styles.table} mb-4`}>
+                        <div className="d-flex align-items-center p-4 border-bottom">
+                            <div className={styles.thead}>E-Points</div>
+                        </div>
+                        <div className="p-4">
+                            <input name="epoint" onChange={this.changeNum} value={this.state.epoint} type="text" placeholder="E.g. 100" className={form.field_light}/>
                         </div>
                     </div>
                 </div>
                 <div className="col-lg-4 d-flex align-items-start">
                     <div className={`${styles.table} ${styles.submitdiv}`}>
-                        <button className={styles.tbtn}>Create Product</button>
+                                    <button className={styles.tbtn} onClick={this.submitProd}>{this.state.isloaded ? <span>Create Product</span> : <Spinner animation="border" variant="light" size='sm'/>}</button>
                         <Link href="/admin/products"><a className="pt-3" style={{color: "#FF6202"}}><MdCancel/> Discard</a></Link>
                     </div>
                 </div>

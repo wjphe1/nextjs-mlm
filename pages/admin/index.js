@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import React from 'react'
 import cn from 'classnames'
+import Cookies from 'js-cookie'
 import styles from '../../styles/module/admin/admin.module.scss'
 import utils from '../../styles/module/utils.module.scss'
 import Layout from '../../components/admin/layout'
@@ -32,6 +33,10 @@ class Sales extends React.Component {
   }
 
   render () {
+    var user = {};
+    var role = null;
+    var userStr = Cookies.get('user');
+    if (userStr) { user = JSON.parse(userStr); role = user.role }
 
     const tab1svg = <Link href="/admin"><a className={`${cn({[styles.hbactive]: this.props.pathname === '/admin'})} ${styles.huge_btns}`}>
       <svg width="74" height="40" viewBox="0 0 74 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -72,38 +77,51 @@ class Sales extends React.Component {
       <rect x="28" y="30" width="12" height="12" fill="#FFD9C2"/>
     </svg><span className="pt-2">P&amp;L</span></a></Link>
 
-    return (
-      <Layout page={'reports'} {...this.props}>
-        <Head>
-          <title>{this.props.name} - Admin Sales</title>
-        </Head>
-
-        <section className="py-5 px-4">
-          <div className="d-flex align-items-center flex-wrap">
-            <div className={utils.h_xl}>Report Overview</div>
-            {/* Date Pickers */}
-            <div className="ml-auto d-flex align-items-center flex-wrap">
-              <label className="date-div">
-                <span className="calendar-icon"><FiCalendar/></span>
-                <span className="pl-2 pr-1">From</span>
-                <DatePicker placeholderText="--/--/--" dateFormat="d MMM yyyy" className="start-date" selected={this.state.startDate} onChange={(date) => this.setState({startDate: date})} selectsStart startDate={this.state.startDate} endDate={this.state.endDate} showMonthDropdown showYearDropdown dropdownMode="select" />
-              </label>
-              <label className="date-div">
-                <span className="calendar-icon"><FiCalendar/></span>
-                <span className="pl-2 pr-1">To</span>
-                <DatePicker placeholderText="--/--/--" dateFormat="d MMM yyyy" className="end-date" selected={this.state.endDate} onChange={(date) => this.setState({endDate: date})} selectsEnd startDate={this.state.startDate} endDate={this.state.endDate} minDate={this.state.startDate} showMonthDropdown showYearDropdown dropdownMode="select" />
-              </label>
+    if (role && role === 'SUPERADMIN') {
+      return (
+        <Layout page={'reports'} {...this.props}>
+          <Head>
+            <title>{this.props.name} - Admin Sales</title>
+          </Head>
+  
+          <section className="py-5 px-4">
+            <div className="d-flex align-items-center flex-wrap">
+              <div className={utils.h_xl}>Report Overview</div>
+              {/* Date Pickers */}
+              <div className="ml-auto d-flex align-items-center flex-wrap">
+                <label className="date-div">
+                  <span className="calendar-icon"><FiCalendar/></span>
+                  <span className="pl-2 pr-1">From</span>
+                  <DatePicker placeholderText="--/--/--" dateFormat="d MMM yyyy" className="start-date" selected={this.state.startDate} onChange={(date) => this.setState({startDate: date})} selectsStart startDate={this.state.startDate} endDate={this.state.endDate} showMonthDropdown showYearDropdown dropdownMode="select" />
+                </label>
+                <label className="date-div">
+                  <span className="calendar-icon"><FiCalendar/></span>
+                  <span className="pl-2 pr-1">To</span>
+                  <DatePicker placeholderText="--/--/--" dateFormat="d MMM yyyy" className="end-date" selected={this.state.endDate} onChange={(date) => this.setState({endDate: date})} selectsEnd startDate={this.state.startDate} endDate={this.state.endDate} minDate={this.state.startDate} showMonthDropdown showYearDropdown dropdownMode="select" />
+                </label>
+              </div>
             </div>
-          </div>
-
-          <div className={styles.huge_btns_div}>
-            {tab1svg} {tab2svg} {tab3svg} {tab4svg}
-          </div>
-          <Asales/>
-          <Othrpt/>
-        </section>
-      </Layout>
-    )
+  
+            <div className={styles.huge_btns_div}>
+              {tab1svg} {tab2svg} {tab3svg} {tab4svg}
+            </div>
+            <Asales/>
+          </section>
+        </Layout>
+      )
+    } else {
+      return (
+        <Layout page={'reports'} {...this.props}>
+          <Head>
+            <title>{this.props.name} - Admin Sales</title>
+          </Head>
+  
+          <section className="py-5 px-4">
+            <Othrpt/>
+          </section>
+        </Layout>
+      )
+    }
   }
 }
 
