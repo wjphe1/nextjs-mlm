@@ -19,9 +19,10 @@ export const AuthProvider = ({ children }) => {
             const token = Cookies.get('token')
             if (token) {
                 console.log("Got a token in the cookies, let's see if it is valid")
-                api.defaults.headers.Authorization = `Bearer ${token}`
-                const { data: user } = await api.get('users/me')
+                api.defaults.headers.Authorization = token
+                const user = JSON.parse(Cookies.get('user'))
                 if (user) setUser(user);
+                console.log("Got user", user)
             }
             setLoading(false)
         }

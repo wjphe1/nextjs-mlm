@@ -44,6 +44,20 @@
         font-weight: 900;
         letter-spacing: 0.01rem;
     }
+
+    .logout_btn {
+        border-radius: 50%;
+        background: #FF6202;
+        border: none;
+        font-size: 1.3rem;
+        color: #FFFFFF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 30px;
+        width: 30px;
+        margin-left: 1rem;
+    }
 }
 
 .sidebar {

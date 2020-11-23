@@ -11,6 +11,7 @@
     "axios": "^0.21.0",
     "bootstrap": "^4.5.3",
     "classnames": "^2.2.6",
+    "cors": "^2.8.5",
     "draft-js": "^0.11.7",
     "draftjs-to-html": "^0.9.1",
     "js-cookie": "^2.2.1",
