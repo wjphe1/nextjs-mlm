@@ -1,11 +1,11 @@
 import Link from 'next/link'
-import React from 'react'
+import React, {useEffect}  from 'react'
 import Router from 'next/router'
 import styles from '../../styles/module/admin/admin.module.scss'
 import form from '../../styles/module/form.module.scss'
 import { MdCancel } from 'react-icons/md'
 import dynamic from 'next/dynamic'
-import { convertToRaw } from 'draft-js'
+import { convertToRaw, EditorState, ContentState, convertFromHTML } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
 import Tabs from 'react-bootstrap/Tabs'
 import Tab from 'react-bootstrap/Tab'
@@ -18,7 +18,7 @@ const Editor = dynamic(
     { ssr: false }
 )
 
-class Newprod extends React.Component {
+class Editprod extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -41,6 +41,7 @@ class Newprod extends React.Component {
             isloaded: true,
             error: false,
             err_msg: {},
+            page_error: false,
         };
     }
 
@@ -59,23 +60,23 @@ class Newprod extends React.Component {
     }
 
     descChange = (editorState) => {
-        const changes = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+        //const changes = draftToHtml(convertToRaw(editorState.getCurrentContent()));
         this.setState({
-          desc: changes,
+          desc: editorState,
         });
     };
 
     deliChange = (editorState) => {
-        const changes = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+        //const changes = draftToHtml(convertToRaw(editorState.getCurrentContent()));
         this.setState({
-          deli: changes,
+          deli: editorState,
         });
     };
 
     orderChange = (editorState) => {
-        const changes = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+        //const changes = draftToHtml(convertToRaw(editorState.getCurrentContent()));
         this.setState({
-          order: changes,
+          order: editorState,
         });
     };
 
@@ -101,9 +102,9 @@ class Newprod extends React.Component {
             product: {
                 name: this.state.name,
                 category: this.state.category,
-                description: this.state.desc,
-                delivery_description: this.state.deli,
-                order_description: this.state.order,
+                description: draftToHtml(convertToRaw(this.state.desc.getCurrentContent())),
+                delivery_description: draftToHtml(convertToRaw(this.state.deli.getCurrentContent())),
+                order_description: draftToHtml(convertToRaw(this.state.order.getCurrentContent())),
                 sku: this.state.sku,
                 epoint: this.state.epoint,
                 photo: this.state.imgData,
@@ -120,12 +121,12 @@ class Newprod extends React.Component {
                 ]
             }
         }
-        api.post(routes.products, postdata)
+        api.put(routes.products + '/' + this.props.pid, postdata)
         .then(res => {
             //console.log(res)
             Router.push({
                 pathname: '/admin/products',
-                query: { newprod: true },
+                query: { editprod: true },
             })
         })
         .catch(err => {
@@ -133,6 +134,41 @@ class Newprod extends React.Component {
             const msg = err.response.data;
             setTimeout(() => {vm.setState({ err_msg: msg, isloaded: true, error: true })}, 100)
         })
+    }
+
+    getProd = () => {
+        api.get(routes.products + '/' + this.props.pid)
+          .then(res => {
+            const rows = res.data.product
+            if (rows.id) {
+                this.setState({
+                    name: rows.name,
+                    category: rows.category,
+                    epoint: parseFloat(rows.epoint),
+                    sku: rows.sku,
+                    pricems: parseFloat(rows.product_prices[0].price),
+                    prices: parseFloat(rows.product_prices[1].price),
+                    pricea: parseFloat(rows.product_prices[2].price),
+                    pricec: parseFloat(rows.product_prices[3].price),
+                    ecashone: parseFloat(rows.product_ecash_rewards[0].ecash),
+                    ecashtwo: parseFloat(rows.product_ecash_rewards[1].ecash),
+                    ecashthree: parseFloat(rows.product_ecash_rewards[2].ecash),
+                    imgData: rows.photo.url,
+                    desc: EditorState.createWithContent(ContentState.createFromBlockArray(convertFromHTML(rows.description))),
+                    deli: EditorState.createWithContent(ContentState.createFromBlockArray(convertFromHTML(rows.delivery_description))),
+                    order: EditorState.createWithContent(ContentState.createFromBlockArray(convertFromHTML(rows.order_description))),
+                })
+            } else {
+                this.setState({ page_error: true })
+            }
+        })
+        .catch(err => {
+            this.setState({ page_error: true })
+        })
+    }
+    
+    componentDidMount() {
+        this.getProd();
     }
 
     render () {
@@ -197,13 +233,13 @@ class Newprod extends React.Component {
                         <div className="admin-generic-tabs">
                             <Tabs defaultActiveKey="desc">
                                 <Tab eventKey="desc" title="Deskripsi">
-                                    <Editor onEditorStateChange={this.descChange} placeholder="Write anything here..." editorClassName={styles.teditor} />
+                                    <Editor editorState={this.state.desc} onEditorStateChange={this.descChange} placeholder="Write anything here..." editorClassName={styles.teditor} />
                                 </Tab>
                                 <Tab eventKey="delivery" title="Penghantaran">
-                                    <Editor onEditorStateChange={this.deliChange} placeholder="Write anything here..." editorClassName={styles.teditor} />
+                                    <Editor editorState={this.state.deli} onEditorStateChange={this.deliChange} placeholder="Write anything here..." editorClassName={styles.teditor} />
                                 </Tab>
                                 <Tab eventKey="order" title="Pesanan">
-                                    <Editor onEditorStateChange={this.orderChange} placeholder="Write anything here..." editorClassName={styles.teditor} />
+                                    <Editor editorState={this.state.order} onEditorStateChange={this.orderChange} placeholder="Write anything here..." editorClassName={styles.teditor} />
                                 </Tab>
                             </Tabs>
                         </div>
@@ -310,7 +346,7 @@ class Newprod extends React.Component {
                 </div>}
                 <div className="col-lg-4 d-flex align-items-start">
                     <div className={`${styles.table} ${styles.submitdiv}`}>
-                        {this.state.isloaded ? <input className={styles.tbtn} type="submit" value="Create Product"/> : <button className={styles.tbtn} disabled><Spinner animation="border" variant="light" size='sm'/></button>}
+                        {this.state.isloaded ? <input className={styles.tbtn} type="submit" value="Update Product"/> : <button className={styles.tbtn} disabled><Spinner animation="border" variant="light" size='sm'/></button>}
                         <Link href="/admin/products"><a className="pt-3" style={{color: "#FF6202"}}><MdCancel/> Discard</a></Link>
                     </div>
                 </div>
@@ -320,4 +356,4 @@ class Newprod extends React.Component {
     }
 }
 
-export default Newprod;
+export default Editprod;

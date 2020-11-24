@@ -105,7 +105,7 @@ class Users extends React.Component {
                       <input type="text" placeholder="Search category here" className={styles.search}/>
                       <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
                     </form>
-                    <Link href="/admin/new/member"><a className={`ml-auto ${styles.tbtn}`}>New Member</a></Link>
+                    <Link href="/admin/members/new"><a className={`ml-auto ${styles.tbtn}`}>New Member</a></Link>
                   </div>
                   <Table responsive>
                     <thead>

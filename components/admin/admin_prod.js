@@ -41,7 +41,7 @@ class Admprod extends React.Component {
     });
   }
 
-  componentDidMount() {
+  getProd = () => {
     api.get(routes.products)
       .then(res => {
         const rows = res.data.products
@@ -51,9 +51,25 @@ class Admprod extends React.Component {
       .catch(err => {
         console.log(err.response.data)
         const msg = err.response.data;
-        this.setState({ err_msg: msg, isloaded: true, error: true })
+        this.setState({ isloaded: true, error: true })
       })
-    
+  }
+
+  deleteProd = (id) => {
+    this.setState({ isloaded: false });
+    api.delete(routes.products + '/' + id)
+    .then(res => {
+      console.log('delete successfully')
+      this.getProd();
+      this.setState({ isloaded: true });
+    })
+    .catch(err => {
+      console.log(err.response.data)
+    })
+  }
+
+  componentDidMount() {
+    this.getProd();
   }
 
   render () {
@@ -90,13 +106,20 @@ class Admprod extends React.Component {
                   </div>
                   <div onClick={() => this.setState({ toast: false })} className={`col-2 ${form.sclose}`}>Close</div>
                 </div>}
+                {(this.props.router.query.editprod && this.state.toast) && <div className={`mb-4 ${form.notice_success}`}>
+                  <div className="col-10 d-flex align-items-center">
+                    <span className={form.sexcl}>✓</span>
+                    <span><b>Congratulations -</b> Product was updated successfully</span>
+                  </div>
+                  <div onClick={() => this.setState({ toast: false })} className={`col-2 ${form.sclose}`}>Close</div>
+                </div>}
                 <div className={styles.table}>
                   <div className="d-flex align-items-center p-3">
                     <form className={styles.search_div}>
                       <input type="text" placeholder="Search product here" className={styles.search}/>
                       <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
                     </form>
-                    <Link to href="/admin/new/product"><a className={`ml-auto ${styles.tbtn}`}>New Product</a></Link>
+                    <Link to href="/admin/products/new"><a className={`ml-auto ${styles.tbtn}`}>New Product</a></Link>
                   </div>
                   {this.state.isloaded ? <Table responsive>
                     <thead>
@@ -138,14 +161,15 @@ class Admprod extends React.Component {
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
-                              <Dropdown.Item href="/">Edit</Dropdown.Item>
-                              <Dropdown.Item as="button">Delete</Dropdown.Item>
+                              <Dropdown.Item href={'/admin/products/'+ u.id}>Edit</Dropdown.Item>
+                              <Dropdown.Item as="button" onClick={() => this.deleteProd(u.id)}>Delete</Dropdown.Item>
                             </Dropdown.Menu>
                           </Dropdown>
                         </td>
                       </tr>)}
                     </tbody>
                   </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
+                  {this.state.isloaded && !this.state.prodlist.length && <div className="p-5 text-center">No product found. Click new product to add.</div>}
                 </div>
               </Tab>
               <Tab eventKey="category" title="● Product Category">
@@ -155,7 +179,7 @@ class Admprod extends React.Component {
                       <input type="text" placeholder="Search category here" className={styles.search}/>
                       <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
                     </form>
-                    <Link to href="/admin/new/category"><a className={`ml-auto ${styles.tbtn}`}>New Category</a></Link>
+                    <Link to href="/admin/categories/new"><a className={`ml-auto ${styles.tbtn}`}>New Category</a></Link>
                   </div>
                   <Table responsive>
                     <thead>

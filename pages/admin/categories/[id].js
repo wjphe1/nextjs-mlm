@@ -1,11 +1,11 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import React from 'react'
-import Layout from '../../../../components/admin/layout'
-import Newcate from '../../../../components/admin/new_category'
+import Layout from '../../../components/admin/layout'
+import Newcate from '../../../components/admin/new_category'
 
 // Use the staticProps returned below
-export default function Product({ posts, name }) {
+export default function Category({ posts, name }) {
   return <Layout page={'products'}>
       <Head>
         <title>{name} - {posts[0].name}</title>

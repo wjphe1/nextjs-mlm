@@ -29,6 +29,7 @@ export default function Layout({ children, page, name }) {
     const logout = () => {
         Cookies.remove('token');
         Cookies.remove('user');
+        Cookies.remove('pid');
         delete api.defaults.headers.Authorization;
         api.delete(routes.sign_out);
         Router.reload();

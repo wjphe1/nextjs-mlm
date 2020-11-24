@@ -2,9 +2,9 @@ import Head from 'next/head'
 import Link from 'next/link'
 import React from 'react'
 import Cookies from 'js-cookie'
-import Layout from '../../components/admin/layout'
-import Admprod from '../../components/admin/admin_prod'
-import Othprod from '../../components/admin/others_prod'
+import Layout from '../../../components/admin/layout'
+import Admprod from '../../../components/admin/admin_prod'
+import Othprod from '../../../components/admin/others_prod'
 
 class Products extends React.Component {
   constructor(props) {
