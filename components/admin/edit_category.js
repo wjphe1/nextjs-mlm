@@ -9,7 +9,7 @@ import routes from '../auth/routes'
 import Spinner from 'react-bootstrap/Spinner'
 
 
-class Newcate extends React.Component {
+class Editcate extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -17,6 +17,7 @@ class Newcate extends React.Component {
       error: false,
       err_msg: '',
       category: '',
+      page_error: false,
     };
   }
 
@@ -26,29 +27,51 @@ class Newcate extends React.Component {
     });
   }
 
+  getCate = () => {
+    api.get(routes.categories + '/' + this.props.cid)
+      .then(res => {
+        const row = res.data.category
+        if (row.id) {
+          this.setState({
+            category: row.name
+          })
+        } else {
+          this.setState({ page_error: true })
+        }
+    })
+    .catch(err => {
+        this.setState({ page_error: true })
+    })
+  }
+
   submitCate = (e) => {
     e.preventDefault();
     let vm = this;
     vm.setState({ error: false, isloaded: false })
-    api.post(routes.categories, { category: { name: this.state.category } })
+    api.put(routes.categories + '/' + this.props.cid, { category: { name: this.state.category } })
     .then(res => {
       //console.log(res)
       Router.push({
         pathname: '/admin/products',
-        query: { newcate: true, tab: 'category' },
+        query: { editcate: true, tab: 'category' },
       })
     })
     .catch(err => {
-        //console.log(err.response.data)
-        const msg = err.response.data;
-        setTimeout(() => {vm.setState({ err_msg: msg, isloaded: true, error: true })}, 100)
+      //console.log(err.response.data)
+      const msg = err.response;
+      setTimeout(() => {vm.setState({ err_msg: msg, isloaded: true, error: true })}, 100)
     })
-}
+  }
+
+  
+  componentDidMount() {
+    this.getCate();
+  }
 
   render () {
     return (
       <section className="py-5 px-4">
-        <form onSubmit={this.submitCate} className="row m-0">
+        {!this.state.page_error ? <form onSubmit={this.submitCate} className="row m-0">
           {this.state.error && <div className={`mb-4 ${form.notice_error}`}>
             <div className="col-10 d-flex align-items-center">
               <span className={form.nexcl}>!</span> 
@@ -67,19 +90,19 @@ class Newcate extends React.Component {
             </div>
             <div className="p-4">
               <div className="pb-3">Category Name</div>
-              <input type="text" name="category" onChange={this.handleChange} placeholder="E.g.: Skin Care Beauty" className={form.field_light} style={{ maxWidth: 400 }}/>
+              <input type="text" value={this.state.category} name="category" onChange={this.handleChange} placeholder="E.g.: Skin Care Beauty" className={form.field_light} style={{ maxWidth: 400 }}/>
             </div>
           </div>
           <div className="col-lg-4 d-flex align-items-start">
             <div className={`${styles.table} ${styles.submitdiv}`}>
-              {this.state.isloaded ? <input className={styles.tbtn} type="submit" value="Create Category"/> : <button className={styles.tbtn} disabled><Spinner animation="border" variant="light" size='sm'/></button>}
+              {this.state.isloaded ? <input className={styles.tbtn} type="submit" value="Update Category"/> : <button className={styles.tbtn} disabled><Spinner animation="border" variant="light" size='sm'/></button>}
               <Link href={{ pathname: '/admin/products', query: { tab: 'category' } }}><a className="pt-3" style={{color: "#FF6202"}}><MdCancel/> Discard</a></Link>
             </div>
           </div>
-        </form>
+        </form> : <div className="p-5 text-center">You are Not Authorized to View this Page</div>}
       </section>
     )
   }
 }
 
-export default Newcate;
+export default Editcate;

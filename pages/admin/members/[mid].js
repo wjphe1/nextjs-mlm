@@ -1,17 +1,21 @@
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import Link from 'next/link'
 import React from 'react'
 import Layout from '../../../components/admin/layout'
-import Newcate from '../../../components/admin/new_category'
+import Editmemb from '../../../components/admin/edit_member'
 
 // Use the staticProps returned below
-export default function Category({ posts, name }) {
-  return <Layout page={'products'}>
+export default function Members({ posts, name }) {
+  const router = useRouter()
+  const { mid } = router.query //current route's [mid] (member ID)
+
+  return <Layout page={'users'}>
       <Head>
-        <title>{name} - {posts[0].name}</title>
+        <title>{name} - Edit Member</title>
       </Head>
 
-      <Newcate/>
+      <Editmemb mid={mid}/>
   </Layout>
 }
 
@@ -22,9 +26,9 @@ export async function getStaticPaths() {
   //const request  = await fetch('https://api.tvmaze.com/search/shows?q=batman')
   //const array = await request.json()
 
-  const array = ['1', '2', '3', '4', '5']
+  const array = ['01509ed5-2972-4d71-a4f5-e1d6bab0a913', '2', '3', '4', '5']
   const paths = array.map(u =>({
-    params: {id: u},
+    params: {mid: u},
   }))
 
   return {

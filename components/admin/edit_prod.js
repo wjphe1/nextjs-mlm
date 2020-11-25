@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import React, {useEffect}  from 'react'
+import React from 'react'
 import Router from 'next/router'
 import styles from '../../styles/module/admin/admin.module.scss'
 import form from '../../styles/module/form.module.scss'
@@ -13,6 +13,22 @@ import api from '../auth/api'
 import routes from '../auth/routes'
 import Spinner from 'react-bootstrap/Spinner'
 
+/* const prodprice = {
+    product_price:[
+        { role: 'MASTER_STOKIS', price: this.state.pricems },
+        { role: 'STOKIS', price: this.state.prices },
+        { role: 'AGENT', price: this.state.pricea },
+        { role: 'CONSUMER', price: this.state.pricec }
+    ]
+};
+const prodecash = {
+    product_ecash_reward: [
+        { level: 0, ecash: this.state.ecashone },
+        { level: 1, ecash: this.state.ecashtwo },
+        { level: 2, ecash: this.state.ecashthree },
+    ]
+} */
+
 const Editor = dynamic(
     () => import('react-draft-wysiwyg').then(mod => mod.Editor),
     { ssr: false }
@@ -22,8 +38,9 @@ class Editprod extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            catelist: [],
             name: '',
-            category: 'Skin Care',
+            category: '',
             sku: '',
             image: '',
             imgData: '',
@@ -37,8 +54,15 @@ class Editprod extends React.Component {
             prices: '',
             pricea: '',
             pricec: '',
+            ecashoneid: '',
+            ecashtwoid: '',
+            ecashthreeid: '',
+            pricemsid: '',
+            pricesid: '',
+            priceaid: '',
+            pricecid: '',
             epoint: '',
-            isloaded: true,
+            isloaded: false,
             error: false,
             err_msg: {},
             page_error: false,
@@ -80,6 +104,17 @@ class Editprod extends React.Component {
         });
     };
 
+    getCate = () => {
+        api.get(routes.categories)
+            .then(res => {
+                const rows = res.data.categories
+                this.setState({ catelist: rows })
+            })
+            .catch(err => {
+                console.log('Get Category Error')
+            })
+    }
+
     imgChange = (e) => {
         e.preventDefault();
         let reader = new FileReader();
@@ -101,7 +136,7 @@ class Editprod extends React.Component {
         const postdata = {
             product: {
                 name: this.state.name,
-                category: this.state.category,
+                category_id: this.state.category,
                 description: draftToHtml(convertToRaw(this.state.desc.getCurrentContent())),
                 delivery_description: draftToHtml(convertToRaw(this.state.deli.getCurrentContent())),
                 order_description: draftToHtml(convertToRaw(this.state.order.getCurrentContent())),
@@ -109,18 +144,19 @@ class Editprod extends React.Component {
                 epoint: this.state.epoint,
                 photo: this.state.imgData,
                 product_prices_attributes: [
-                    { role: 'MASTER_STOKIS', price: this.state.pricems },
-                    { role: 'STOKIS', price: this.state.prices },
-                    { role: 'AGENT', price: this.state.pricea },
-                    { role: 'CONSUMER', price: this.state.pricec }
+                    { id: this.state.pricemsid, role: 'MASTER_STOKIS', price: this.state.pricems },
+                    { id: this.state.pricesid, role: 'STOKIS', price: this.state.prices },
+                    { id: this.state.priceaid, role: 'AGENT', price: this.state.pricea },
+                    { id: this.state.pricecid, role: 'CONSUMER', price: this.state.pricec }
                 ],
                 product_ecash_rewards_attributes: [
-                    { level: 0, ecash: this.state.ecashone },
-                    { level: 1, ecash: this.state.ecashtwo },
-                    { level: 2, ecash: this.state.ecashthree },
+                    { id: this.state.ecashoneid, level: 0, ecash: this.state.ecashone },
+                    { id: this.state.ecashtwoid, level: 1, ecash: this.state.ecashtwo },
+                    { id: this.state.ecashthreeid, level: 2, ecash: this.state.ecashthree },
                 ]
             }
         }
+        
         api.put(routes.products + '/' + this.props.pid, postdata)
         .then(res => {
             //console.log(res)
@@ -143,7 +179,7 @@ class Editprod extends React.Component {
             if (rows.id) {
                 this.setState({
                     name: rows.name,
-                    category: rows.category,
+                    category: rows.category_id,
                     epoint: parseFloat(rows.epoint),
                     sku: rows.sku,
                     pricems: parseFloat(rows.product_prices[0].price),
@@ -153,21 +189,30 @@ class Editprod extends React.Component {
                     ecashone: parseFloat(rows.product_ecash_rewards[0].ecash),
                     ecashtwo: parseFloat(rows.product_ecash_rewards[1].ecash),
                     ecashthree: parseFloat(rows.product_ecash_rewards[2].ecash),
+                    pricemsid: rows.product_prices[0].id,
+                    pricesid: rows.product_prices[1].id,
+                    priceaid: rows.product_prices[2].id,
+                    pricecid: rows.product_prices[3].id,
+                    ecashoneid: rows.product_ecash_rewards[0].id,
+                    ecashtwoid: rows.product_ecash_rewards[1].id,
+                    ecashthreeid: rows.product_ecash_rewards[2].id,
                     imgData: rows.photo.url,
                     desc: EditorState.createWithContent(ContentState.createFromBlockArray(convertFromHTML(rows.description))),
                     deli: EditorState.createWithContent(ContentState.createFromBlockArray(convertFromHTML(rows.delivery_description))),
                     order: EditorState.createWithContent(ContentState.createFromBlockArray(convertFromHTML(rows.order_description))),
+                    isloaded: true,
                 })
             } else {
-                this.setState({ page_error: true })
+                this.setState({ page_error: true, isloaded: true })
             }
         })
         .catch(err => {
-            this.setState({ page_error: true })
+            this.setState({ page_error: true, isloaded: true })
         })
     }
     
     componentDidMount() {
+        this.getCate();
         this.getProd();
     }
 
@@ -182,16 +227,17 @@ class Editprod extends React.Component {
 
         return (
         <section className="py-5 px-4">
-            <form onSubmit={this.submitProd} className="row m-0">
-                {this.state.isloaded && <div className="col-lg-8 p-0 mb-4">
+            {!this.state.page_error ? <form onSubmit={this.submitProd} className="row m-0">
+                {this.state.isloaded ? <div className="col-lg-8 p-0 mb-4">
                     {this.state.error && <div className={`mb-4 ${form.notice_error}`}>
                         <div className="col-10 d-flex align-items-center">
                             <span className={form.nexcl}>!</span> 
-                            <ul className="m-0 pl-4">
-                                {this.state.err_msg.error && Object.keys(this.state.err_msg.error).map(key =>
+                            {(this.state.err_msg.error && typeof this.state.err_msg.error === 'string') && <div>{this.state.err_msg.error}</div>}
+                            {(this.state.err_msg.error && typeof this.state.err_msg.error === 'array') && <ul className="m-0 pl-4">
+                                {Object.keys(this.state.err_msg.error).map(key =>
                                     <li value={key} key={key}>{`${key}: ${this.state.err_msg.error[key][0]}`}</li>
                                 )}
-                            </ul>
+                            </ul>}
                         </div> 
                         <div onClick={() => this.setState({ error: false })} className={`col-2 ${form.nclose}`}>Close</div>
                     </div>}
@@ -220,8 +266,9 @@ class Editprod extends React.Component {
                             <div className="col-md-4 px-2">
                                 <label>Product Categories</label>
                                 <select name="category" onChange={this.changeStr} value={this.state.category} type="text" className={form.field_light}>
-                                    <option>Skin Care</option>
-                                    <option>Others</option>
+                                    {this.state.catelist.map((u, i) => 
+                                        <option key={i} value={u.id}>{u.name}</option>
+                                    )}
                                 </select>
                             </div>
                             <div className="col-md-4 px-2">
@@ -343,14 +390,14 @@ class Editprod extends React.Component {
                             <input name="epoint" onChange={this.changeNum} value={this.state.epoint} type="text" placeholder="E.g. 100" className={form.field_light} required/>
                         </div>
                     </div>
-                </div>}
+                </div> : <div className="col-lg-8 d-flex justify-content-center p-5"><Spinner animation="border" size='lg'/></div>}
                 <div className="col-lg-4 d-flex align-items-start">
                     <div className={`${styles.table} ${styles.submitdiv}`}>
                         {this.state.isloaded ? <input className={styles.tbtn} type="submit" value="Update Product"/> : <button className={styles.tbtn} disabled><Spinner animation="border" variant="light" size='sm'/></button>}
                         <Link href="/admin/products"><a className="pt-3" style={{color: "#FF6202"}}><MdCancel/> Discard</a></Link>
                     </div>
                 </div>
-            </form>
+            </form> : <div className="p-5 text-center">You are Not Authorized to View this Page</div>}
         </section>
         )
     }

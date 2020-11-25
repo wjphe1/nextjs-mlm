@@ -3,14 +3,13 @@ import Link from 'next/link'
 import React from 'react'
 import Cookies from 'js-cookie'
 import Layout from '../../../components/admin/layout'
-import Newmemb from '../../../components/admin/new_member'
+import HQmembers from '../../../components/admin/hq_member'
+import Othermembers from '../../../components/admin/others_member'
 
-class Members extends React.Component {
+class Users extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      startDate: new Date(),
-      endDate: (new Date()).setDate(new Date().getDate()+1)
     };
   }
 
@@ -25,21 +24,18 @@ class Members extends React.Component {
   render () {
     var user = {};
     var role = null;
-    var referral = '';
     var userStr = Cookies.get('user');
     if (userStr) { user = JSON.parse(userStr); role = user.role }
-    if (role !== 'SUPERADMIN' && role !== 'HQ') { referral = user.id }
 
     return (
       <Layout page={'users'} {...this.props}>
         <Head>
-          <title>{this.props.name} - Admin New Member</title>
+          <title>{this.props.name} - Admin Members</title>
         </Head>
-
-        <Newmemb referral={referral}/>
+        {(role && role ==='HQ') ? <HQmembers/> : <Othermembers/>}
       </Layout>
     )
   }
 }
 
-export default Members;
+export default Users;

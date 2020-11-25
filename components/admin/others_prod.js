@@ -1,7 +1,9 @@
 import Link from 'next/link'
 import React from 'react'
+import Cookies from 'js-cookie'
 import styles from '../../styles/module/admin/admin.module.scss'
 import utils from '../../styles/module/utils.module.scss'
+import Prodinv from './product_inventory'
 import Stocktransfer from './stock_transfer'
 import Pending from './pending_transfer'
 import Past from './past_transfer'
@@ -12,7 +14,7 @@ import Tabs from 'react-bootstrap/Tabs'
 import Tab from 'react-bootstrap/Tab'
 import Table from 'react-bootstrap/Table'
 
-class HQprod extends React.Component {
+class Othprod extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,22 +23,14 @@ class HQprod extends React.Component {
     };
   }
 
-  handleChange = (e) => {
-    console.log(e)
-    const value = parseInt(e.target.value);
-    this.setState({
-      [e.target.name]: value
-    });
-  }
-
-  editQuantity = (value) => {
-    var newt = prompt('Please enter a new inventory quantity', value)
-    if (newt) {
-      console.log(newt)
-    }
-  }
-
   render () {
+    var user = {};
+    var role = null;
+    var dtab = 'transfer';
+    var userStr = Cookies.get('user');
+    if (userStr) { user = JSON.parse(userStr); role = user.role; }
+    if (role === 'HQ') { dtab = 'inventory'; }
+
     return (
         <section className="py-5 px-4">
           {/* Head Section */}
@@ -59,70 +53,10 @@ class HQprod extends React.Component {
 
           {/* HQ Products Tabs */}
           <div className="admin-reports-tabs">
-            <Tabs defaultActiveKey="inventory" id="uncontrolled-tab-example">
-              <Tab eventKey="inventory" title="● Inventory">   
-                <div className={`${styles.table} mb-4`}>
-                  <div className="d-flex align-items-center p-3">
-                    <form className={styles.search_div}>
-                      <input type="text" placeholder="Search product here" className={styles.search}/>
-                      <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
-                    </form>
-                  </div>
-                  <Table responsive>
-                    <thead>
-                      <tr>
-                        <th className="pl-4">Product Name</th>
-                        <th className="w-50">Inventory</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className={styles.cell_center}>
-                        <td className="font-weight-bold pl-4">Kopi Reeqza</td>
-                        <td className="w-50">100</td>
-                        <td><button onClick={() => this.editQuantity('100')} className={`${styles.tbtn} py-2`}>Edit Inventory</button></td>
-                      </tr>
-                      <tr className={styles.cell_center}>
-                        <td className="font-weight-bold pl-4">Kopi Reeqza</td>
-                        <td className="w-50">80</td>
-                        <td><button onClick={() => this.editQuantity('80')} className={`${styles.tbtn} py-2`}>Edit Inventory</button></td>
-                      </tr>
-                      <tr className={styles.cell_center}>
-                        <td className="font-weight-bold pl-4">Kopi Reeqza</td>
-                        <td className="w-50">70</td>
-                        <td><button onClick={() => this.editQuantity('70')} className={`${styles.tbtn} py-2`}>Edit Inventory</button></td>
-                      </tr>
-                    </tbody>
-                  </Table>
-                </div>
-
-                <div className={styles.table}>
-                  <div className="d-flex align-items-center p-3">
-                    <div className={styles.thead}>History</div>
-                  </div>
-                  <Table responsive>
-                    <thead>
-                      <tr>
-                        <th className="pl-4">Product Name</th>
-                        <th>Inventory Changes</th>
-                        <th>Changed At</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td className="pl-4 font-weight-bold">Kopi Reezqa</td>
-                        <td>-100</td>
-                        <td>11 Oct 2020</td>
-                      </tr>
-                      <tr>
-                        <td className="pl-4 font-weight-bold">Kopi Reezqa</td>
-                        <td>+50</td>
-                        <td>10 Oct 2020</td>
-                      </tr>
-                    </tbody>
-                  </Table>
-                </div>
-              </Tab>
+            <Tabs defaultActiveKey={dtab} id="uncontrolled-tab-example">
+              {role === 'HQ' && <Tab eventKey="inventory" title="● Inventory">    
+                <Prodinv/>
+              </Tab>}
               <Tab eventKey="transfer" title="● Stock Transfer">
                 <Stocktransfer/>
               </Tab>
@@ -139,4 +73,4 @@ class HQprod extends React.Component {
   }
 }
 
-export default HQprod;
+export default Othprod;

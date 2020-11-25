@@ -7,10 +7,10 @@ import form from '../../styles/module/form.module.scss'
 import dateTime from '../dateTime'
 import api from '../auth/api'
 import routes from '../auth/routes'
-import DatePicker from "react-datepicker";
-import { FiCalendar } from 'react-icons/fi';
-import { HiOutlineSearch } from 'react-icons/hi';
-import { BsFillCaretDownFill, BsThreeDots } from 'react-icons/bs';
+import DatePicker from "react-datepicker"
+import { FiCalendar } from 'react-icons/fi'
+import { HiOutlineSearch } from 'react-icons/hi'
+import { BsFillCaretDownFill, BsThreeDots } from 'react-icons/bs'
 import Tabs from 'react-bootstrap/Tabs'
 import Tab from 'react-bootstrap/Tab'
 import Table from 'react-bootstrap/Table'
@@ -27,8 +27,11 @@ class Admprod extends React.Component {
       startDate: new Date(),
       endDate: (new Date()).setDate(new Date().getDate()+1),
       prodlist: [],
+      catelist: [],
       isloaded: false,
       error: false,
+      cisloaded: false,
+      cerror: false,
       toast: true,
     };
   }
@@ -49,9 +52,21 @@ class Admprod extends React.Component {
         this.setState({ prodlist: rows, isloaded: true })
       })
       .catch(err => {
-        console.log(err.response.data)
-        const msg = err.response.data;
+        console.log(err.response)
         this.setState({ isloaded: true, error: true })
+      })
+  }
+
+  getCate = () => {
+    api.get(routes.categories)
+      .then(res => {
+        const rows = res.data.categories
+        console.log(rows)
+        this.setState({ cisloaded: true, catelist: rows })
+      })
+      .catch(err => {
+        console.log(err.response)
+        this.setState({ cisloaded: true, cerror: true })
       })
   }
 
@@ -61,14 +76,28 @@ class Admprod extends React.Component {
     .then(res => {
       console.log('delete successfully')
       this.getProd();
-      this.setState({ isloaded: true });
     })
     .catch(err => {
-      console.log(err.response.data)
+      console.log(err.response)
+      this.setState({ toast: true, error: true, isloaded: true })
+    })
+  }
+
+  deleteCate = (id) => {
+    this.setState({ cisloaded: false });
+    api.delete(routes.categories + '/' + id)
+    .then(res => {
+      console.log('delete successfully')
+      this.getCate();
+    })
+    .catch(err => {
+      console.log(err.response)
+      this.setState({ toast: true, cerror: true, cisloaded: true })
     })
   }
 
   componentDidMount() {
+    this.getCate();
     this.getProd();
   }
 
@@ -98,7 +127,14 @@ class Admprod extends React.Component {
           {/* Admin Products Tabs */}
           <div className="admin-reports-tabs">
             <Tabs defaultActiveKey={dtab} id="uncontrolled-tab-example">
-              <Tab eventKey="list" title="● Product List">   
+              <Tab eventKey="list" title="● Product List">
+                {(this.state.error && this.state.toast) && <div className={`mb-4 ${form.notice_error}`}>
+                  <div className="col-10 d-flex align-items-center">
+                    <span className={form.nexcl}>!</span>
+                    <span><b>Error -</b> Delete Product Unsuccessful</span>
+                  </div>
+                  <div onClick={() => this.setState({ toast: false })} className={`col-2 ${form.nclose}`}>Close</div>
+                </div>}
                 {(this.props.router.query.newprod && this.state.toast) && <div className={`mb-4 ${form.notice_success}`}>
                   <div className="col-10 d-flex align-items-center">
                     <span className={form.sexcl}>✓</span>
@@ -173,6 +209,27 @@ class Admprod extends React.Component {
                 </div>
               </Tab>
               <Tab eventKey="category" title="● Product Category">
+                {(this.state.cerror && this.state.toast) && <div className={`mb-4 ${form.notice_error}`}>
+                  <div className="col-10 d-flex align-items-center">
+                    <span className={form.nexcl}>!</span>
+                    <span><b>Error -</b> Delete Category Unsuccessful</span>
+                  </div>
+                  <div onClick={() => this.setState({ toast: false })} className={`col-2 ${form.nclose}`}>Close</div>
+                </div>}
+                {(this.props.router.query.newcate && this.state.toast) && <div className={`mb-4 ${form.notice_success}`}>
+                  <div className="col-10 d-flex align-items-center">
+                    <span className={form.sexcl}>✓</span>
+                    <span><b>Congratulations -</b> Category was created successfully</span>
+                  </div>
+                  <div onClick={() => this.setState({ toast: false })} className={`col-2 ${form.sclose}`}>Close</div>
+                </div>}
+                {(this.props.router.query.editcate && this.state.toast) && <div className={`mb-4 ${form.notice_success}`}>
+                  <div className="col-10 d-flex align-items-center">
+                    <span className={form.sexcl}>✓</span>
+                    <span><b>Congratulations -</b> Category was updated successfully</span>
+                  </div>
+                  <div onClick={() => this.setState({ toast: false })} className={`col-2 ${form.sclose}`}>Close</div>
+                </div>}
                 <div className={styles.table}>
                   <div className="d-flex align-items-center p-3">
                     <form className={styles.search_div}>
@@ -181,7 +238,7 @@ class Admprod extends React.Component {
                     </form>
                     <Link to href="/admin/categories/new"><a className={`ml-auto ${styles.tbtn}`}>New Category</a></Link>
                   </div>
-                  <Table responsive>
+                  {this.state.cisloaded ? <Table responsive>
                     <thead>
                       <tr>
                         <th className="pl-4"><input type="checkbox"/></th>
@@ -191,10 +248,10 @@ class Admprod extends React.Component {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
+                      {this.state.catelist.map((u, i) => <tr key={i}>
                         <td className="pl-4"><input type="checkbox"/></td>
-                        <td className="font-weight-bold">Skin Care Beauty</td>
-                        <td className="w-50">20 Oct 2020 11.30 AM</td>
+                        <td className="font-weight-bold">{u.name}</td>
+                        <td className="w-50">{dateTime(u.created_at)}</td>
                         <td className="table-cell-dropdown">
                           <Dropdown>
                             <Dropdown.Toggle>
@@ -202,14 +259,15 @@ class Admprod extends React.Component {
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
-                              <Dropdown.Item href="/">Edit</Dropdown.Item>
-                              <Dropdown.Item as="button">Delete</Dropdown.Item>
+                              <Dropdown.Item href={'/admin/categories/'+ u.id}>Edit</Dropdown.Item>
+                              <Dropdown.Item as="button" onClick={() => this.deleteCate(u.id)}>Delete</Dropdown.Item>
                             </Dropdown.Menu>
                           </Dropdown>
                         </td>
-                      </tr>
+                      </tr>)}
                     </tbody>
-                  </Table>
+                  </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
+                  {this.state.cisloaded && !this.state.catelist.length && <div className="p-5 text-center">No category found. Click new category to add.</div>}
                 </div>
               </Tab>
             </Tabs>

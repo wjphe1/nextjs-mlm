@@ -6,7 +6,6 @@ import Adminlog from './login'
 //api here is an axios instance which has the baseURL set according to the env.
 import api from './api';
 
-
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {

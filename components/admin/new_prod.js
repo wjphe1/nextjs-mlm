@@ -22,8 +22,9 @@ class Newprod extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            catelist: [],
             name: '',
-            category: 'Skin Care',
+            category: '',
             sku: '',
             image: '',
             imgData: '',
@@ -79,6 +80,18 @@ class Newprod extends React.Component {
         });
     };
 
+    getCate = () => {
+        api.get(routes.categories)
+            .then(res => {
+                const rows = res.data.categories
+                console.log(rows)
+                this.setState({ catelist: rows, category: rows[0].id })
+            })
+            .catch(err => {
+                console.log('Get Category Error')
+            })
+    }
+
     imgChange = (e) => {
         e.preventDefault();
         let reader = new FileReader();
@@ -100,7 +113,7 @@ class Newprod extends React.Component {
         const postdata = {
             product: {
                 name: this.state.name,
-                category: this.state.category,
+                category_id: this.state.category,
                 description: this.state.desc,
                 delivery_description: this.state.deli,
                 order_description: this.state.order,
@@ -135,6 +148,10 @@ class Newprod extends React.Component {
         })
     }
 
+    componentDidMount() {
+        this.getCate();
+    }
+
     render () {
 
         let $imagePreview = null;
@@ -147,15 +164,16 @@ class Newprod extends React.Component {
         return (
         <section className="py-5 px-4">
             <form onSubmit={this.submitProd} className="row m-0">
-                {this.state.isloaded && <div className="col-lg-8 p-0 mb-4">
+                {this.state.isloaded ? <div className="col-lg-8 p-0 mb-4">
                     {this.state.error && <div className={`mb-4 ${form.notice_error}`}>
                         <div className="col-10 d-flex align-items-center">
                             <span className={form.nexcl}>!</span> 
-                            <ul className="m-0 pl-4">
-                                {this.state.err_msg.error && Object.keys(this.state.err_msg.error).map(key =>
+                            {(this.state.err_msg.error && typeof this.state.err_msg.error === 'string') && <div>{this.state.err_msg.error}</div>}
+                            {(this.state.err_msg.error && typeof this.state.err_msg.error === 'array') && <ul className="m-0 pl-4">
+                                {Object.keys(this.state.err_msg.error).map(key =>
                                     <li value={key} key={key}>{`${key}: ${this.state.err_msg.error[key][0]}`}</li>
                                 )}
-                            </ul>
+                            </ul>}
                         </div> 
                         <div onClick={() => this.setState({ error: false })} className={`col-2 ${form.nclose}`}>Close</div>
                     </div>}
@@ -184,8 +202,9 @@ class Newprod extends React.Component {
                             <div className="col-md-4 px-2">
                                 <label>Product Categories</label>
                                 <select name="category" onChange={this.changeStr} value={this.state.category} type="text" className={form.field_light}>
-                                    <option>Skin Care</option>
-                                    <option>Others</option>
+                                    {this.state.catelist.map((u, i) => 
+                                        <option key={i} value={u.id}>{u.name}</option>
+                                    )}
                                 </select>
                             </div>
                             <div className="col-md-4 px-2">
@@ -307,7 +326,7 @@ class Newprod extends React.Component {
                             <input name="epoint" onChange={this.changeNum} value={this.state.epoint} type="text" placeholder="E.g. 100" className={form.field_light} required/>
                         </div>
                     </div>
-                </div>}
+                </div> : <div className="col-lg-8 d-flex justify-content-center p-5"><Spinner animation="border" size='lg'/></div>}
                 <div className="col-lg-4 d-flex align-items-start">
                     <div className={`${styles.table} ${styles.submitdiv}`}>
                         {this.state.isloaded ? <input className={styles.tbtn} type="submit" value="Create Product"/> : <button className={styles.tbtn} disabled><Spinner animation="border" variant="light" size='sm'/></button>}
