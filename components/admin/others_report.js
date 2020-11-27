@@ -4,6 +4,7 @@ import utils from '../../styles/module/utils.module.scss'
 import form from '../../styles/module/form.module.scss'
 import api from '../auth/api'
 import routes from '../auth/routes'
+import dateTime from '../dateTime'
 import Spinner from 'react-bootstrap/Spinner'
 import DatePicker from "react-datepicker";
 import { FiCalendar } from 'react-icons/fi';
@@ -26,6 +27,7 @@ class Othrpt extends React.Component {
       error: false,
       isloaded: false,
       redeemlist: [],
+      rewardlist: [],
       points: '',
     };
   }
@@ -56,6 +58,19 @@ class Othrpt extends React.Component {
     }
   }
 
+  getIncentives = () => {
+    api.get(routes.epoint_rewards)
+      .then(res => {
+      const rows = res.data.epoint_rewards;
+      console.log(rows)
+      this.setState({ rewardlist: rows })
+    })
+    .catch(err => {
+      console.log(err.response)
+      this.setState({ error: true, isloaded: true })
+    })
+  }
+
   getPoints = () => {
     api.get(routes.epoint_requests)
       .then(res => {
@@ -70,6 +85,7 @@ class Othrpt extends React.Component {
   }
 
   componentDidMount() {
+    this.getIncentives();
     this.getPoints();
   }
 
@@ -161,48 +177,43 @@ class Othrpt extends React.Component {
                     <tr>
                       <th className="pl-5 pt-4">E-Points</th>
                       <th className="pt-4">Redeemed At</th>
-                      <th className="pt-4">Balance</th>
+                      <th className="pt-4">Approved At</th>
                       <th className="pt-4">Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     {this.state.redeemlist.map((u, i) => <tr className={styles.cell_center} key={i}>
-                      <td className="pl-5">500 Pts</td>
-                      <td>20 Oct 2020 11:30 AM</td>
-                      <td>50 Pts</td>
-                      <td><button className={styles.status_yellow} disabled>In Progress</button></td>
+                      <td className="pl-5">{u.epoint} Pts</td>
+                      <td>{dateTime(u.created_at)}</td>
+                      <td>{u.approved_at ? dateTime(u.approved_at) : '-'}</td>
+                      {u.status === 'PENDING' ? <td><button className={`text-capitalize ${styles.status_yellow}`} disabled>{u.status.toLowerCase()}</button></td> : 
+                      <td><button className={`text-capitalize ${styles.status_green}`} disabled>{u.status.toLowerCase()}</button></td>}
                     </tr>)}
                 </tbody>
                 </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
                 {this.state.isloaded && !this.state.redeemlist.length && <div className="p-5 text-center">No Reimbursement History Found.</div>}
               </Tab>
               <Tab eventKey="incentive" title="Monthly Incentive">
-                <Table responsive>
+                {this.state.isloaded ? <Table responsive>
                   <thead>
                     <tr>
-                      <th className="pl-5 pt-4">Incentive</th>
-                      <th className="pt-4">Reimbursed At</th>
-                      <th className="pt-4">Balance</th>
+                      <th className="pl-5 pt-4">Incentives</th>
+                      <th className="pt-4">Awarded At</th>
+                      <th className="pt-4">Reward Type</th>
+                      <th className="pt-4">Status</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className={styles.cell_center}>
-                      <td className="pl-5">500 Pts</td>
-                      <td>20 Oct 2020 11:30 AM</td>
-                      <td>50 Pts</td>
-                    </tr>
-                    <tr className={styles.cell_center}>
-                      <td className="pl-5">500 Pts</td>
-                      <td>20 Oct 2020 11:30 AM</td>
-                      <td>50 Pts</td>
-                    </tr>
-                    <tr className={styles.cell_center}>
-                      <td className="pl-5">500 Pts</td>
-                      <td>20 Oct 2020 11:30 AM</td>
-                      <td>50 Pts</td>
-                    </tr>
+                    {this.state.rewardlist.map((u, i) => <tr className={styles.cell_center} key={i}>
+                      <td className="pl-5">{u.epoint} Pts</td>
+                      <td>{dateTime(u.created_at)}</td>
+                      <td>{u.reward_type}</td>
+                      {u.status === 'PENDING' ? <td><button className={`text-capitalize ${styles.status_yellow}`} disabled>{u.status.toLowerCase()}</button></td> : 
+                      <td><button className={`text-capitalize ${styles.status_green}`} disabled>{u.status.toLowerCase()}</button></td>}
+                    </tr>)}
                   </tbody>
-                </Table>
+                </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
+                {this.state.isloaded && !this.state.rewardlist.length && <div className="p-5 text-center">No Incentive Record Found.</div>}
               </Tab>
             </Tabs>
           </div>

@@ -32,7 +32,12 @@ class Othermembers extends React.Component {
     getUsers = () => {
         api.get(routes.users)
         .then(res => {
-            const rows = res.data.users
+            var user = {};
+            var id = null;
+            var userStr = Cookies.get('user');
+            if (userStr) { user = JSON.parse(userStr); id = user.id }
+            var rows = res.data.users
+            rows = rows.filter(u => u.id !== id);
             this.setState({ userlist: rows, isloaded: true })
         })
         .catch(err => {
@@ -125,7 +130,7 @@ class Othermembers extends React.Component {
                                         )}
                                     </tbody>
                                 </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
-                                {this.state.isloaded && !this.state.userlist.length && <div className="p-5 text-center">No User Request Found.</div>}
+                                {this.state.isloaded && !this.state.userlist.length && <div className="p-5 text-center">No Downline Members Found.</div>}
                             </div>
                         </Tab>
                     </Tabs>

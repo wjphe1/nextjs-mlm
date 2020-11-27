@@ -4,7 +4,8 @@ import api from '../auth/api'
 import routes from '../auth/routes'
 import styles from '../../styles/module/admin/admin.module.scss'
 import utils from '../../styles/module/utils.module.scss'
-import { FaUsers, FaMapMarkerAlt } from 'react-icons/fa';
+import form from '../../styles/module/form.module.scss'
+import { FaUsers, FaMapMarkerAlt, FaPhoneAlt } from 'react-icons/fa';
 import { HiOutlineSearch } from 'react-icons/hi';
 import { BsFillCaretDownFill } from 'react-icons/bs';
 import { FiPlus, FiMinus } from 'react-icons/fi';
@@ -23,6 +24,9 @@ class Stocktransfer extends React.Component {
         this.state = {
             isloaded: false,
             error: false,
+            oisloaded: true,
+            oerror: false,
+            oerr_msg: {},
             member: true,
             fulfilment: false,
             show: false,
@@ -30,6 +34,8 @@ class Stocktransfer extends React.Component {
             userlist: [],
             target_member: null,
             target_address: null,
+            target_customer: '',
+            target_phone_number: '',
             products_check: ['','',''],
             products_selected: [],
             products_selected_quantity: [],
@@ -77,6 +83,7 @@ class Stocktransfer extends React.Component {
         this.setState({
             target_member: this.state.userlist[i].id,
             target_address: this.state.userlist[i].address,
+            target_phone_number: this.state.userlist[i].phone_number,
         });
     }
 
@@ -91,6 +98,7 @@ class Stocktransfer extends React.Component {
             this.setState({
                 target_member: null,
                 target_address: null,
+                target_phone_number: null,
             });
         }
     }
@@ -98,13 +106,64 @@ class Stocktransfer extends React.Component {
     editQuantity = (i, e) => {
         var quantity = this.state.products_selected_quantity;
         if (e.target) { 
-            if (!e.target.value) { quantity[i] = 0 }
+            if (!e.target.value) { quantity[i] = e.target.value }
             else { quantity[i] = parseInt(e.target.value) }
         } else { quantity[i] = quantity[i] + parseInt(e) }
 
         this.setState({
             products_selected_quantity: quantity
         })
+    }
+
+    submitOrder = () => {
+        this.setState({ oerror: false })
+        var orderitems = [];
+        var itemerror = false;
+        for (var i = 0; i < this.state.products_selected.length; i++) {
+            orderitems[i] = { 
+                product_id: this.state.products_selected[i].id,
+                quantity: this.state.products_selected_quantity[i]
+            }
+            if (typeof this.state.products_selected_quantity[i] !== 'number' || this.state.products_selected_quantity[i] < 1) {
+                itemerror = true;
+            }
+        }
+
+        console.log(orderitems)
+
+        if (itemerror) {
+            const msg = { error: 'Please select product(s) and valid quantity' }
+            this.setState({ oerror: true, oerr_msg: msg })
+        } else if ((!this.state.target_member && !this.state.target_customer) && (this.state.fulfilment && !this.state.target_address) && !this.state.target_phone_number) {
+            const msg = { error: 'Please fill in all the order details' }
+            this.setState({ oerror: true, oerr_msg: msg })
+        } else {
+            this.setState({ oisloaded: false })
+            var cust = this.state.target_customer
+            if (this.state.target_member) { cust = this.state.target_member }
+
+            const orderdata = {
+                order : {
+                    ordered_for_id: cust,
+                    delivery_required: this.state.fulfilment, 
+                    deliver_to: this.state.target_address,
+                    phone_number: this.state.target_phone_number,
+                    order_items_attributes: orderitems
+                }
+            }
+
+            api.post(routes.orders, orderdata)
+                .then(res => {
+                    console.log(res)
+                    this.getProd();
+                })
+                .catch(err => {
+                    console.log(err.response)
+                    var msg = { error: err.response.status + ' : ' + err.response.statusText };
+                    if (err.response.data) { msg = err.response.data };
+                    this.setState({ oerr_msg: msg, oisloaded: true, oerror: true })
+                })
+        }
     }
 
     getProd = () => {
@@ -126,7 +185,7 @@ class Stocktransfer extends React.Component {
             const rows = res.data.users
             const active = rows.filter((u) => u.active)
             console.log(active)
-            this.setState({ userlist: active, target_member: active[0].id, target_address: active[0].address })
+            this.setState({ userlist: active, target_member: active[0].id, target_address: active[0].address, target_phone_number: active[0].phone_number })
         })
         .catch(err => {
             console.log(err.response)
@@ -201,6 +260,18 @@ class Stocktransfer extends React.Component {
                         </div>
                     </Modal.Header>
                     <Modal.Body>
+                        {this.state.oerror && <div className={`w-100 mb-4 ${form.notice_error}`}>
+                            <div className="col-10 d-flex align-items-center">
+                                <span className={form.nexcl}>!</span> 
+                                {(this.state.oerr_msg.error && typeof this.state.oerr_msg.error === 'string') && <div>{this.state.oerr_msg.error}</div>}
+                                {(this.state.oerr_msg.error && typeof this.state.oerr_msg.error === 'array') && <ul className="m-0 pl-4">
+                                {Object.keys(this.state.oerr_msg.error).map(key =>
+                                    <li value={key} key={key}>{`${key}: ${this.state.oerr_msg.error[key][0]}`}</li>
+                                )}
+                                </ul>}
+                            </div>
+                            <div onClick={() => this.setState({ oerror: false })} className={`col-2 ${form.nclose}`}>Close</div>
+                        </div>}
                         <div className={styles.target_info}>
                             <div className="row m-0 flex-nowrap align-items-center">
                                 <div className="font-weight-bold px-2" style={{ minWidth: 80 }}>To</div>
@@ -210,11 +281,17 @@ class Stocktransfer extends React.Component {
                                                 <option key={i} value={i}>{u.username}</option>
                                             )}
                                         </select> 
-                                    : 
-                                        <input onChange={this.handleChange} name="target_member" className={styles.info_input} placeholder="Name"/>}
+                                    : <input onChange={this.handleChange} name="target_customer" className={styles.info_input} placeholder="Name"/>}
                                     <div className={styles.info_icon}><FaUsers/></div>
                                 </div>
                             </div>
+                            {!this.state.member && <div className="row m-0 pt-3 flex-nowrap align-items-center">
+                                <div className="font-weight-bold px-2" style={{ minWidth: 80 }}>Contact</div>
+                                <div className="position-relative pl-0" style={{ flex: 'auto'}}>
+                                    <input onChange={this.handleChange} name="target_phone_number" className={styles.info_input} placeholder="Phone Number"/>
+                                    <div className={styles.info_icon}><FaPhoneAlt/></div>
+                                </div>
+                            </div>}
                             {this.state.fulfilment && <div className="row m-0 pt-3 flex-nowrap align-items-center">
                                 <div className="font-weight-bold px-2" style={{ minWidth: 80 }}>Address</div>
                                 <div className="position-relative pl-0" style={{ flex: 'auto'}}>
@@ -237,7 +314,7 @@ class Stocktransfer extends React.Component {
                                     <tr key={i}>
                                         <td className="pl-4 font-weight-bold">{u.product.name}</td>
                                         <td className="d-flex align-items-center">
-                                        {u.quantity > 1 ? <button onClick={() => this.editQuantity(i,-1)} className={styles.prod_mbtn}><FiMinus/></button> : <button className={styles.prod_dbtn} disabled><FiMinus/></button>}
+                                        {this.state.products_selected_quantity[i] > 1 ? <button onClick={() => this.editQuantity(i,-1)} className={styles.prod_mbtn}><FiMinus/></button> : <button className={styles.prod_dbtn} disabled><FiMinus/></button>}
                                         <input type="number" name="count" value={this.state.products_selected_quantity[i]} onChange={(e) => this.editQuantity(i, e)} className={styles.prod_qinput}/>
                                         <button onClick={() => this.editQuantity(i,1)} className={styles.prod_abtn}><FiPlus/></button>
                                         </td>
@@ -249,8 +326,8 @@ class Stocktransfer extends React.Component {
                         <button className={styles.add_more} onClick={() => this.setState({ show: false })}><FiPlus/> Add More Products</button>
                     </Modal.Body>
                     <Modal.Footer>
-                        <button className={styles.tbtn_reverse_borderless} onClick={() => this.setState({ show: false })}><MdCancel/> Discard</button>
-                        <button className={`px-5 ${styles.tbtn}`}>Transfer Now</button>
+                        <button className={styles.tbtn_reverse_borderless} onClick={() => this.setState({ show: false, oerror: false })}><MdCancel/> Discard</button>
+                        <button onClick={this.submitOrder} className={`px-5 ${styles.tbtn}`}>Transfer Now</button>
                     </Modal.Footer>
                 </Modal>
             </div>
