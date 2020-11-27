@@ -9,8 +9,6 @@ class Members extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      startDate: new Date(),
-      endDate: (new Date()).setDate(new Date().getDate()+1)
     };
   }
 

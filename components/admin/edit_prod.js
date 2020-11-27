@@ -167,7 +167,8 @@ class Editprod extends React.Component {
         })
         .catch(err => {
             //console.log(err.response.data)
-            const msg = err.response.data;
+            var msg = { error: err.response.status + ' : ' + err.response.statusText };
+            if (err.response.data) { msg = err.response.data };
             setTimeout(() => {vm.setState({ err_msg: msg, isloaded: true, error: true })}, 100)
         })
     }

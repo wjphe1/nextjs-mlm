@@ -26,7 +26,7 @@ export async function getStaticPaths() {
   //const request  = await fetch('https://api.tvmaze.com/search/shows?q=batman')
   //const array = await request.json()
 
-  const array = ['01509ed5-2972-4d71-a4f5-e1d6bab0a913', '2', '3', '4', '5']
+  const array = ['01509ed5-2972-4d71-a4f5-e1d6bab0a913', '5b08867b-bdd0-4e65-9b10-1588203713d9', '74d35e02-c15c-49cd-90c1-96a62824150a', '4', '5']
   const paths = array.map(u =>({
     params: {mid: u},
   }))

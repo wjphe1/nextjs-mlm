@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
+import api from '../auth/api'
+import routes from '../auth/routes'
 import styles from '../../styles/module/admin/admin.module.scss'
 import utils from '../../styles/module/utils.module.scss'
 import { FaUsers, FaMapMarkerAlt } from 'react-icons/fa';
@@ -13,20 +15,24 @@ import Accordion from 'react-bootstrap/Accordion'
 import Card from 'react-bootstrap/Card'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
+import Spinner from 'react-bootstrap/Spinner'
 
 class Stocktransfer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            isloaded: false,
+            error: false,
             member: true,
             fulfilment: false,
             show: false,
-            productlist: [{name: 'Kopi Reezqa', inventory: 100}, {name: 'Kopi Reezqa 2', inventory: 80}, {name: 'Kopi Reezqa 3', inventory: 70}],
-            memberlist: [{id: 'member84638', address: '1, lorong yukrr 2'}, {id: 'member37554', address: '5, lorong makdd 4'}, {id: 'member775654', address: '113A, lorong eiituf 12'}],
+            prodlist: [],
+            userlist: [],
             target_member: null,
             target_address: null,
             products_check: ['','',''],
             products_selected: [],
+            products_selected_quantity: [],
         };
     }
 
@@ -39,32 +45,38 @@ class Stocktransfer extends React.Component {
     checkProduct = (i) => {
         var array = this.state.products_check;
         if (i.target && (i.target.checked === true || i.target.checked === false)) {
-            array = Array(this.state.productlist.length).fill(i.target.checked) 
+            array = Array(this.state.prodlist.length).fill(i.target.checked) 
         } else {
             array[i] = !array[i];
         }
 
         var selected = [];
-        const semua = this.state.productlist;
+        var quantity = [];
+        const semua = this.state.prodlist;
         const sedia = this.state.products_selected;
         
         array.forEach(function(part, index) {
-            if (part) { selected = selected.concat(semua[index]) }
+            if (part) { 
+                selected = selected.concat(semua[index]);
+                quantity = quantity.concat(1)
+            }
         });
 
         console.log(selected)
+        console.log(quantity)
 
         this.setState({
             products_check: array,
             products_selected: selected,
+            products_selected_quantity: quantity,
         })
     }
 
     selectMember = (e) => {
         const i = e.target.value;
         this.setState({
-            target_member: this.state.memberlist[i].id,
-            target_address: this.state.memberlist[i].address,
+            target_member: this.state.userlist[i].id,
+            target_address: this.state.userlist[i].address,
         });
     }
 
@@ -84,20 +96,47 @@ class Stocktransfer extends React.Component {
     }
 
     editQuantity = (i, e) => {
-        console.log(i)
-        if (e.target) {
-            console.log(e.target.value)
-        }
+        var quantity = this.state.products_selected_quantity;
+        if (e.target) { 
+            if (!e.target.value) { quantity[i] = 0 }
+            else { quantity[i] = parseInt(e.target.value) }
+        } else { quantity[i] = quantity[i] + parseInt(e) }
+
+        this.setState({
+            products_selected_quantity: quantity
+        })
+    }
+
+    getProd = () => {
+        api.get(routes.inventory)
+            .then(res => {
+                const rows = res.data.user_inventories
+                console.log(rows)
+                this.setState({ prodlist: rows, isloaded: true, products_check: Array(rows.length).fill(false), })
+            })
+            .catch(err => {
+                console.log(err.response)
+                this.setState({ isloaded: true, error: true })
+            })
+    }
+
+    getUsers = () => {
+        api.get(routes.users)
+        .then(res => {
+            const rows = res.data.users
+            const active = rows.filter((u) => u.active)
+            console.log(active)
+            this.setState({ userlist: active, target_member: active[0].id, target_address: active[0].address })
+        })
+        .catch(err => {
+            console.log(err.response)
+            this.setState({ error: true })
+        })
     }
 
     componentDidMount = () => {
-        var makelist = this.state.productlist;
-
-        this.setState({
-            target_member: this.state.memberlist[0].id,
-            target_address: this.state.memberlist[0].address,
-            products_check: Array(makelist.length).fill(false),
-        });
+        this.getUsers();
+        this.getProd();
     }
 
     render () {
@@ -123,7 +162,7 @@ class Stocktransfer extends React.Component {
                         </DropdownButton>
                     </div>
                 </div>
-                <Table responsive>
+                {this.state.isloaded ? <Table responsive>
                     <thead>
                         <tr>
                             <th className="pl-4"><input type="checkbox" onChange={this.checkProduct}/></th>
@@ -132,12 +171,12 @@ class Stocktransfer extends React.Component {
                             <th>Role Based Pricing (MYR)</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {this.state.productlist.length && this.state.productlist.map((u, i) => 
+                    {this.state.prodlist.length ? <tbody>
+                        {this.state.prodlist.map((u, i) => 
                             <tr key={i}>
                                 <td className="pl-4"><input type="checkbox" checked={this.state.products_check[i]} onChange={() => this.checkProduct(i)}/></td>
-                                <td className="font-weight-bold" style={{ width: '30%' }}>{u.name}</td>
-                                <td style={{ width: '30%' }}>{u.inventory}</td>
+                                <td className="font-weight-bold" style={{ width: '30%' }}>{u.product.name}</td>
+                                <td style={{ width: '30%' }}>{u.quantity}</td>
                                 <td className="table-cell-collapse">
                                 <Accordion>
                                     <Card>
@@ -152,8 +191,9 @@ class Stocktransfer extends React.Component {
                                 </td>
                             </tr>
                         )}
-                    </tbody>
-                </Table>
+                    </tbody> : <tbody><tr></tr></tbody>}
+                </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
+                {this.state.isloaded && !this.state.prodlist.length && <div className="p-5 text-center">No product inventory found.</div>}
                 <Modal show={this.state.show} onHide={() => this.setState({ show: false })} size="lg" aria-labelledby="fulfilment-modal" centered>
                     <Modal.Header>
                         <div className={utils.modal_header}>
@@ -166,8 +206,8 @@ class Stocktransfer extends React.Component {
                                 <div className="font-weight-bold px-2" style={{ minWidth: 80 }}>To</div>
                                 <div className="position-relative pl-0" style={{ flex: 'auto'}}>{this.state.member ? 
                                         <select onChange={this.selectMember} className={styles.info_input}>
-                                            {this.state.memberlist && this.state.memberlist.map((u, i) =>
-                                                <option key={i} value={i}>{u.id}</option>
+                                            {this.state.userlist.map((u, i) =>
+                                                <option key={i} value={i}>{u.username}</option>
                                             )}
                                         </select> 
                                     : 
@@ -195,10 +235,10 @@ class Stocktransfer extends React.Component {
                             <tbody className={styles.modal_table}>
                                 {this.state.products_selected.map((u, i) =>
                                     <tr key={i}>
-                                        <td className="pl-4 font-weight-bold">{u.name}</td>
+                                        <td className="pl-4 font-weight-bold">{u.product.name}</td>
                                         <td className="d-flex align-items-center">
                                         {u.quantity > 1 ? <button onClick={() => this.editQuantity(i,-1)} className={styles.prod_mbtn}><FiMinus/></button> : <button className={styles.prod_dbtn} disabled><FiMinus/></button>}
-                                        <input type="number" name="count" value={u.quantity} onChange={(e) => this.editQuantity(i, e)} className={styles.prod_qinput}/>
+                                        <input type="number" name="count" value={this.state.products_selected_quantity[i]} onChange={(e) => this.editQuantity(i, e)} className={styles.prod_qinput}/>
                                         <button onClick={() => this.editQuantity(i,1)} className={styles.prod_abtn}><FiPlus/></button>
                                         </td>
                                         <td>100</td>

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { withRouter } from 'next/router'
 import React from 'react'
+import Cookies from 'js-cookie'
 import styles from '../../styles/module/admin/admin.module.scss'
 import utils from '../../styles/module/utils.module.scss'
 import form from '../../styles/module/form.module.scss'
@@ -19,8 +20,8 @@ class Othermembers extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            startDate: new Date(),
-            endDate: (new Date()).setDate(new Date().getDate()+1),
+            startDate: '',
+            endDate: '',
             userlist: [],
             isloaded: false,
             error: false,
@@ -45,6 +46,13 @@ class Othermembers extends React.Component {
     }
 
     render () {
+        var user = {};
+        var role = null;
+        var authorized = false;
+        var userStr = Cookies.get('user');
+        if (userStr) { user = JSON.parse(userStr); role = user.role }
+        if (role !== 'AGENT' && role !== 'SUPERADMIN') { authorized = true }
+        
         return (
             <section className="py-5 px-4">
                 {/* Head Section */}
@@ -65,7 +73,7 @@ class Othermembers extends React.Component {
                     </div>
                 </div>
 
-                {/* Admin Reports Tabs */}
+                {/* Other Members Tabs */}
                 <div className="admin-reports-tabs">
                     <Tabs defaultActiveKey="list" id="uncontrolled-tab-example">
                         <Tab eventKey="list" title="● Member List">
@@ -89,7 +97,7 @@ class Othermembers extends React.Component {
                                     <input type="text" placeholder="Search user here" className={styles.search}/>
                                     <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
                                     </form>
-                                    <Link href="/admin/members/new"><a className={`ml-auto ${styles.tbtn}`}>New Member</a></Link>
+                                    {authorized && <Link href="/admin/members/new"><a className={`ml-auto ${styles.tbtn}`}>New Member</a></Link>}
                                 </div>
                                 {this.state.isloaded ? <Table responsive>
                                     <thead>

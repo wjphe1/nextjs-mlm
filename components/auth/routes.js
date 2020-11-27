@@ -6,6 +6,7 @@ const routes = {
     users: '/users',
     inventory: '/user_inventories',
     inven_transac: '/inventory_transactions',
+    epoint_requests: '/epoint_requests',
 };
 
 export default routes;

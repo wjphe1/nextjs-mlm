@@ -19,8 +19,8 @@ class HQmembers extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            startDate: new Date(),
-            endDate: (new Date()).setDate(new Date().getDate()+1),
+            startDate: '',
+            endDate: '',
             userlist: [],
             pendinglist: [],
             pending_check: [],
@@ -67,7 +67,7 @@ class HQmembers extends React.Component {
             console.log(inactive)
             this.setState({ 
                 pendinglist: inactive, 
-                userlist: rows,
+                userlist: active,
                 pending_check: Array(inactive.length).fill(false),
                 isloaded: true })
         })

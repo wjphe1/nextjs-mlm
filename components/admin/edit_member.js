@@ -25,7 +25,9 @@ class Editmemb extends React.Component {
             show: false,
             pisloaded: true,
             perror: false,
+            psuccess: false,
             perr_msg: {},
+            pscs_msg: {},
             new_password: '',
             confirm_password: '',
             isloaded: false,
@@ -66,7 +68,17 @@ class Editmemb extends React.Component {
 
     changePassword = () => {
         if (this.state.new_password === this.state.confirm_password) {
-            console.log('same')
+            this.setState({ pisloaded: false })
+            api.put(routes.users + '/' + this.props.mid, { user: { password: this.state.new_password }})
+            .then(res => {
+                this.setState({ pscs_msg: { success: 'Password is Changed Successfully'}, pisloaded: true, psuccess: true })
+            })
+            .catch(err => {
+                console.log(err.response)
+                var msg = { error: err.response.status + ' : ' + err.response.statusText };
+                if (err.response.data) { msg = err.response.data };
+                this.setState({ perr_msg: msg, pisloaded: true, perror: true })
+            })
         } else {
             this.setState({ perror: true, perr_msg: { error: 'Passwords do not match' } })
         }
@@ -123,7 +135,8 @@ class Editmemb extends React.Component {
             })
             .catch(err => {
                 console.log(err.response)
-                const msg = err.response.data
+                var msg = { error: err.response.status + ' : ' + err.response.statusText };
+                if (err.response.data) { msg = err.response.data };
                 setTimeout(() => {this.setState({ err_msg: msg, isloaded: true, error: true })}, 100)
             })
     }
@@ -166,10 +179,13 @@ class Editmemb extends React.Component {
     render () {
         var user = {};
         var role = null;
+        var myid = null;
         var authorized = false;
+        var myself = false;
         var userStr = Cookies.get('user');
-        if (userStr) { user = JSON.parse(userStr); role = user.role }
-        if (role === 'SUPERADMIN' || role === 'HQ') { authorized = true }
+        if (userStr) { user = JSON.parse(userStr); role = user.role; myid = user.id }
+        if (role === 'HQ') { authorized = true }
+        if (this.props.mid === myid) { myself = true }
 
         let $imagePreview = null;
         if (this.state.imagePreviewUrl) {
@@ -191,7 +207,6 @@ class Editmemb extends React.Component {
                                     <li value={key} key={key}>{`${key}: ${this.state.err_msg.error[key][0]}`}</li>
                                 )}
                             </ul>}
-                            {!this.state.err_msg.error && <div>Error - Username or Email entered has been used</div>}
                         </div> 
                         <div onClick={() => this.setState({ error: false })} className={`col-2 ${form.nclose}`}>Close</div>
                     </div>}
@@ -219,7 +234,7 @@ class Editmemb extends React.Component {
                             </div>
                             <div className="col-md-4 px-2">
                                 <label>Membership Level</label>
-                                <select name="role" onChange={this.handleChange} type="text" className={form.field_light} value={this.state.role} disabled={!authorized}>
+                                <select name="role" onChange={this.handleChange} type="text" className={cn({[form.field_light]: authorized, [form.field_disabled]: !authorized})} value={this.state.role} disabled={!authorized}>
                                     <option value="MASTER_STOKIS">Master Stokis</option>
                                     <option value="STOKIS">Stokis</option>
                                     <option value="AGENT">Agent</option>
@@ -329,8 +344,8 @@ class Editmemb extends React.Component {
                 <div className="col-lg-4 d-flex align-items-start">
                     <div className={`${styles.table} ${styles.submitdiv}`}>
                         <div className={`font-weight-bold mb-2 ${utils.hightext_md}`}>View Mode</div>
-                        {authorized && <div onClick={() => {this.setState({ isloaded: false });setTimeout(() => this.setState({ edit_mode: true, isloaded: true }), 1000)}} className={`w-100 text-center ${styles.tbtn}`} style={{ cursor: 'pointer' }}>Edit</div>}
-                        <Link href={{ pathname: '/admin/members', query: { tab: 'list' }}}><a className="pt-3" style={{color: "#FF6202"}}><MdCancel/> Discard Changes</a></Link>
+                        {(authorized || myself) && <div onClick={() => {this.setState({ isloaded: false });setTimeout(() => this.setState({ edit_mode: true, isloaded: true }), 500)}} className={`w-100 text-center ${styles.tbtn}`} style={{ cursor: 'pointer' }}>Edit</div>}
+                        <Link href={{ pathname: '/admin/members', query: { tab: 'list' }}}><a className="pt-3" style={{color: "#FF6202"}}><MdCancel/> {(authorized || myself) ? 'Discard Changes' : 'Go Back'}</a></Link>
                     </div>
                 </div>}
             </form> : <div className="p-5 text-center">You are Not Authorized to View this Page</div>}
@@ -351,6 +366,13 @@ class Editmemb extends React.Component {
                                 </ul>}
                             </div> 
                             <div onClick={() => this.setState({ perror: false })} className={`col-2 ${form.nclose}`}>Close</div>
+                        </div>}
+                        {this.state.psuccess && <div className={`w-100 mb-4 ${form.notice_success}`}>
+                            <div className="col-10 d-flex align-items-center">
+                                <span className={form.sexcl}>✓</span> 
+                                <div>{this.state.pscs_msg.success}</div>
+                            </div> 
+                            <div onClick={() => this.setState({ psuccess: false })} className={`col-2 ${form.sclose}`}>Close</div>
                         </div>}
                         <div className="w-100 mb-4">
                             <label>New Passwords</label>

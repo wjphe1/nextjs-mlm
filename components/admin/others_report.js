@@ -2,6 +2,9 @@ import React from 'react'
 import styles from '../../styles/module/admin/admin.module.scss'
 import utils from '../../styles/module/utils.module.scss'
 import form from '../../styles/module/form.module.scss'
+import api from '../auth/api'
+import routes from '../auth/routes'
+import Spinner from 'react-bootstrap/Spinner'
 import DatePicker from "react-datepicker";
 import { FiCalendar } from 'react-icons/fi';
 import { MdCancel } from 'react-icons/md'
@@ -14,18 +17,60 @@ class Othrpt extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      startDate: new Date(),
-      endDate: (new Date()).setDate(new Date().getDate()+1),
+      startDate: '',
+      endDate: '',
       show: false,
+      risloaded: true,
+      rerror: false,
+      rerr_msg: {},
+      error: false,
+      isloaded: false,
+      redeemlist: [],
+      points: '',
     };
   }
 
   handleChange = (e) => {
-    console.log(e)
     const value = parseInt(e.target.value);
     this.setState({
       [e.target.name]: value
     });
+  }
+
+  postPoints = () => {
+    if (this.state.points) {
+      this.setState({ risloaded: false })
+      api.post(routes.epoint_requests, { epoint_request: { epoint: this.state.points }})
+        .then(res => {
+        console.log(res)
+        this.setState({ risloaded: true })
+      })
+      .catch(err => {
+        console.log(err.response)
+        var msg = { error: err.response.status + ' : ' + err.response.statusText };
+        if (err.response.data) { msg = err.response.data };
+        this.setState({ rerror: true, risloaded: true, rerr_msg: msg })
+      })
+    } else {
+      this.setState({ rerror: true, rerr_msg: { error: 'Please enter desired E-Points to Reimburse'}})
+    }
+  }
+
+  getPoints = () => {
+    api.get(routes.epoint_requests)
+      .then(res => {
+      const rows = res.data.epoint_requests;
+      console.log(rows)
+      this.setState({ isloaded: true, redeemlist: rows })
+    })
+    .catch(err => {
+      console.log(err.response)
+      this.setState({ error: true, isloaded: true })
+    })
+  }
+
+  componentDidMount() {
+    this.getPoints();
   }
 
   render () {
@@ -111,7 +156,7 @@ class Othrpt extends React.Component {
           <div className="admin-generic-tabs report-tabs border-0 m-0">
             <Tabs defaultActiveKey="redeem" id="uncontrolled-tab-example">
               <Tab eventKey="redeem" title="Redemption History">
-                <Table responsive>
+                {this.state.isloaded ? <Table responsive>
                   <thead>
                     <tr>
                       <th className="pl-5 pt-4">E-Points</th>
@@ -121,26 +166,15 @@ class Othrpt extends React.Component {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className={styles.cell_center}>
+                    {this.state.redeemlist.map((u, i) => <tr className={styles.cell_center} key={i}>
                       <td className="pl-5">500 Pts</td>
                       <td>20 Oct 2020 11:30 AM</td>
                       <td>50 Pts</td>
                       <td><button className={styles.status_yellow} disabled>In Progress</button></td>
-                    </tr>
-                    <tr className={styles.cell_center}>
-                      <td className="pl-5">500 Pts</td>
-                      <td>20 Oct 2020 11:30 AM</td>
-                      <td>50 Pts</td>
-                      <td><button className={styles.status_yellow} disabled>In Progress</button></td>
-                    </tr>
-                    <tr className={styles.cell_center}>
-                      <td className="pl-5">500 Pts</td>
-                      <td>20 Oct 2020 11:30 AM</td>
-                      <td>50 Pts</td>
-                      <td><button className={styles.status_yellow} disabled>In Progress</button></td>
-                    </tr>
+                    </tr>)}
                 </tbody>
-                </Table>
+                </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
+                {this.state.isloaded && !this.state.redeemlist.length && <div className="p-5 text-center">No Reimbursement History Found.</div>}
               </Tab>
               <Tab eventKey="incentive" title="Monthly Incentive">
                 <Table responsive>
@@ -173,19 +207,31 @@ class Othrpt extends React.Component {
             </Tabs>
           </div>
         </div>
-        <Modal show={this.state.show} onHide={() => this.setState({ show: false })} size="sm" aria-labelledby="fulfilment-modal" centered>
+        <Modal show={this.state.show} onHide={() => this.setState({ show: false })} size="md" aria-labelledby="fulfilment-modal" centered>
           <Modal.Header>
             <div className={utils.modal_header}>
               Points Redemption
             </div>
           </Modal.Header>
           <Modal.Body>
+            {this.state.rerror && <div className={`w-100 mb-4 ${form.notice_error}`}>
+              <div className="col-10 d-flex align-items-center">
+                <span className={form.nexcl}>!</span> 
+                {(this.state.rerr_msg.error && typeof this.state.rerr_msg.error === 'string') && <div>{this.state.rerr_msg.error}</div>}
+                {(this.state.rerr_msg.error && typeof this.state.rerr_msg.error === 'array') && <ul className="m-0 pl-4">
+                  {Object.keys(this.state.rerr_msg.error).map(key =>
+                    <li value={key} key={key}>{`${key}: ${this.state.rerr_msg.error[key][0]}`}</li>
+                  )}
+                </ul>}
+              </div> 
+              <div onClick={() => this.setState({ rerror: false })} className={`col-2 ${form.nclose}`}>Close</div>
+            </div>}
             <label>Points to redeem</label>
-            <input type="number" className={form.field} />
+            <input name="points" onChange={this.handleChange} type="number" className={form.field} />
           </Modal.Body>
           <Modal.Footer>
-            <button className={`pl-0 ${styles.tbtn_reverse_borderless}`}><MdCancel/> Discard</button>
-            <button className={`px-5 ${styles.tbtn}`}>Submit</button>
+            <button onClick={() => this.setState({ show: false, points: '' })} className={`pl-0 ${styles.tbtn_reverse_borderless}`}><MdCancel/> Discard</button>
+            {this.state.risloaded ? <button onClick={this.postPoints} className={`px-5 ${styles.tbtn}`}>Submit</button> : <button className={`px-5 ${styles.tbtn}`} disabled><Spinner animation="border" variant="light" size='sm'/></button>}
           </Modal.Footer>
         </Modal>
       </>

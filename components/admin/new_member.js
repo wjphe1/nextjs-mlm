@@ -95,7 +95,9 @@ class Newmemb extends React.Component {
             })
             .catch(err => {
                 console.log(err.response)
-                const msg = err.response.data
+                var msg = err.response.status + ' : ' + err.response.statusText
+                if (err.response.data) { msg = err.response.data }
+
                 setTimeout(() => {this.setState({ err_msg: msg, isloaded: true, error: true })}, 100)
             })
     }
@@ -122,7 +124,7 @@ class Newmemb extends React.Component {
                                     <li value={key} key={key}>{`${key}: ${this.state.err_msg.error[key][0]}`}</li>
                                 )}
                             </ul>}
-                            {!this.state.err_msg.error && <div>Error - Username or Email entered has been used</div>}
+                            {!this.state.err_msg.error && typeof this.state.err_msg === 'string' && <div>{this.state.err_msg}</div>}
                         </div> 
                         <div onClick={() => this.setState({ error: false })} className={`col-2 ${form.nclose}`}>Close</div>
                     </div>}
