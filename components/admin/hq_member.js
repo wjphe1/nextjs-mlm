@@ -27,24 +27,25 @@ class HQmembers extends React.Component {
             pending_selected: [],
             isloaded: false,
             error: false,
+            merror: false,
             toast: true,
             accept: false,
             reject: false,
+            nouser: false,
         };
     }
 
     checkPending = (i) => {
         var array = this.state.pending_check;
+        var selected = [];
+        const semua = this.state.pendinglist;
+
         if (i.target && (i.target.checked === true || i.target.checked === false)) {
-            array = Array(this.state.pendinglist.length).fill(i.target.checked) 
+            array = Array(semua.length).fill(i.target.checked) 
         } else {
             array[i] = !array[i];
         }
 
-        var selected = [];
-        const semua = this.state.pendinglist;
-        const sedia = this.state.pending_selected;
-        
         array.forEach(function(part, index) {
             if (part) { selected = selected.concat(semua[index]) }
         });
@@ -57,12 +58,34 @@ class HQmembers extends React.Component {
         })
     }
 
+    markUser = (decision) => {
+        this.setState({ isloaded: false })
+        const marked = this.state.pending_selected;
+        if (marked.length) {
+            for (var i= 0; i < marked.length; i++) {
+                api.put(routes.users + '/' + marked[i].id, { user: { active: decision } })
+                    .then(res => {
+                        if (decision) { this.setState({ accept: true, toast: true }) }
+                        else { this.setState({ reject: true, toast: true }) }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        this.setState({ merror: true, toast: true })
+                    })
+            }
+            this.getUsers();
+        } else {
+            this.setState({ isloaded: true, nouser: true, toast: true })
+        }
+    }
+
     getUsers = () => {
         api.get(routes.users)
         .then(res => {
             const rows = res.data.users
             const active = rows.filter((u) => u.active)
             const inactive = rows.filter((u) => !u.active)
+            console.log(rows)
             console.log(active)
             console.log(inactive)
             this.setState({ 
@@ -111,16 +134,30 @@ class HQmembers extends React.Component {
                             {(this.state.accept && this.state.toast) && <div className={`mb-4 ${form.notice_success}`}>
                                 <div className="col-10 d-flex align-items-center">
                                     <span className={form.sexcl}>✓</span>
-                                    <span><b>Welcome! -</b> User was Accepted</span>
+                                    <span><b>Welcome! -</b> User(s) was Accepted</span>
                                 </div>
-                                <div onClick={() => this.setState({ toast: false })} className={`col-2 ${form.sclose}`}>Close</div>
+                                <div onClick={() => this.setState({ toast: false, accept: false })} className={`col-2 ${form.sclose}`}>Close</div>
                             </div>}
-                            {(this.state.reject && this.state.toast) && <div className={`mb-4 ${form.notice_success}`}>
+                            {(this.state.reject && this.state.toast) && <div className={`mb-4 ${form.notice_warning}`}>
                                 <div className="col-10 d-flex align-items-center">
-                                    <span className={form.sexcl}>✓</span>
-                                    <span><b>Uh Oh.. -</b> User was Rejected</span>
+                                    <span className={form.wexcl}>✓</span>
+                                    <span><b>Uh Oh.. -</b> User(s) was Rejected</span>
                                 </div>
-                                <div onClick={() => this.setState({ toast: false })} className={`col-2 ${form.sclose}`}>Close</div>
+                                <div onClick={() => this.setState({ toast: false, reject: false })} className={`col-2 ${form.wclose}`}>Close</div>
+                            </div>}
+                            {(this.state.nouser && this.state.toast) && <div className={`mb-4 ${form.notice_error}`}>
+                                <div className="col-10 d-flex align-items-center">
+                                    <span className={form.nexcl}>!</span>
+                                    <span><b>Error -</b> Please select member(s) for further actions</span>
+                                </div>
+                                <div onClick={() => this.setState({ toast: false, error: false })} className={`col-2 ${form.nclose}`}>Close</div>
+                            </div>}
+                            {(this.state.merror && this.state.toast) && <div className={`mb-4 ${form.notice_error}`}>
+                                <div className="col-10 d-flex align-items-center">
+                                    <span className={form.nexcl}>!</span>
+                                    <span><b>Error -</b> Update member status error, please try again later</span>
+                                </div>
+                                <div onClick={() => this.setState({ toast: false, error: false })} className={`col-2 ${form.nclose}`}>Close</div>
                             </div>}
                             <div className={styles.table}>
                                 <div className="d-flex align-items-center p-3 flex-wrap">
@@ -130,8 +167,8 @@ class HQmembers extends React.Component {
                                     </form>
                                     <div className="d-flex align-items-center ml-auto flex-nowrap py-2">
                                     <div className="font-weight-bold">Action</div>
-                                    <button className={`ml-3 mr-2 py-2 ${styles.tbtn}`}>Approve</button>
-                                    <button className={`mr-3 ml-2 py-2 ${styles.tbtn_reverse}`}>Reject</button>
+                                    <button onClick={() => this.markUser(true)} className={`ml-3 mr-2 py-2 ${styles.tbtn}`}>Approve</button>
+                                    <button onClick={() => this.markUser(false)} className={`mr-3 ml-2 py-2 ${styles.tbtn_reverse}`}>Reject</button>
                                     </div>
                                 </div>
                                 {this.state.isloaded ? <Table responsive>

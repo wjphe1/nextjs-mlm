@@ -10,6 +10,8 @@ import Asales from '../../components/admin/admin_sales'
 import Othrpt from '../../components/admin/others_report'
 import DatePicker from "react-datepicker";
 import { FiCalendar } from 'react-icons/fi';
+import { FaUserAlt } from 'react-icons/fa'
+import { RiShoppingBagFill } from 'react-icons/ri'
 
 class Sales extends React.Component {
   static getInitialProps({ pathname }){
@@ -107,6 +109,15 @@ class Sales extends React.Component {
             </div>
             <Asales/>
           </section>
+        </Layout>
+      )
+    } else if (role && role === 'HQ') {
+      return (
+        <Layout>
+          <div className="pt-5 d-flex align-items-center justify-content-center">
+            <Link href="/admin/products"><a className={styles.gigantic_btns}><RiShoppingBagFill/> Products</a></Link>
+            <Link href="/admin/members"><a className={styles.gigantic_btns}><FaUserAlt/> Members</a></Link>
+          </div>
         </Layout>
       )
     } else {

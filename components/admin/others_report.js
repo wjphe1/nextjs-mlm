@@ -191,9 +191,11 @@ class Othrpt extends React.Component {
                     {this.state.redeemlist.map((u, i) => <tr className={styles.cell_center} key={i}>
                       <td className="pl-5">{u.epoint} Pts</td>
                       <td>{dateTime(u.created_at)}</td>
-                      <td>{u.approved_at ? dateTime(u.approved_at) : '-'}</td>
-                      {u.status === 'PENDING' ? <td><button className={`text-capitalize ${styles.status_yellow}`} disabled>{u.status.toLowerCase()}</button></td> : 
-                      <td><button className={`text-capitalize ${styles.status_green}`} disabled>{u.status.toLowerCase()}</button></td>}
+                      {u.status === 'PENDING' ? <td> - </td> : <td>{u.approved_at ? dateTime(u.approved_at) : dateTime(u.updated_at)}</td>}
+                      {u.status === 'PENDING' && <td><button className={`text-capitalize ${styles.status_yellow}`} disabled>{u.status.toLowerCase()}</button></td>}
+                      {u.status === 'APPROVED' && <td><button className={`text-capitalize ${styles.status_green}`} disabled>{u.status.toLowerCase()}</button></td>}
+                      {u.status === 'CANCELLED' && <td><button className={`text-capitalize ${styles.status_red}`} disabled>{u.status.toLowerCase()}</button></td>}
+                      {u.status === 'REJECTED' && <td><button className={`text-capitalize ${styles.status_red}`} disabled>{u.status.toLowerCase()}</button></td>}
                     </tr>)}
                 </tbody>
                 </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
@@ -214,8 +216,10 @@ class Othrpt extends React.Component {
                       <td className="pl-5">{u.epoint} Pts</td>
                       <td>{dateTime(u.created_at)}</td>
                       <td>{u.reward_type}</td>
-                      {u.status === 'PENDING' ? <td><button className={`text-capitalize ${styles.status_yellow}`} disabled>{u.status.toLowerCase()}</button></td> : 
-                      <td><button className={`text-capitalize ${styles.status_green}`} disabled>{u.status.toLowerCase()}</button></td>}
+                      {u.status === 'PENDING' && <td><button className={`text-capitalize ${styles.status_yellow}`} disabled>{u.status.toLowerCase()}</button></td>}
+                      {u.status === 'COMPLETED' && <td><button className={`text-capitalize ${styles.status_green}`} disabled>{u.status.toLowerCase()}</button></td>}
+                      {u.status === 'CANCELLED' && <td><button className={`text-capitalize ${styles.status_red}`} disabled>{u.status.toLowerCase()}</button></td>}
+                      {u.status === 'REJECTED' && <td><button className={`text-capitalize ${styles.status_red}`} disabled>{u.status.toLowerCase()}</button></td>}
                     </tr>)}
                   </tbody>
                 </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
