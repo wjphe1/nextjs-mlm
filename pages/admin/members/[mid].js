@@ -5,8 +5,7 @@ import React from 'react'
 import Layout from '../../../components/admin/layout'
 import Editmemb from '../../../components/admin/edit_member'
 
-// Use the staticProps returned below
-export default function Members({ posts, name }) {
+export default function Members({ name }) {
   const router = useRouter()
   const { mid } = router.query //current route's [mid] (member ID)
 
@@ -17,39 +16,4 @@ export default function Members({ posts, name }) {
 
       <Editmemb mid={mid}/>
   </Layout>
-}
-
-export async function getStaticPaths() {
-  // Return a list of possible value for id
-
-  // For API request
-  //const request  = await fetch('https://api.tvmaze.com/search/shows?q=batman')
-  //const array = await request.json()
-
-  const array = ['01509ed5-2972-4d71-a4f5-e1d6bab0a913', '5b08867b-bdd0-4e65-9b10-1588203713d9', '74d35e02-c15c-49cd-90c1-96a62824150a', '4', '5']
-  const paths = array.map(u =>({
-    params: {mid: u},
-  }))
-
-  return {
-    paths,
-    fallback: false
-  }
-}
-
-export async function getStaticProps() {
-  // Call an external API endpoint to get posts.
-  // You can use any data fetching library
-  //const res = await fetch('https://.../posts')
-  //const posts = await res.json()
-
-  const posts = [{id: 1, name: 'one'}, {id: 2, name: 'two'}]
-
-  // By returning { props: posts }, the Blog component
-  // will receive `posts` as a prop at build time
-  return {
-    props: {
-      posts,
-    },
-  }
 }
