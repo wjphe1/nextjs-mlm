@@ -41,21 +41,25 @@ class Othrpt extends React.Component {
   }
 
   postPoints = () => {
-    if (this.state.points) {
+    const points = parseInt(this.state.points);
+
+    if (!points) {
+      this.setState({ rerror: true, rerr_msg: { error: 'Please enter desired E-Points to Reimburse'}})
+    } else if (this.props.user && points > this.props.user.epoint) {
+      this.setState({ rerror: true, rerr_msg: { error: 'You do not have enough E-points to Reimburse'}})
+    } else {
       this.setState({ risloaded: false, rerror: false, rsuccess: false })
       api.post(routes.epoint_requests, { epoint_request: { epoint: this.state.points }})
         .then(res => {
-        console.log(res)
-        this.setState({ risloaded: true, rsuccess: true })
-      })
-      .catch(err => {
-        console.log(err.response)
-        var msg = { error: err.response.status + ' : ' + err.response.statusText };
-        if (err.response.data) { msg = err.response.data };
-        this.setState({ rerror: true, risloaded: true, rerr_msg: msg })
-      })
-    } else {
-      this.setState({ rerror: true, rerr_msg: { error: 'Please enter desired E-Points to Reimburse'}})
+          console.log(res)
+          this.setState({ risloaded: true, rsuccess: true })
+        })
+        .catch(err => {
+          console.log(err.response)
+          var msg = { error: err.response.status + ' : ' + err.response.statusText };
+          if (err.response.data) { msg = err.response.data };
+          this.setState({ rerror: true, risloaded: true, rerr_msg: msg })
+        })
     }
   }
 
@@ -88,6 +92,7 @@ class Othrpt extends React.Component {
   componentDidMount() {
     this.getIncentives();
     this.getPoints();
+    console.log(this.props.user)
   }
 
   render () {
@@ -165,7 +170,7 @@ class Othrpt extends React.Component {
               </svg>
               <div className="pl-3 align-self-center">
                 <div className={utils.text_sm}>E-Points Earned</div>
-                <div className={utils.h_md_n}>100 Pts</div>
+                <div className={utils.h_md_n}>{this.props.user ? this.props.user.epoint : '-'} Pts</div>
               </div>
             </div>
             <button className={`ml-auto ${styles.tbtn}`} onClick={() => this.setState({ show: true })}>Redeem</button>

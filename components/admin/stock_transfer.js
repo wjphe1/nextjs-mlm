@@ -29,6 +29,7 @@ class Stocktransfer extends React.Component {
             oisloaded: true,
             oerror: false,
             oerr_msg: {},
+            osuccess: false,
             member: true,
             fulfilment: false,
             show: false,
@@ -151,7 +152,7 @@ class Stocktransfer extends React.Component {
             const msg = { error: 'Please fill in all the order details' }
             this.setState({ oerror: true, oerr_msg: msg })
         } else {
-            this.setState({ oisloaded: false })
+            this.setState({ oisloaded: false, oerror: false, osuccess: false })
 
             var theorder = {
                 deliver_to: cust,
@@ -182,7 +183,9 @@ class Stocktransfer extends React.Component {
             api.post(routes.orders, orderdata)
                 .then(res => {
                     console.log(res)
+                    this.setState({ osuccess: true, oisloaded: true })
                     this.getProd();
+                    this.props.getOrders();
                 })
                 .catch(err => {
                     console.log(err.response)
@@ -234,7 +237,7 @@ class Stocktransfer extends React.Component {
             <div className={styles.table}>
                 <div className="d-flex align-items-center p-3">
                     <form className={styles.search_div}>
-                        <input type="text" placeholder="Search category here" className={styles.search}/>
+                        <input type="text" placeholder="Search inventory here" className={styles.search}/>
                         <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
                     </form>
                     <div className="ml-auto btn-dropdown">
@@ -305,7 +308,14 @@ class Stocktransfer extends React.Component {
                                 )}
                                 </ul>}
                             </div>
-                            <div onClick={() => this.setState({ oerror: false })} className={`col-2 ${form.nclose}`}>Close</div>
+                            <div onClick={() => this.setState({ oerror: false, show: false })} className={`col-2 ${form.nclose}`}>Close</div>
+                        </div>}
+                        {this.state.osuccess && <div className={`w-100 mb-4 ${form.notice_success}`}>
+                            <div className="col-10 d-flex align-items-center">
+                                <span className={form.sexcl}>✓</span>
+                                <div><b>Success -</b> Transfer Created</div>
+                            </div>
+                            <div onClick={() => this.setState({ osuccess: false })} className={`col-2 ${form.sclose}`}>Close</div>
                         </div>}
                         <div className={styles.target_info}>
                             <div className="row m-0 flex-nowrap align-items-center">
@@ -362,7 +372,7 @@ class Stocktransfer extends React.Component {
                     </Modal.Body>
                     <Modal.Footer>
                         <button className={styles.tbtn_reverse_borderless} onClick={() => this.setState({ show: false, oerror: false })}><MdCancel/> Discard</button>
-                        <button onClick={this.submitOrder} className={`px-5 ${styles.tbtn}`}>Transfer Now</button>
+                        {this.state.oisloaded ? <button onClick={this.submitOrder} className={`px-5 ${styles.tbtn}`}>Transfer Now</button> : <button className={`px-5 ${styles.tbtn}`} disabled><Spinner animation="border" variant="light" size='sm'/></button>}
                     </Modal.Footer>
                 </Modal>
             </div>

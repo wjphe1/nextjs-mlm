@@ -117,7 +117,7 @@ class Sales extends React.Component {
           </Head>
   
           <section className="py-5 px-4">
-            <Othrpt/>
+            <Othrpt user={user}/>
           </section>
         </Layout>
       )
