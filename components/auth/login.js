@@ -40,7 +40,8 @@ class Adminlog extends React.Component {
         Cookies.set('user', res.data.user)
         //console.log(JSON.parse(Cookies.get('user')))
       }
-      Router.push('/admin');
+      if (Router.href = '/admin') { Router.reload(); }
+      else { Router.push('/admin'); }
     })
     .catch(error => {
       console.log(error.response)

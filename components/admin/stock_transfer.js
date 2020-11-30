@@ -2,6 +2,7 @@ import Link from 'next/link'
 import React from 'react'
 import api from '../auth/api'
 import routes from '../auth/routes'
+import Cookies from 'js-cookie'
 import styles from '../../styles/module/admin/admin.module.scss'
 import utils from '../../styles/module/utils.module.scss'
 import form from '../../styles/module/form.module.scss'
@@ -22,6 +23,7 @@ class Stocktransfer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            current_user: {},
             isloaded: false,
             error: false,
             oisloaded: true,
@@ -36,6 +38,7 @@ class Stocktransfer extends React.Component {
             target_address: null,
             target_customer: '',
             target_phone_number: '',
+            target_role: 3,
             products_check: ['','',''],
             products_selected: [],
             products_selected_quantity: [],
@@ -80,10 +83,17 @@ class Stocktransfer extends React.Component {
 
     selectMember = (e) => {
         const i = e.target.value;
+        const role = this.state.userlist[i].role;
+        var index = 3;
+        if (role === 'MASTER_STOKIS') { index = 0 }
+        else if (role === 'STOKIS') { index = 1 }
+        else if ( role === 'AGENT' ) { index = 2 }
+
         this.setState({
             target_member: this.state.userlist[i].id,
             target_address: this.state.userlist[i].address,
             target_phone_number: this.state.userlist[i].phone_number,
+            target_role: index,
         });
     }
 
@@ -121,13 +131,16 @@ class Stocktransfer extends React.Component {
         var itemerror = false;
         for (var i = 0; i < this.state.products_selected.length; i++) {
             orderitems[i] = { 
-                product_id: this.state.products_selected[i].id,
+                product_id: this.state.products_selected[i].product.id,
                 quantity: this.state.products_selected_quantity[i]
             }
             if (typeof this.state.products_selected_quantity[i] !== 'number' || this.state.products_selected_quantity[i] < 1) {
                 itemerror = true;
             }
         }
+        var otype = 'EXTERNAL';
+        var cust = this.state.target_customer;
+        if (this.state.member) { otype = 'INTERNAL'; cust = this.state.target_member; }
 
         console.log(orderitems)
 
@@ -139,18 +152,32 @@ class Stocktransfer extends React.Component {
             this.setState({ oerror: true, oerr_msg: msg })
         } else {
             this.setState({ oisloaded: false })
-            var cust = this.state.target_customer
-            if (this.state.target_member) { cust = this.state.target_member }
 
-            const orderdata = {
-                order : {
-                    ordered_for_id: cust,
+            var theorder = {
+                deliver_to: cust,
+                delivery_required: this.state.fulfilment, 
+                address: this.state.target_address,
+                phone_number: this.state.target_phone_number,
+                order_items_attributes: orderitems,
+                order_type: otype,
+                fulfilled_by_id: this.state.current_user.id,
+                sales_by_id: this.state.current_user.id,
+            }
+
+            if (this.state.member) {
+                theorder = {
+                    customer_id: cust,
                     delivery_required: this.state.fulfilment, 
-                    deliver_to: this.state.target_address,
+                    address: this.state.target_address,
                     phone_number: this.state.target_phone_number,
-                    order_items_attributes: orderitems
+                    order_items_attributes: orderitems,
+                    order_type: otype,
+                    fulfilled_by_id: this.state.current_user.id,
+                    sales_by_id: this.state.current_user.id,
                 }
             }
+
+            const orderdata = { order: theorder }
 
             api.post(routes.orders, orderdata)
                 .then(res => {
@@ -196,6 +223,10 @@ class Stocktransfer extends React.Component {
     componentDidMount = () => {
         this.getUsers();
         this.getProd();
+
+        const current = JSON.parse(Cookies.get('user'))
+        console.log(current)
+        this.setState({ current_user: current})
     }
 
     render () {
@@ -240,10 +271,14 @@ class Stocktransfer extends React.Component {
                                 <Accordion>
                                     <Card>
                                     <Accordion.Toggle as={Card.Header} eventKey="0">
-                                        100 For MS <BsFillCaretDownFill/>
+                                        {(u.product.product_prices[0].price_cents/100).toFixed(2)} For MS <BsFillCaretDownFill/>
                                     </Accordion.Toggle>
                                     <Accordion.Collapse eventKey="0">
-                                        <Card.Body>20 For S<br/>10 For A</Card.Body>
+                                        <Card.Body>
+                                            {(u.product.product_prices[1].price_cents/100).toFixed(2)} For S<br/>
+                                            {(u.product.product_prices[2].price_cents/100).toFixed(2)} For A<br/>
+                                            {(u.product.product_prices[3].price_cents/100).toFixed(2)} For C
+                                        </Card.Body>
                                     </Accordion.Collapse>
                                     </Card>
                                 </Accordion>
@@ -264,7 +299,7 @@ class Stocktransfer extends React.Component {
                             <div className="col-10 d-flex align-items-center">
                                 <span className={form.nexcl}>!</span> 
                                 {(this.state.oerr_msg.error && typeof this.state.oerr_msg.error === 'string') && <div>{this.state.oerr_msg.error}</div>}
-                                {(this.state.oerr_msg.error && typeof this.state.oerr_msg.error === 'array') && <ul className="m-0 pl-4">
+                                {(this.state.oerr_msg.error && typeof this.state.oerr_msg.error === 'object') && <ul className="m-0 pl-4">
                                 {Object.keys(this.state.oerr_msg.error).map(key =>
                                     <li value={key} key={key}>{`${key}: ${this.state.oerr_msg.error[key][0]}`}</li>
                                 )}
@@ -318,7 +353,7 @@ class Stocktransfer extends React.Component {
                                         <input type="number" name="count" value={this.state.products_selected_quantity[i]} onChange={(e) => this.editQuantity(i, e)} className={styles.prod_qinput}/>
                                         <button onClick={() => this.editQuantity(i,1)} className={styles.prod_abtn}><FiPlus/></button>
                                         </td>
-                                        <td>100</td>
+                                        <td>{(u.product.product_prices[this.state.target_role].price_cents/100).toFixed(2)}</td>
                                     </tr>
                                 )}
                             </tbody>

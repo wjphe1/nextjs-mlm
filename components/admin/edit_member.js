@@ -359,7 +359,7 @@ class Editmemb extends React.Component {
                             <div className="col-10 d-flex align-items-center">
                                 <span className={form.nexcl}>!</span> 
                                 {(this.state.perr_msg.error && typeof this.state.perr_msg.error === 'string') && <div>{this.state.perr_msg.error}</div>}
-                                {(this.state.perr_msg.error && typeof this.state.perr_msg.error === 'array') && <ul className="m-0 pl-4">
+                                {(this.state.perr_msg.error && typeof this.state.perr_msg.error === 'object') && <ul className="m-0 pl-4">
                                     {Object.keys(this.state.perr_msg.error).map(key =>
                                         <li value={key} key={key}>{`${key}: ${this.state.perr_msg.error[key][0]}`}</li>
                                     )}

@@ -26,7 +26,7 @@ class Members extends React.Component {
     var referral = '';
     var userStr = Cookies.get('user');
     if (userStr) { user = JSON.parse(userStr); role = user.role }
-    if (role !== 'SUPERADMIN' && role !== 'HQ') { referral = user.id }
+    if (role !== 'SUPERADMIN' && role !== 'HQ') { referral = user.username }
 
     return (
       <Layout page={'users'} {...this.props}>

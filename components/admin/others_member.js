@@ -38,6 +38,7 @@ class Othermembers extends React.Component {
             if (userStr) { user = JSON.parse(userStr); id = user.id }
             var rows = res.data.users
             rows = rows.filter(u => u.id !== id);
+            console.log(rows)
             this.setState({ userlist: rows, isloaded: true })
         })
         .catch(err => {

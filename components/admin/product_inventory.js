@@ -138,7 +138,7 @@ class Prodinv extends React.Component {
                         </thead>
                         <tbody>
                             {this.state.translist.map((u, i) => <tr key={i}>
-                                <td className="pl-4 font-weight-bold">{u.product_id}</td>
+                                <td className="pl-4 font-weight-bold">{u.product.name}</td>
                                 {u.transaction_type === 'INCREASE' ? <td>+{u.quantity}</td> : <td>-{u.quantity}</td>}
                                 <td>{dateTime(u.created_at)}</td>
                             </tr>)}

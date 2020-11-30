@@ -24,6 +24,7 @@ class Othrpt extends React.Component {
       risloaded: true,
       rerror: false,
       rerr_msg: {},
+      rsuccess: false,
       error: false,
       isloaded: false,
       redeemlist: [],
@@ -41,11 +42,11 @@ class Othrpt extends React.Component {
 
   postPoints = () => {
     if (this.state.points) {
-      this.setState({ risloaded: false })
+      this.setState({ risloaded: false, rerror: false, rsuccess: false })
       api.post(routes.epoint_requests, { epoint_request: { epoint: this.state.points }})
         .then(res => {
         console.log(res)
-        this.setState({ risloaded: true })
+        this.setState({ risloaded: true, rsuccess: true })
       })
       .catch(err => {
         console.log(err.response)
@@ -229,13 +230,20 @@ class Othrpt extends React.Component {
               <div className="col-10 d-flex align-items-center">
                 <span className={form.nexcl}>!</span> 
                 {(this.state.rerr_msg.error && typeof this.state.rerr_msg.error === 'string') && <div>{this.state.rerr_msg.error}</div>}
-                {(this.state.rerr_msg.error && typeof this.state.rerr_msg.error === 'array') && <ul className="m-0 pl-4">
+                {(this.state.rerr_msg.error && typeof this.state.rerr_msg.error === 'object') && <ul className="m-0 pl-4">
                   {Object.keys(this.state.rerr_msg.error).map(key =>
                     <li value={key} key={key}>{`${key}: ${this.state.rerr_msg.error[key][0]}`}</li>
                   )}
                 </ul>}
               </div> 
               <div onClick={() => this.setState({ rerror: false })} className={`col-2 ${form.nclose}`}>Close</div>
+            </div>}
+            {this.state.rsuccess && <div className={`w-100 mb-4 ${form.notice_success}`}>
+              <div className="col-10 d-flex align-items-center">
+                <span className={form.sexcl}>✓</span> 
+                <div><b>Success -</b> Request Sent</div>
+              </div> 
+              <div onClick={() => this.setState({ rsuccess: false })} className={`col-2 ${form.sclose}`}>Close</div>
             </div>}
             <label>Points to redeem</label>
             <input name="points" onChange={this.handleChange} type="number" className={form.field} />

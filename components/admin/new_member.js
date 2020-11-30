@@ -15,7 +15,7 @@ class Newmemb extends React.Component {
         this.state = {
             ptype: 'password',
             image: '',
-            imagePreviewUrl: '',
+            imgData: '',
             isloaded: true,
             error: false,
             err_msg: {},
@@ -55,10 +55,10 @@ class Newmemb extends React.Component {
         let file = e.target.files[0];
     
         reader.onloadend = () => {
-          this.setState({
-            image: file,
-            imagePreviewUrl: reader.result
-          });
+            this.setState({
+                image: file,
+                imgData: reader.result
+            });
         }
         reader.readAsDataURL(file)
     }
@@ -69,6 +69,7 @@ class Newmemb extends React.Component {
         const postdata = {
             user: {
                 full_name: this.state.full_name,
+                profile_picture: this.state.imgData,
                 role: this.state.role,
                 ic_number: this.state.ic,
                 username: this.state.username,
@@ -105,8 +106,8 @@ class Newmemb extends React.Component {
     render () {
 
         let $imagePreview = null;
-        if (this.state.imagePreviewUrl) {
-            $imagePreview = (<img src={this.state.imagePreviewUrl} className={form.img_preview}/>);
+        if (this.state.imgData) {
+            $imagePreview = (<img src={this.state.imgData} className={form.img_preview}/>);
         } else {
             $imagePreview = null;
         }
@@ -119,7 +120,7 @@ class Newmemb extends React.Component {
                         <div className="col-10 d-flex align-items-center">
                             <span className={form.nexcl}>!</span> 
                             {(this.state.err_msg.error && typeof this.state.err_msg.error === 'string') && <div>{this.state.err_msg.error}</div>}
-                            {(this.state.err_msg.error && typeof this.state.err_msg.error === 'array') && <ul className="m-0 pl-4">
+                            {(this.state.err_msg.error && typeof this.state.err_msg.error === 'object') && <ul className="m-0 pl-4">
                                 {Object.keys(this.state.err_msg.error).map(key =>
                                     <li value={key} key={key}>{`${key}: ${this.state.err_msg.error[key][0]}`}</li>
                                 )}
@@ -132,19 +133,19 @@ class Newmemb extends React.Component {
                         <div className="d-flex align-items-center p-4 border-bottom mb-4">
                             <div className={styles.thead}>New Member Details</div>
                         </div>
-                        {/* <div className="row m-0 px-3 pb-4">
+                        <div className="row m-0 px-3 pb-4">
                             <div className="col-md-6 px-2">
                                 <label>Profile Photo</label>
                                 <div className="d-flex align-items-center">
-                                    {this.state.imagePreviewUrl ? $imagePreview :
+                                    {this.state.imgData ? $imagePreview :
                                     <label htmlFor="file-upload" className={form.field_file}>Upload your Photo here</label>}
                                     <input id="file-upload" name="prod_img" type="file" onChange={(e)=>this.imgChange(e)} className="d-none"/>
                                 </div>
                             </div>
                             <div className="col-md-6 px-2 d-flex align-items-end">
-                                {this.state.imagePreviewUrl && <button onClick={() => {this.setState({image: '', imagePreviewUrl: ''})}} className={form.remove_img_btn}><MdCancel/> Remove</button>}
+                                {this.state.imgData && <button onClick={() => {this.setState({image: '', imgData: ''})}} className={form.remove_img_btn}><MdCancel/> Remove</button>}
                             </div>
-                        </div> */}
+                        </div>
                         <div className="row m-0 px-3">
                             <div className="col-md-4 px-2">
                                 <label>Member Full Name</label>
@@ -188,7 +189,7 @@ class Newmemb extends React.Component {
                                 <input name="phone" onChange={this.handleChange} value={this.state.phone} type="tel" className={form.field_light}/>
                             </div>
                             <div className="col-md-4 px-2">
-                                <label>Referral Member ID</label>
+                                <label>Referral Member Username</label>
                                 <input name="upline_id" onChange={this.handleChange} value={this.state.upline_id} type="text" className={form.field_light} placeholder="E.g. Member5758"/>
                             </div>
                         </div>
