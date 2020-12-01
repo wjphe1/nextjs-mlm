@@ -33,6 +33,10 @@ class Admprod extends React.Component {
       cisloaded: false,
       cerror: false,
       toast: true,
+      ppage: 1,
+      pnext: false,
+      cpage: 1,
+      cnext: false,
     };
   }
 
@@ -44,10 +48,14 @@ class Admprod extends React.Component {
     });
   }
 
-  getProd = () => {
-    api.get(routes.products)
+  getProd = (str) => {
+    this.setState({ isloaded: false })
+    const pagy = this.state.ppage + parseInt(str || 0);
+    api.get(routes.products + '?page=' + pagy)
       .then(res => {
         const rows = res.data.products
+        if (rows.length >= 20) { this.setState({ pnext: true, ppage: pagy }) }
+        else { this.setState({ pnext: false, ppage: pagy }) }
         console.log(rows)
         this.setState({ prodlist: rows, isloaded: true })
       })
@@ -57,10 +65,14 @@ class Admprod extends React.Component {
       })
   }
 
-  getCate = () => {
-    api.get(routes.categories)
+  getCate = (str) => {
+    this.setState({ cisloaded: false })
+    const pagy = this.state.cpage + parseInt(str || 0);
+    api.get(routes.categories + '?page=' + pagy)
       .then(res => {
         const rows = res.data.categories
+        if (rows.length >= 20) { this.setState({ cnext: true, cpage: pagy }) }
+        else { this.setState({ cnext: false, cpage: pagy }) }
         console.log(rows)
         this.setState({ cisloaded: true, catelist: rows })
       })
@@ -207,6 +219,11 @@ class Admprod extends React.Component {
                   </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
                   {this.state.isloaded && !this.state.prodlist.length && <div className="p-5 text-center">No product found. Click new product to add.</div>}
                 </div>
+                {(this.state.pnext || this.state.ppage > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
+                  {this.state.ppage > 1 && <button onClick={() => this.getProd(-1)} className={styles.tbtn}>Prev</button>}
+                  <div>Page {this.state.ppage} Showing {(this.state.ppage - 1)*20 + 1} - {(this.state.ppage - 1)*20 + this.state.prodlist.length}</div>
+                  {this.state.pnext && <button onClick={() => this.getProd(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                </div>}
               </Tab>
               <Tab eventKey="category" title="● Product Category">
                 {(this.state.cerror && this.state.toast) && <div className={`mb-4 ${form.notice_error}`}>
@@ -269,6 +286,11 @@ class Admprod extends React.Component {
                   </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
                   {this.state.cisloaded && !this.state.catelist.length && <div className="p-5 text-center">No category found. Click new category to add.</div>}
                 </div>
+                {(this.state.cnext || this.state.cpage > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
+                  {this.state.cpage > 1 && <button onClick={() => this.getCate(-1)} className={styles.tbtn}>Prev</button>}
+                  <div>Page {this.state.cpage} Showing {(this.state.cpage - 1)*20 + 1} - {(this.state.cpage - 1)*20 + this.state.catelist.length}</div>
+                  {this.state.cnext && <button onClick={() => this.getCate(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                </div>}
               </Tab>
             </Tabs>
           </div>

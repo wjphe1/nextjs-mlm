@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
+import { withRouter } from 'next/router'
 import api from '../auth/api'
 import routes from '../auth/routes'
 import Cookies from 'js-cookie'
@@ -30,6 +31,9 @@ class Othprod extends React.Component {
     this.state = {
       isloaded: false,
       error: false,
+      hisloaded: false,
+      herror: false,
+      shipped: false,
       ferror: false,
       pendinglist: [],
       pending_check: [],
@@ -41,6 +45,10 @@ class Othprod extends React.Component {
       history_view: {},
       startDate: '',
       endDate: '',
+      page: 1,
+      next: false,
+      hpage: 1,
+      hnext: false,
     };
   }
 
@@ -82,24 +90,26 @@ class Othprod extends React.Component {
   }
 
   shipOrders = () => {
-    this.setState({ isloaded: false })
+    this.setState({ isloaded: false, shipped: false, })
     for (var i = 0; i < this.state.pending_selected.length; i ++) {
       api.put(routes.orders + '/' + this.state.pending_selected[i].id + '/complete')
-        .then(res => console.log(`Marked ${this.state.pending_selected[i].order_number} as complete`) )
+        .then(res => this.setState({ shipped: true }) )
         .catch(err => { console.log(err.response); this.setState({ error: true }) })
     }
-    this.getOrders();
+    setTimeout(() => {this.getOrders();}, 500)
+    setTimeout(() => {this.gethistoryOrders();}, 500)
   }
 
-  getOrders = () => {
-    api.get(routes.orders)
+  getOrders = (str) => {
+    this.setState({ isloaded: false })
+    const pagy = this.state.page + parseInt(str || 0);
+    api.get(routes.orders + '?page=' + pagy + '&status=PENDING')
       .then(res => {
         const rows = res.data.orders
-        const pending = rows.filter(u => u.status === 'PENDING');
-        const history = rows.filter(u => u.status === 'COMPLETED' || u.status === 'VOID');
-        console.log(pending)
-        console.log(history)
-        this.setState({ pendinglist: pending, historylist: history, isloaded: true, pending_check: Array(pending.length).fill(false) })
+        if (rows.length >= 20) { this.setState({ next: true, page: pagy }) }
+        else { this.setState({ next: false, page: pagy }) }
+        console.log(rows)
+        this.setState({ pendinglist: rows, isloaded: true, pending_check: Array(rows.length).fill(false) })
       })
       .catch(err => {
         console.log(err.response)
@@ -107,8 +117,26 @@ class Othprod extends React.Component {
       })
   }
 
+  gethistoryOrders = (str) => {
+    this.setState({ hisloaded: false })
+    const pagy = this.state.hpage + parseInt(str || 0);
+    api.get(routes.orders + '?page=' + pagy + '&status=COMPLETED')
+      .then(res => {
+        const rows = res.data.orders
+        if (rows.length >= 20) { this.setState({ hnext: true, hpage: pagy }) }
+        else { this.setState({ hnext: false, hpage: pagy }) }
+        console.log(rows)
+        this.setState({ historylist: rows, hisloaded: true })
+      })
+      .catch(err => {
+        console.log(err.response)
+        this.setState({ hisloaded: true, herror: true })
+      })
+  }
+
   componentDidMount() {
     this.getOrders();
+    this.gethistoryOrders();
   }
 
   render () {
@@ -118,25 +146,13 @@ class Othprod extends React.Component {
     var userStr = Cookies.get('user');
     if (userStr) { user = JSON.parse(userStr); role = user.role; }
     if (role === 'HQ') { dtab = 'inventory'; }
+    if (this.props.router.query.tab) { dtab = this.props.router.query.tab; }
 
     return (
         <section className="py-5 px-4">
           {/* Head Section */}
           <div className="d-flex align-items-center flex-wrap">
             <div className={utils.h_xl}>Product Management</div>
-            {/* Date Pickers */}
-            <div className="ml-auto d-flex align-items-center flex-wrap">
-              <label className="date-div">
-                <span className="calendar-icon"><FiCalendar/></span>
-                <span className="pl-2 pr-1">From</span>
-                <DatePicker placeholderText="--/--/--" dateFormat="d MMM yyyy" className="start-date" selected={this.state.startDate} onChange={(date) => this.setState({startDate: date})} selectsStart startDate={this.state.startDate} endDate={this.state.endDate} showMonthDropdown showYearDropdown dropdownMode="select" />
-              </label>
-              <label className="date-div">
-                <span className="calendar-icon"><FiCalendar/></span>
-                <span className="pl-2 pr-1">To</span>
-                <DatePicker placeholderText="--/--/--" dateFormat="d MMM yyyy" className="end-date" selected={this.state.endDate} onChange={(date) => this.setState({endDate: date})} selectsEnd startDate={this.state.startDate} endDate={this.state.endDate} minDate={this.state.startDate} showMonthDropdown showYearDropdown dropdownMode="select" />
-              </label>
-            </div>
           </div>
 
           {/* HQ Products Tabs */}
@@ -156,6 +172,13 @@ class Othprod extends React.Component {
                   </div> 
                   <div onClick={() => this.setState({ error: false })} className={`col-2 ${form.nclose}`}>Close</div>
                 </div>}
+                {this.state.shipped && <div className={`mb-4 ${form.notice_success}`}>
+                  <div className="col-10 d-flex align-items-center">
+                    <span className={form.sexcl}>✓</span>
+                    <div><b>Success - </b> Transfer(s) are marked as completed</div>
+                  </div> 
+                  <div onClick={() => this.setState({ shipped: false })} className={`col-2 ${form.sclose}`}>Close</div>
+                </div>}
                 <div className={styles.table}>
                   <div className="d-flex align-items-center p-3 flex-wrap">
                     <form className={styles.search_div}>
@@ -169,7 +192,7 @@ class Othprod extends React.Component {
                       <tr>
                         {role === 'HQ' ? <th className="pl-4"><input type="checkbox" onChange={this.checkOrder}/></th> : <th className="pl-4"></th>}
                         <th>Transfer ID</th>
-                        <th>(M)ember ID/(C)onsumer Name</th>
+                        <th>Receiver (M/C)</th>
                         <th>Delivery Address</th>
                         <th>Transferred by</th>
                         <th>Transfer Summary</th>
@@ -180,9 +203,9 @@ class Othprod extends React.Component {
                       {this.state.pendinglist.map((u, i) => <tr className={styles.cell_center} key={i}>
                         {role === 'HQ' ? <td className="pl-4"><input type="checkbox" checked={this.state.pending_check[i]} onChange={() => this.checkOrder(i)}/></td> : <td className="pl-4"></td>}
                         <td className="font-weight-bold">{u.order_number}</td>
-                        {u.customer ? <td className="font-weight-bold">(M) {u.customer.full_name}</td> : <td className="font-weight-bold">(C) {u.deliver_to}</td>}
+                        {u.customer ? <td className="font-weight-bold">(M) {u.customer.username}</td> : <td className="font-weight-bold">(C) {u.deliver_to}</td>}
                         <td className="text-truncate" style={{ maxWidth: 200 }}>{u.address ? u.address : '-'}</td>
-                        <td>{u.fulfilled_by.full_name}</td>
+                        <td>{u.fulfilled_by.username}</td>
                         <td><button className={styles.modal_btn} onClick={() => this.setState({ pshow: true, pending_view: u })}>View</button></td>
                         <td><button className={styles.status_yellow} disabled>{u.status}</button></td>
                       </tr>)}
@@ -197,7 +220,7 @@ class Othprod extends React.Component {
                     </Modal.Header>
                     <Modal.Body>
                       <div className={styles.delivery}>
-                        <div className={utils.hightext_md}><FaUsers/>&nbsp;&nbsp;{this.state.pending_view.customer ? this.state.pending_view.customer.full_name : this.state.pending_view.deliver_to}</div>
+                        <div className={utils.hightext_md}><FaUsers/>&nbsp;&nbsp;{this.state.pending_view.customer ? this.state.pending_view.customer.username : this.state.pending_view.deliver_to}</div>
                         <div className="pt-2">{this.state.pending_view.address || <span className="font-italic">No Fulfilment Required</span>}</div>
                       </div>
                       <div className={`px-3 ${utils.modal_summary}`}>Order Summary</div>
@@ -233,6 +256,11 @@ class Othprod extends React.Component {
                     </Modal.Footer>}
                   </Modal>
                 </div>
+                {(this.state.next || this.state.page > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
+                  {this.state.page > 1 && <button onClick={() => this.getOrders(-1)} className={styles.tbtn}>Prev</button>}
+                  <div>Page {this.state.page} Showing {(this.state.page - 1)*20 + 1} - {(this.state.page - 1)*20 + this.state.pendinglist.length}</div>
+                  {this.state.next && <button onClick={() => this.getOrders(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                </div>}
               </Tab>
               <Tab eventKey="past" title="● Past Transfer">
                 {this.state.ferror && <div className={`mb-4 ${form.notice_error}`}>
@@ -264,7 +292,7 @@ class Othprod extends React.Component {
                     <thead>
                       <tr>
                         <th className="pl-4">Transfer ID</th>
-                          <th>(M)ember ID/(C)onsumer Name</th>
+                          <th>Receiver (M/C)</th>
                           <th>Delivery Address</th>
                           <th>Transfer Summary</th>
                           <th>Status</th>
@@ -274,7 +302,7 @@ class Othprod extends React.Component {
                     <tbody>
                       {this.state.historylist.map((u, i) => <tr key={i} className={`${cn({['flagged']: u.flag})} ${styles.cell_center}`}>
                         <td className="font-weight-bold pl-4">{u.order_number}</td>
-                        {u.customer ? <td className="font-weight-bold">(M) {u.customer.full_name}</td> : <td className="font-weight-bold">(C) {u.deliver_to}</td>}
+                        {u.customer ? <td className="font-weight-bold">(M) {u.customer.username}</td> : <td className="font-weight-bold">(C) {u.deliver_to}</td>}
                         <td className="text-truncate" style={{ maxWidth: 200 }}>{u.address ? u.address : '-'}</td>
                         <td><button className={styles.modal_btn} onClick={() => this.setState({ hshow: true, history_view: u })}>View</button></td>
                         <th>{u.status === 'COMPLETED' ? <button className={styles.status_green} disabled>{u.status}</button> : <button className={styles.status_red} disabled>{u.status}</button>}</th>
@@ -292,7 +320,7 @@ class Othprod extends React.Component {
                       <div className="row m-0">
                         <div className="col-md-6 p-0">
                           <div className={styles.delivery}>
-                            <div className={utils.hightext_md}><FaUsers/>&nbsp;&nbsp;{this.state.history_view.customer ? this.state.history_view.customer.full_name : this.state.history_view.deliver_to}</div>
+                            <div className={utils.hightext_md}><FaUsers/>&nbsp;&nbsp;{this.state.history_view.customer ? this.state.history_view.customer.username : this.state.history_view.deliver_to}</div>
                             <div className="pt-2">{this.state.history_view.address || <span className="font-italic">No Fulfilment Required</span>}</div>
                           </div>
                         </div>
@@ -331,6 +359,11 @@ class Othprod extends React.Component {
                     </Modal.Body>
                   </Modal>
                 </div>
+                {(this.state.hnext || this.state.hpage > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
+                  {this.state.hpage > 1 && <button onClick={() => this.gethistoryOrders(-1)} className={styles.tbtn}>Prev</button>}
+                  <div>Page {this.state.hpage} Showing {(this.state.hpage - 1)*20 + 1} - {(this.state.hpage - 1)*20 + this.state.historylist.length}</div>
+                  {this.state.hnext && <button onClick={() => this.gethistoryOrders(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                </div>}
               </Tab>
             </Tabs>
           </div>
@@ -339,4 +372,4 @@ class Othprod extends React.Component {
   }
 }
 
-export default Othprod;
+export default withRouter(Othprod);

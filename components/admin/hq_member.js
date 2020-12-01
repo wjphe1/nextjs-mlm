@@ -27,11 +27,17 @@ class HQmembers extends React.Component {
             pending_selected: [],
             isloaded: false,
             error: false,
+            aisloaded: false,
+            error: false,
             merror: false,
             toast: true,
             accept: false,
             reject: false,
             nouser: false,
+            page: 1,
+            next: false,
+            apage: 1,
+            anext: false,
         };
     }
 
@@ -73,26 +79,39 @@ class HQmembers extends React.Component {
                         this.setState({ merror: true, toast: true })
                     })
             }
-            this.getUsers();
+            setTimeout(() => {this.getUsers();}, 500)
         } else {
             this.setState({ isloaded: true, nouser: true, toast: true })
         }
     }
 
-    getUsers = () => {
-        api.get(routes.users)
+    getUsers = (str) => {
+        this.setState({ aisloaded: false })
+        const pagy = this.state.apage + parseInt(str || 0);
+        api.get(routes.users + '?page=' + pagy + '&status=ACTIVE')
         .then(res => {
             const rows = res.data.users
-            const active = rows.filter((u) => u.active)
-            const inactive = rows.filter((u) => !u.active)
+            if (rows.length >= 20) { this.setState({ anext: true, apage: pagy }) }
+            else { this.setState({ anext: false, apage: pagy }) }
             console.log(rows)
-            console.log(active)
-            console.log(inactive)
-            this.setState({ 
-                pendinglist: inactive, 
-                userlist: active,
-                pending_check: Array(inactive.length).fill(false),
-                isloaded: true })
+            this.setState({ userlist: rows, aisloaded: true })
+        })
+        .catch(err => {
+            console.log(err.response)
+            this.setState({ aisloaded: true, aerror: true })
+        })
+    }
+
+    getpendingUsers = (str) => {
+        this.setState({ isloaded: false })
+        const pagy = this.state.page + parseInt(str || 0);
+        api.get(routes.users + '?page=' + pagy + '&status=PENDING')
+        .then(res => {
+            const rows = res.data.users
+            if (rows.length >= 20) { this.setState({ next: true, page: pagy }) }
+            else { this.setState({ next: false, page: pagy }) }
+            console.log(rows)
+            this.setState({ pendinglist: rows, isloaded: true, pending_check: Array(rows.length).fill(false) })
         })
         .catch(err => {
             console.log(err.response)
@@ -102,6 +121,7 @@ class HQmembers extends React.Component {
 
     componentDidMount() {
         this.getUsers();
+        this.getpendingUsers();
     }
 
     render () {
@@ -112,19 +132,6 @@ class HQmembers extends React.Component {
                 {/* Head Section */}
                 <div className="d-flex align-items-center flex-wrap">
                     <div className={utils.h_xl}>Members Management</div>
-                    {/* Date Pickers */}
-                    <div className="ml-auto d-flex align-items-center flex-wrap">
-                    <label className="date-div">
-                        <span className="calendar-icon"><FiCalendar/></span>
-                        <span className="pl-2 pr-1">From</span>
-                        <DatePicker placeholderText="--/--/--" dateFormat="d MMM yyyy" className="start-date" selected={this.state.startDate} onChange={(date) => this.setState({startDate: date})} selectsStart startDate={this.state.startDate} endDate={this.state.endDate} showMonthDropdown showYearDropdown dropdownMode="select" />
-                    </label>
-                    <label className="date-div">
-                        <span className="calendar-icon"><FiCalendar/></span>
-                        <span className="pl-2 pr-1">To</span>
-                        <DatePicker placeholderText="--/--/--" dateFormat="d MMM yyyy" className="end-date" selected={this.state.endDate} onChange={(date) => this.setState({endDate: date})} selectsEnd startDate={this.state.startDate} endDate={this.state.endDate} minDate={this.state.startDate} showMonthDropdown showYearDropdown dropdownMode="select" />
-                    </label>
-                    </div>
                 </div>
 
                 {/* Admin Reports Tabs */}
@@ -203,6 +210,11 @@ class HQmembers extends React.Component {
                                 </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
                                 {this.state.isloaded && !this.state.pendinglist.length && <div className="p-5 text-center">No User Request Found.</div>}
                             </div>
+                            {(this.state.next || this.state.page > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
+                                {this.state.page > 1 && <button onClick={() => this.getpendingUsers(-1)} className={styles.tbtn}>Prev</button>}
+                                <div>Page {this.state.page} Showing {(this.state.page - 1)*20 + 1} - {(this.state.page - 1)*20 + this.state.pendinglist.length}</div>
+                                {this.state.next && <button onClick={() => this.getpendingUsers(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                            </div>}
                         </Tab>
                         <Tab eventKey="list" title="● Member List">
                             {(this.props.router.query.newuser && this.state.toast) && <div className={`mb-4 ${form.notice_success}`}>
@@ -227,7 +239,7 @@ class HQmembers extends React.Component {
                                     </form>
                                     <Link href="/admin/members/new"><a className={`ml-auto ${styles.tbtn}`}>New Member</a></Link>
                                 </div>
-                                {this.state.isloaded ? <Table responsive>
+                                {this.state.aisloaded ? <Table responsive>
                                     <thead>
                                         <tr>
                                             <th className="pl-4">Member ID</th>
@@ -255,8 +267,13 @@ class HQmembers extends React.Component {
                                         )}
                                     </tbody>
                                 </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
-                                {this.state.isloaded && !this.state.userlist.length && <div className="p-5 text-center">No User Request Found.</div>}
+                                {this.state.aisloaded && !this.state.userlist.length && <div className="p-5 text-center">No User Request Found.</div>}
                             </div>
+                            {(this.state.anext || this.state.apage > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
+                                {this.state.apage > 1 && <button onClick={() => this.getUsers(-1)} className={styles.tbtn}>Prev</button>}
+                                <div>Page {this.state.apage} Showing {(this.state.apage - 1)*20 + 1} - {(this.state.apage - 1)*20 + this.state.userlist.length}</div>
+                                {this.state.anext && <button onClick={() => this.getUsers(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                            </div>}
                         </Tab>
                     </Tabs>
                 </div>

@@ -27,6 +27,10 @@ class Prodinv extends React.Component {
             selid: '',
             type: 'INCREASE',
             quantity: null,
+            ppage: 1,
+            pnext: false,
+            tpage: 1,
+            tnext: false,
         };
     }
 
@@ -38,10 +42,14 @@ class Prodinv extends React.Component {
         });
     }
 
-    getProd = () => {
-        api.get(routes.inventory)
+    getProd = (str) => {
+        this.setState({ isloaded: false })
+        const pagy = this.state.ppage + parseInt(str || 0);
+        api.get(routes.inventory + '?page=' + pagy)
             .then(res => {
                 const rows = res.data.user_inventories
+                if (rows.length >= 20) { this.setState({ pnext: true, ppage: pagy }) }
+                else { this.setState({ pnext: false, ppage: pagy }) }
                 console.log(rows)
                 this.setState({ prodlist: rows, isloaded: true })
             })
@@ -51,10 +59,14 @@ class Prodinv extends React.Component {
             })
     }
 
-    getTrans = () => {
-        api.get(routes.inven_transac)
+    getTrans = (str) => {
+        this.setState({ tisloaded: false })
+        const pagy = this.state.tpage + parseInt(str || 0);
+        api.get(routes.inven_transac + '?page=' + pagy)
             .then(res => {
                 const rows = res.data.inventory_transactions
+                if (rows.length >= 20) { this.setState({ tnext: true, tpage: pagy }) }
+                else { this.setState({ tnext: false, tpage: pagy }) }
                 console.log(rows)
                 this.setState({ translist: rows, tisloaded: true })
             })
@@ -123,6 +135,11 @@ class Prodinv extends React.Component {
                     </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
                     {this.state.isloaded && !this.state.prodlist.length && <div className="p-5 text-center">No product inventory found.</div>}
                 </div>
+                {(this.state.pnext || this.state.ppage > 1) && <div className="d-flex align-items-center justify-content-between pb-5">
+                    {this.state.ppage > 1 && <button onClick={() => this.getProd(-1)} className={styles.tbtn}>Prev</button>}
+                    <div>Page {this.state.ppage} Showing {(this.state.ppage - 1)*20 + 1} - {(this.state.ppage - 1)*20 + this.state.prodlist.length}</div>
+                    {this.state.pnext && <button onClick={() => this.getProd(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                </div>}
 
                 <div className={styles.table}>
                     <div className="d-flex align-items-center p-3">
@@ -146,6 +163,11 @@ class Prodinv extends React.Component {
                     </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
                     {this.state.tisloaded && !this.state.translist.length && <div className="p-5 text-center">No transaction found.</div>}
                 </div>
+                {(this.state.tnext || this.state.tpage > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
+                    {this.state.tpage > 1 && <button onClick={() => this.getTrans(-1)} className={styles.tbtn}>Prev</button>}
+                    <div>Page {this.state.tpage} Showing {(this.state.tpage - 1)*20 + 1} - {(this.state.tpage - 1)*20 + this.state.translist.length}</div>
+                    {this.state.tnext && <button onClick={() => this.getTrans(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                </div>}
 
                 <Modal show={this.state.show} onHide={() => this.setState({ show: false })} size="md" aria-labelledby="confirm-log-out" centered>
                     <Modal.Body>

@@ -8,7 +8,7 @@ const routes = {
     inven_transac: '/inventory_transactions',
     epoint_requests: '/epoint_requests',
     epoint_rewards: '/epoint_rewards',
-    orders: '/orders'
+    orders: '/orders',
 };
 
 export default routes;

@@ -26,18 +26,19 @@ class Othermembers extends React.Component {
             isloaded: false,
             error: false,
             toast: true,
+            page: 1,
+            next: false,
         };
     }
 
-    getUsers = () => {
-        api.get(routes.users)
+    getUsers = (str) => {
+        this.setState({ isloaded: false })
+        const pagy = this.state.page + parseInt(str || 0);
+        api.get(routes.users + '?page=' + pagy)
         .then(res => {
-            var user = {};
-            var id = null;
-            var userStr = Cookies.get('user');
-            if (userStr) { user = JSON.parse(userStr); id = user.id }
-            var rows = res.data.users
-            rows = rows.filter(u => u.id !== id);
+            const rows = res.data.users
+            if (rows.length >= 20) { this.setState({ next: true, page: pagy }) }
+            else { this.setState({ next: false, page: pagy }) }
             console.log(rows)
             this.setState({ userlist: rows, isloaded: true })
         })
@@ -64,19 +65,6 @@ class Othermembers extends React.Component {
                 {/* Head Section */}
                 <div className="d-flex align-items-center flex-wrap">
                     <div className={utils.h_xl}>Members Management</div>
-                    {/* Date Pickers */}
-                    <div className="ml-auto d-flex align-items-center flex-wrap">
-                    <label className="date-div">
-                        <span className="calendar-icon"><FiCalendar/></span>
-                        <span className="pl-2 pr-1">From</span>
-                        <DatePicker placeholderText="--/--/--" dateFormat="d MMM yyyy" className="start-date" selected={this.state.startDate} onChange={(date) => this.setState({startDate: date})} selectsStart startDate={this.state.startDate} endDate={this.state.endDate} showMonthDropdown showYearDropdown dropdownMode="select" />
-                    </label>
-                    <label className="date-div">
-                        <span className="calendar-icon"><FiCalendar/></span>
-                        <span className="pl-2 pr-1">To</span>
-                        <DatePicker placeholderText="--/--/--" dateFormat="d MMM yyyy" className="end-date" selected={this.state.endDate} onChange={(date) => this.setState({endDate: date})} selectsEnd startDate={this.state.startDate} endDate={this.state.endDate} minDate={this.state.startDate} showMonthDropdown showYearDropdown dropdownMode="select" />
-                    </label>
-                    </div>
                 </div>
 
                 {/* Other Members Tabs */}
@@ -133,6 +121,11 @@ class Othermembers extends React.Component {
                                 </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
                                 {this.state.isloaded && !this.state.userlist.length && <div className="p-5 text-center">No Downline Members Found.</div>}
                             </div>
+                            {(this.state.next || this.state.page > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
+                                {this.state.page > 1 && <button onClick={() => this.getUsers(-1)} className={styles.tbtn}>Prev</button>}
+                                <div>Page {this.state.page} Showing {(this.state.page - 1)*20 + 1} - {(this.state.page - 1)*20 + this.state.userlist.length}</div>
+                                {this.state.next && <button onClick={() => this.getUsers(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                            </div>}
                         </Tab>
                     </Tabs>
                 </div>

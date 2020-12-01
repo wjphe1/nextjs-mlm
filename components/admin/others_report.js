@@ -30,6 +30,10 @@ class Othrpt extends React.Component {
       redeemlist: [],
       rewardlist: [],
       points: '',
+      ppage: 1,
+      pnext: false,
+      cpage: 1,
+      cnext: false,
     };
   }
 
@@ -63,10 +67,14 @@ class Othrpt extends React.Component {
     }
   }
 
-  getIncentives = () => {
-    api.get(routes.epoint_rewards)
+  getIncentives = (str) => {
+    this.setState({ cisloaded: false })
+    const pagy = this.state.cpage + parseInt(str || 0);
+    api.get(routes.epoint_rewards + '?page=' + pagy)
       .then(res => {
       const rows = res.data.epoint_rewards;
+      if (rows.length >= 20) { this.setState({ cnext: true, cpage: pagy }) }
+      else { this.setState({ cnext: false, cpage: pagy }) }
       console.log(rows)
       this.setState({ rewardlist: rows })
     })
@@ -76,10 +84,14 @@ class Othrpt extends React.Component {
     })
   }
 
-  getPoints = () => {
-    api.get(routes.epoint_requests)
+  getPoints = (str) => {
+    this.setState({ isloaded: false })
+    const pagy = this.state.ppage + parseInt(str || 0);
+    api.get(routes.epoint_requests + '?page=' + pagy)
       .then(res => {
       const rows = res.data.epoint_requests;
+      if (rows.length >= 20) { this.setState({ pnext: true, ppage: pagy }) }
+      else { this.setState({ pnext: false, ppage: pagy }) }
       console.log(rows)
       this.setState({ isloaded: true, redeemlist: rows })
     })
@@ -200,6 +212,11 @@ class Othrpt extends React.Component {
                 </tbody>
                 </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
                 {this.state.isloaded && !this.state.redeemlist.length && <div className="p-5 text-center">No Reimbursement History Found.</div>}
+                {(this.state.pnext || this.state.ppage > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
+                  {this.state.ppage > 1 && <button onClick={() => this.getProd(-1)} className={styles.tbtn}>Prev</button>}
+                  <div>Page {this.state.ppage} Showing {(this.state.ppage - 1)*20 + 1} - {(this.state.ppage - 1)*20 + this.state.redeemlist.length}</div>
+                  {this.state.pnext && <button onClick={() => this.getProd(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                </div>}
               </Tab>
               <Tab eventKey="incentive" title="Monthly Incentive">
                 {this.state.isloaded ? <Table responsive>
@@ -217,13 +234,18 @@ class Othrpt extends React.Component {
                       <td>{dateTime(u.created_at)}</td>
                       <td>{u.reward_type}</td>
                       {u.status === 'PENDING' && <td><button className={`text-capitalize ${styles.status_yellow}`} disabled>{u.status.toLowerCase()}</button></td>}
-                      {u.status === 'COMPLETED' && <td><button className={`text-capitalize ${styles.status_green}`} disabled>{u.status.toLowerCase()}</button></td>}
+                      {u.status === 'APPROVED' && <td><button className={`text-capitalize ${styles.status_green}`} disabled>{u.status.toLowerCase()}</button></td>}
                       {u.status === 'CANCELLED' && <td><button className={`text-capitalize ${styles.status_red}`} disabled>{u.status.toLowerCase()}</button></td>}
                       {u.status === 'REJECTED' && <td><button className={`text-capitalize ${styles.status_red}`} disabled>{u.status.toLowerCase()}</button></td>}
                     </tr>)}
                   </tbody>
                 </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
                 {this.state.isloaded && !this.state.rewardlist.length && <div className="p-5 text-center">No Incentive Record Found.</div>}
+                {(this.state.cnext || this.state.cpage > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
+                  {this.state.cpage > 1 && <button onClick={() => this.getCate(-1)} className={styles.tbtn}>Prev</button>}
+                  <div>Page {this.state.cpage} Showing {(this.state.cpage - 1)*20 + 1} - {(this.state.cpage - 1)*20 + this.state.rewardlist.length}</div>
+                  {this.state.cnext && <button onClick={() => this.getCate(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                </div>}
               </Tab>
             </Tabs>
           </div>

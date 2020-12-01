@@ -1,17 +1,32 @@
 import Link from 'next/link'
 import React from 'react'
+import cn from 'classnames'
+import api from '../auth/api'
+import routes from '../auth/routes'
 import styles from '../../styles/module/admin/admin.module.scss'
 import utils from '../../styles/module/utils.module.scss'
+import form from '../../styles/module/form.module.scss'
 import { FaUsers } from 'react-icons/fa';
 import { MdCancel } from 'react-icons/md'
+import { RiErrorWarningLine } from 'react-icons/ri';
 import Table from 'react-bootstrap/Table'
 import Modal from 'react-bootstrap/Modal'
+import dateTime from '../dateTime';
+import Spinner from 'react-bootstrap/Spinner'
 
 class Asales extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             show: false,
+            isloaded: false,
+            error: false,
+            orderlist: [],
+            order_check: [],
+            order_selected: [],
+            view: {},
+            page: 1,
+            next: false,
         };
     }
 
@@ -23,9 +38,55 @@ class Asales extends React.Component {
         });
     }
 
+    checkOrder = (i) => {
+        var array = this.state.order_check;
+        var selected = [];
+        const semua = this.state.orderlist;
+    
+        if (i.target && (i.target.checked === true || i.target.checked === false)) {
+            array = Array(semua.length).fill(i.target.checked) 
+        } else {
+            array[i] = !array[i];
+        }
+        
+        array.forEach(function(part, index) {
+            if (part) { 
+                selected = selected.concat(semua[index]);
+            }
+        });
+    
+        console.log(selected)
+    
+        this.setState({
+            order_check: array,
+            order_selected: selected,
+        })
+    }
+
+    getOrders = (str) => {
+        this.setState({ isloaded: false })
+        const pagy = this.state.page + parseInt(str || 0);
+        api.get(routes.orders + '?page=' + pagy)
+            .then(res => {
+                const rows = res.data.orders
+                if (rows.length >= 20) { this.setState({ next: true, page: pagy }) }
+                else { this.setState({ next: false, page: pagy }) }
+                console.log(rows)
+                this.setState({ orderlist: rows, isloaded: true, order_check: Array(rows.length).fill(false) })
+            })
+            .catch(err => {
+                console.log(err.response)
+                this.setState({ isloaded: true, error: true })
+            })
+    }
+    
+    componentDidMount() {
+        this.getOrders();
+    }
+
     render () {
     
-        return (
+        return (<>
             <div className={styles.table}>
                 <div className="d-flex align-items-center p-3 pl-4" style={{ borderBottom: '1px solid #EBEBEB' }}>
                     <div className={styles.thead}>Transaction History</div>
@@ -37,10 +98,17 @@ class Asales extends React.Component {
                         <div className={utils.hightext_lg}>RM 1,200.00</div>
                     </button>
                 </div>
-                <Table responsive>
+                {this.state.error && <div className={`mb-4 ${form.notice_error}`}>
+                  <div className="col-10 d-flex align-items-center">
+                    <span className={form.nexcl}>!</span>
+                    <div><b>Error - </b> Some Error Occurred</div>
+                  </div> 
+                  <div onClick={() => this.setState({ error: false })} className={`col-2 ${form.nclose}`}>Close</div>
+                </div>}
+                {this.state.isloaded ? <Table responsive>
                     <thead>
                         <tr>
-                            <th className="pl-4"><input type="checkbox"/></th>
+                            <th className="pl-4"><input type="checkbox" onChange={this.checkOrder}/></th>
                             <th>Transfer ID</th>
                             <th>Transferred At</th>
                             <th>Amount</th>
@@ -49,36 +117,32 @@ class Asales extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr className={styles.cell_center}>
-                            <td className="pl-4"><input type="checkbox"/></td>
-                            <td>X1896747d</td>
-                            <td>20 Oct 2020 11:30 AM</td>
-                            <td>RM 200</td>
-                            <td><button className={styles.status_green} disabled>Successful</button></td>
-                            <td><button className={styles.modal_btn} onClick={() => this.setState({ show: true })}>View</button></td>
-                        </tr>
-                        <tr className={styles.cell_center}>
-                            <td className="pl-4"><input type="checkbox"/></td>
-                            <td>X1896747d</td>
-                            <td>20 Oct 2020 11:30 AM</td>
-                            <td>RM 200</td>
-                            <td><button className={styles.status_green} disabled>Successful</button></td>
-                            <td><button className={styles.modal_btn} onClick={() => this.setState({ show: true })}>View</button></td>
-                        </tr>
+                        {this.state.orderlist.map((u, i) => <tr className={`${cn({['flagged']: u.flag})} ${styles.cell_center}`} key={i}>
+                            <td className="pl-4"><input type="checkbox" checked={this.state.order_check[i]} onChange={() => this.checkOrder(i)}/></td>
+                            <td>{u.order_number}</td>
+                            <td>{dateTime(u.created_at)}</td>
+                            <td>RM {u.total_price}</td>
+                            {u.status === 'COMPLETED' && <td><button className={`text-capitalize ${styles.status_green}`} disabled>{u.status.toLowerCase()}</button></td>}
+                            {u.status === 'VOID' && <td><button className={`text-capitalize ${styles.status_red}`} disabled>{u.status.toLowerCase()}</button></td>}
+                            {u.status === 'PENDING' && <td><button className={`text-capitalize ${styles.status_yellow}`} disabled>{u.status.toLowerCase()}</button></td>}
+                            <td><button className={styles.modal_btn} onClick={() => this.setState({ show: true, view: u })}>View</button></td>
+                        </tr>)}
                     </tbody>
-                </Table>
+                </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
+                {this.state.isloaded && !this.state.orderlist.length && <div className="p-5 text-center">No transfer found.</div>}
                 <Modal show={this.state.show} onHide={() => this.setState({ show: false })} size="lg" aria-labelledby="fulfilment-modal" centered>
                     <Modal.Body>
                         <div className="row m-0">
                             <div className="col-md-6 p-0">
                                 <div className={styles.delivery}>
-                                    <div className={utils.hightext_md}><FaUsers/>&nbsp;&nbsp;Member18979</div>
-                                    <div className="pt-2">2, USJ height, Subang Jaya, 41500,  Selangor, Malaysia</div>
+                                    <div className={utils.hightext_md}><FaUsers/>&nbsp;&nbsp;{this.state.view.customer ? this.state.view.customer.username : this.state.view.deliver_to}</div>
+                                    <div className="pt-2">{this.state.view.address || <span className="font-italic">No Fulfilment Required</span>}</div>
                                 </div>
                             </div>
                             <div className="col-md-6 px-0 pt-3 text-right">
-                                <div className={utils.h_md_n}>Invoice ID: XD10234t</div>
-                                <div className={utils.text_md}>Order at 10 Oct 2020 11:30 AM</div>
+                            {this.state.view.flag && <div className={utils.hightext_md}><RiErrorWarningLine/>&nbsp;This Transfer is Flagged</div>}
+                                <div className={utils.h_md_n}>Invoice ID: {this.state.view.order_number}</div>
+                                <div className={utils.text_md}>Order at {dateTime(this.state.view.created_at)}</div>
                             </div>
                         </div>
                         <div className={`px-3 ${utils.modal_summary}`}>Order Summary</div>
@@ -91,22 +155,17 @@ class Asales extends React.Component {
                                 </tr>
                             </thead>
                             <tbody className={styles.modal_table}>
-                                <tr>
-                                    <td className="pl-4 font-weight-bold">Kozi Reezqa</td>
-                                    <td>1</td>
-                                    <td>100</td>
-                                </tr>
-                                <tr>
-                                    <td className="pl-4 font-weight-bold">Soft Cream Reezqa</td>
-                                    <td>1</td>
-                                    <td>100</td>
-                                </tr>
+                                {this.state.view.order_items && this.state.view.order_items.map((u, i) => <tr key={i}>
+                                    <td className="pl-4 font-weight-bold">{u.product_details.name}</td>
+                                    <td>{u.quantity}</td>
+                                    <td>{u.unit_price}</td>
+                                </tr>)}
                             </tbody>
                             <thead className={`${styles.subtotal} ${styles.modal_table}`}>
                                 <tr>
                                     <th className={`pl-4 ${styles.ttl}`}>Subtotal</th>
-                                    <th>2</th>
-                                    <th className={styles.tend}>200</th>
+                                    <th style={{ fontSize: '0.9rem' }}>{this.state.view.order_items && <span>{this.state.view.order_items.length} item(s)</span>}</th>
+                                    <th className={styles.tend}>{this.state.view.total_price}</th>
                                 </tr>
                             </thead>
                         </Table>
@@ -115,7 +174,12 @@ class Asales extends React.Component {
                     </Modal.Body>
                 </Modal>
             </div>
-        )
+            {(this.state.next || this.state.page > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
+                {this.state.page > 1 && <button onClick={() => this.getOrders(-1)} className={styles.tbtn}>Prev</button>}
+                <div>Page {this.state.page} Showing {(this.state.page - 1)*20 + 1} - {(this.state.page - 1)*20 + this.state.orderlist.length}</div>
+                {this.state.next && <button onClick={() => this.getOrders(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+            </div>}
+        </>)
     }
 }
 

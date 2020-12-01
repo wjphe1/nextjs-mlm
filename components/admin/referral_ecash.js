@@ -14,7 +14,7 @@ class Referral extends React.Component {
         return (
             <div className={`d-flex flex-column ${styles.table}`}>
                 <div className={`${form.notice_warning} mx-5 mt-4`}><span>For Product E-cash Settings, please go to <Link href="/admin/products"><a style={{fontWeight: 'bold', color: '#FF6202', whiteSpace: 'nowrap'}}>product tab</a></Link> and set the new e-cash earned value for each product.</span></div>
-                <div className="row m-0 py-3 px-5 flex-nowrap">
+                <div className="row m-0 py-3 px-5 flex-nowrap" style={{ maxWidth: 600 }}>
                     <div className="col-3 pl-4 pr-0">
                         <div className="py-2">Level</div>
                         <div className={styles.level}>1</div>

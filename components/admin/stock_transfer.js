@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
+import Router from 'next/router'
 import api from '../auth/api'
 import routes from '../auth/routes'
 import Cookies from 'js-cookie'
@@ -148,7 +149,7 @@ class Stocktransfer extends React.Component {
         if (itemerror) {
             const msg = { error: 'Please select product(s) and valid quantity' }
             this.setState({ oerror: true, oerr_msg: msg })
-        } else if ((!this.state.target_member && !this.state.target_customer) && (this.state.fulfilment && !this.state.target_address) && !this.state.target_phone_number) {
+        } else if ((!this.state.target_member && !this.state.target_customer) || (this.state.fulfilment && !this.state.target_address) || !this.state.target_phone_number) {
             const msg = { error: 'Please fill in all the order details' }
             this.setState({ oerror: true, oerr_msg: msg })
         } else {
@@ -185,7 +186,8 @@ class Stocktransfer extends React.Component {
                     console.log(res)
                     this.setState({ osuccess: true, oisloaded: true })
                     this.getProd();
-                    this.props.getOrders();
+                    setTimeout(() => {Router.push({ pathname: '/admin/products', query: { tab: 'pending'}})}, 500)
+                    setTimeout(() => {Router.reload()}, 600)
                 })
                 .catch(err => {
                     console.log(err.response)
