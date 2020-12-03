@@ -87,7 +87,7 @@ class Apnl extends React.Component {
                             <tbody className={styles.modal_table}>
                                 <tr>
                                     <td className="pl-4 font-weight-bold">RM 100</td>
-                                    <td>2 Feb 2020</td>
+                                    <td></td>
                                     <td></td>
                                     <td></td>
                                     <td>10 Oct 2020</td>

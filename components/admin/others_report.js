@@ -57,12 +57,30 @@ class Othrpt extends React.Component {
         .then(res => {
           console.log(res)
           this.setState({ risloaded: true, rsuccess: true })
+          this.getPoints();
         })
         .catch(err => {
           console.log(err.response)
           var msg = { error: err.response.status + ' : ' + err.response.statusText };
           if (err.response.data) { msg = err.response.data };
           this.setState({ rerror: true, risloaded: true, rerr_msg: msg })
+        })
+    }
+  }
+
+  cancelRequest = (rid) => {
+    if (confirm('Are you sure?')) {
+      this.setState({ isloaded: false, error: false, success: false })
+      api.put(routes.epoint_requests + '/' + rid + '/cancel')
+        .then(res => {
+          console.log(res)
+          this.getPoints();
+        })
+        .catch(err => {
+          console.log(err.response)
+          var msg = { error: err.response.status + ' : ' + err.response.statusText };
+          if (err.response.data) { msg = err.response.data };
+          this.setState({ error: true, isloaded: true, err_msg: msg })
         })
     }
   }
@@ -172,6 +190,18 @@ class Othrpt extends React.Component {
           </div>
         </div>
 
+        {this.state.error && <div className={`w-100 mb-4 ${form.notice_error}`}>
+          <div className="col-10 d-flex align-items-center">
+            <span className={form.nexcl}>!</span> 
+            {(this.state.err_msg.error && typeof this.state.err_msg.error === 'string') && <div>{this.state.err_msg.error}</div>}
+            {(this.state.err_msg.error && typeof this.state.err_msg.error === 'object') && <ul className="m-0 pl-4">
+              {Object.keys(this.state.err_msg.error).map(key =>
+                <li value={key} key={key}>{`${key}: ${this.state.err_msg.error[key][0]}`}</li>
+              )}
+            </ul>}
+          </div> 
+          <div onClick={() => this.setState({ error: false })} className={`col-2 ${form.nclose}`}>Close</div>
+        </div>}
         {/* Others Reports Tabs */}
         <div className={styles.table}>
           <div className="d-flex align-items-center pb-0 pt-3 pr-3 pl-5">
@@ -208,6 +238,7 @@ class Othrpt extends React.Component {
                       {u.status === 'APPROVED' && <td><button className={`text-capitalize ${styles.status_green}`} disabled>{u.status.toLowerCase()}</button></td>}
                       {u.status === 'CANCELLED' && <td><button className={`text-capitalize ${styles.status_red}`} disabled>{u.status.toLowerCase()}</button></td>}
                       {u.status === 'REJECTED' && <td><button className={`text-capitalize ${styles.status_red}`} disabled>{u.status.toLowerCase()}</button></td>}
+                      {u.status === 'PENDING' ? <td><button onClick={() => this.cancelRequest(u.id)} className={styles.modal_btn}>Cancel</button></td> : <td></td>}
                     </tr>)}
                 </tbody>
                 </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
@@ -226,6 +257,7 @@ class Othrpt extends React.Component {
                       <th className="pt-4">Awarded At</th>
                       <th className="pt-4">Reward Type</th>
                       <th className="pt-4">Status</th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -274,7 +306,7 @@ class Othrpt extends React.Component {
                 <span className={form.sexcl}>✓</span> 
                 <div><b>Success -</b> Request Sent</div>
               </div> 
-              <div onClick={() => this.setState({ rsuccess: false })} className={`col-2 ${form.sclose}`}>Close</div>
+              <div onClick={() => this.setState({ show: false })} className={`col-2 ${form.sclose}`}>Close</div>
             </div>}
             <label>Points to redeem</label>
             <input name="points" onChange={this.handleChange} type="number" className={form.field} />

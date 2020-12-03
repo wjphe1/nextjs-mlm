@@ -35,7 +35,7 @@ class Pnlform extends React.Component {
 
     appendForm = (e) => {
         var current = this.state.expenses;
-        var newform = {name: '', date: new Date(), amount: '', remarks: ''};
+        var newform = {name: '', date: '', amount: '', remarks: ''};
         var newcurrent = current.concat(newform);
         this.setState({
             expenses: newcurrent

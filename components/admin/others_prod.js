@@ -49,6 +49,11 @@ class Othprod extends React.Component {
       next: false,
       hpage: 1,
       hnext: false,
+      edit: false,
+      eisloaded: false,
+      eerror: false,
+      esuccess: false,
+      eerr_msg: {},
     };
   }
 
@@ -61,6 +66,66 @@ class Othprod extends React.Component {
       .catch(err => {
         console.log(err.response)
         this.setState({ ferror: true })
+      })
+  }
+
+  cancelOrder = (oid) => {
+    if (confirm('Are you sure?')) {
+      this.setState({ isloaded: false, error: false, success: false })
+      api.put(routes.orders + '/' + oid + '/cancel')
+        .then(res => {
+          console.log(res)
+          this.getOrders();
+        })
+        .catch(err => {
+          console.log(err.response)
+          var msg = { error: err.response.status + ' : ' + err.response.statusText };
+          if (err.response.data) { msg = err.response.data };
+          this.setState({ error: true, isloaded: true, err_msg: msg })
+        })
+    }
+  }
+
+  editOrder = (e, index) => {
+    var order = this.state.pending_view;
+    if (index === null) {
+      if (e.target.type === 'checkbox') {
+        order.delivery_required = !order.delivery_required
+      } else {
+        order[e.target.name] = e.target.value
+      }
+    } else {
+      order.order_items[index][e.target.name] = parseInt(e.target.value)
+    }
+    this.setState({ pending_view: order })
+  }
+
+  putPending = () => {
+    const row = this.state.pending_view;
+    var putdata = { order: {
+      delivery_required: row.delivery_required,
+      deliver_to: row.deliver_to,
+      address: row.address,
+      phone_number: row.phone_number,
+      order_items_attributes: [],
+    }}
+    if (!row.delivery_required) { putdata.order.address = '' }
+    for (var i = 0; i < row.order_items.length; i++) {
+      var item = { id: row.order_items[i].id, quantity: row.order_items[i].quantity}
+      putdata.order.order_items_attributes = putdata.order.order_items_attributes.concat(item)
+    }
+    this.setState({ eisloaded: false, eerror: false, esuccess: false })
+    api.put(routes.orders + '/' + row.id, putdata)
+      .then(res => {
+        console.log(res)
+        this.setState({ edit: false, esuccess: true, eisloaded: true })
+        this.getOrders();
+      })
+      .catch(err => {
+        console.log(err.response)
+        var msg = { error: err.response.status + ' : ' + err.response.statusText };
+        if (err.response.data) { msg = err.response.data };
+        this.setState({ eerror: true, eisloaded: true, eerr_msg: msg })
       })
   }
 
@@ -197,6 +262,7 @@ class Othprod extends React.Component {
                         <th>Transferred by</th>
                         <th>Transfer Summary</th>
                         <th>Status</th>
+                        {role !== 'HQ' && <th></th>}
                       </tr>
                     </thead>
                     <tbody>
@@ -208,20 +274,81 @@ class Othprod extends React.Component {
                         <td>{u.fulfilled_by.username}</td>
                         <td><button className={styles.modal_btn} onClick={() => this.setState({ pshow: true, pending_view: u })}>View</button></td>
                         <td><button className={styles.status_yellow} disabled>{u.status}</button></td>
+                        {role !== 'HQ' && <td><button onClick={() => this.cancelOrder(u.id)} className={styles.modal_btn}>Cancel</button></td>}
                       </tr>)}
                     </tbody>
                   </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
                   {this.state.isloaded && !this.state.pendinglist.length && <div className="p-5 text-center">No pending transfer found.</div>}
-                  <Modal show={this.state.pshow} onHide={() => this.setState({ pshow: false })} size="lg" aria-labelledby="fulfilment-modal" centered>
+                  <Modal show={this.state.pshow} onHide={() => this.setState({ pshow: false, edit: false, esuccess: false, eerror: false })} size="lg" aria-labelledby="fulfilment-modal" centered>
                     <Modal.Header>
                       <div className={utils.modal_header}>
                         {role === 'HQ' ? 'Please confirm the details before proceeding to fulfilment' : 'Please wait for HQ to fulfill the transfer'}
                       </div>
                     </Modal.Header>
-                    <Modal.Body>
+                    {this.state.edit ? <Modal.Body>
+                      {this.state.eerror && <div className={`mb-4 ${form.notice_error}`}>
+                        <div className="col-10 d-flex align-items-center">
+                          <span className={form.nexcl}>!</span>
+                          {(this.state.eerr_msg.error && typeof this.state.eerr_msg.error === 'string') && <div>{this.state.eerr_msg.error}</div>}
+                          {(this.state.eerr_msg.error && typeof this.state.eerr_msg.error === 'object') && <ul className="m-0 pl-4">
+                            {Object.keys(this.state.eerr_msg.error).map(key =>
+                              <li value={key} key={key}>{`${key}: ${this.state.eerr_msg.error[key][0]}`}</li>
+                            )}
+                          </ul>}
+                        </div>
+                        <div onClick={() => this.setState({ eerror: false })} className={`col-2 ${form.nclose}`}>Close</div>
+                      </div>}
+                      <form>
+                        {this.state.pending_view.customer && <div className={`mb-3 ${styles.delivery}`}>
+                          <div className={utils.hightext_md}><FaUsers/>&nbsp;&nbsp;{this.state.pending_view.customer.username}</div>
+                        </div>}
+                        {this.state.pending_view.deliver_to && <div className="row m-0 py-2">
+                          <div className="col-4 align-self-center">Customer Name</div>
+                          <div className="col-8"><input onChange={(e) => this.editOrder(e, null)} name="deliver_to" value={this.state.pending_view.deliver_to} className={`m-0 ${form.field_light}`}/></div>
+                        </div>}
+                        <div className="row m-0 py-2">
+                          <div className="col-4 align-self-center">Fulfilment</div>
+                          <div className="col-8"><input type="checkbox" checked={this.state.pending_view.delivery_required} name="delivery_required" onChange={(e) => this.editOrder(e, null)}/></div>
+                        </div>
+                        {this.state.pending_view.delivery_required && <div className="row m-0 py-2">
+                          <div className="col-4 align-self-center">Address</div>
+                          <div className="col-8"><input onChange={(e) => this.editOrder(e, null)} name="address" value={this.state.pending_view.address} className={`m-0 ${form.field_light}`}/></div>
+                        </div>}
+                        <div className="row m-0 py-2">
+                          <div className="col-4 align-self-center">Contact</div>
+                          <div className="col-8"><input onChange={(e) => this.editOrder(e, null)} name="phone_number" value={this.state.pending_view.phone_number} className={`m-0 ${form.field_light}`}/></div>
+                        </div>
+                        
+                        <Table responsive>
+                          <thead className={styles.modal_table}>
+                            <tr>
+                              <th className="pl-4">Product</th>
+                              <th>Quantity</th>
+                              <th>Pricing (MYR)</th>
+                            </tr>
+                          </thead>
+                          <tbody className={styles.modal_table}>
+                            {this.state.pending_view.order_items && this.state.pending_view.order_items.map((u, i) => <tr key={i}>
+                              <td className="pl-4 font-weight-bold">{u.product_details.name}</td>
+                              <td className="w-50"><input onChange={(e) => this.editOrder(e, i)} name="quantity" value={u.quantity} type="number" className={`m-0 w-50 ${form.field_light}`}/></td>
+                              <td>{u.unit_price}</td>
+                            </tr>)}
+                          </tbody>
+                        </Table>
+                      </form>
+                    </Modal.Body>
+                    :<Modal.Body>
+                      {this.state.esuccess && <div className={`mb-4 ${form.notice_success}`}>
+                        <div className="col-10 d-flex align-items-center">
+                          <span className={form.sexcl}>✓</span>
+                          <span><b>Success -</b> Transfer details are updated successfully</span>
+                        </div>
+                        <div onClick={() => this.setState({ esuccess: false, pshow: false })} className={`col-2 ${form.sclose}`}>Close</div>
+                      </div>}
                       <div className={styles.delivery}>
                         <div className={utils.hightext_md}><FaUsers/>&nbsp;&nbsp;{this.state.pending_view.customer ? this.state.pending_view.customer.username : this.state.pending_view.deliver_to}</div>
-                        <div className="pt-2">{this.state.pending_view.address || <span className="font-italic">No Fulfilment Required</span>}</div>
+                        <div className="pt-2">{this.state.pending_view.delivery_required ? <span>{this.state.pending_view.address}</span> : <span className="font-italic">No Fulfilment Required</span>}</div>
+                        <div className="pt-2">Contact: {this.state.pending_view.phone_number}</div>
                       </div>
                       <div className={`px-3 ${utils.modal_summary}`}>Order Summary</div>
                       <Table responsive>
@@ -248,11 +375,11 @@ class Othprod extends React.Component {
                         </thead>
                       </Table>
                       {role !== 'HQ' && <button className={styles.modal_closebtn} onClick={() => this.setState({ pshow: false })}><MdCancel/> Close</button>}
-                    </Modal.Body>
+                    </Modal.Body>}
                     {role === 'HQ' && <Modal.Footer>
-                      <button onClick={() => this.setState({ pshow: false })} className={styles.tbtn_reverse_borderless}><MdCancel/> Discard</button>
-                      <button className={`px-5 ${styles.tbtn_reverse}`}>Edit</button>
-                      <button className={`px-5 ${styles.tbtn}`}>Confirm</button>
+                      {this.state.edit ? <button onClick={() => {if(confirm('Discard Changes?')) {this.setState({ pshow: false, edit: false, esuccess: false, eerror: false })}}} className={styles.tbtn_reverse_borderless}><MdCancel/> Discard</button> : <button onClick={() => this.setState({ pshow: false })} className={styles.tbtn_reverse_borderless}><MdCancel/> Close</button>}
+                      {!this.state.edit && <button onClick={() => this.setState({ edit: true })} className={`px-5 ${styles.tbtn_reverse}`}>Edit</button>}
+                      {this.state.edit && <button onClick={this.putPending} className={`px-5 ${styles.tbtn}`}>Confirm</button>}
                     </Modal.Footer>}
                   </Modal>
                 </div>

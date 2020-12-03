@@ -37,7 +37,7 @@ class Adminlog extends React.Component {
         //console.log(api.defaults.headers.Authorization)
       }
       if (res.data.user) {
-        Cookies.set('user', res.data.user)
+        Cookies.set('user', res.data.user, { expires: 7 }); // 7 days expiry
         //console.log(JSON.parse(Cookies.get('user')))
       }
 
