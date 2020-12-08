@@ -131,7 +131,7 @@ class Aepoints extends React.Component {
   getPending = (str) => {
     this.setState({ pisloaded: false })
     const pagy = this.state.ppage + parseInt(str || 0);
-    api.get(routes.epoint_requests + '?page=' + pagy)
+    api.get(routes.epoint_requests + '?page=' + pagy + '&status=PENDING')
       .then(res => {
       const rows = res.data.epoint_requests;
       if (rows.length >= 20) { this.setState({ pnext: true, ppage: pagy }) }
@@ -148,7 +148,7 @@ class Aepoints extends React.Component {
   getPoints = (str) => {
     this.setState({ isloaded: false })
     const pagy = this.state.page + parseInt(str || 0);
-    api.get(routes.epoint_requests + '?page=' + pagy)
+    api.get(routes.epoint_requests + '?page=' + pagy + '&scope=HISTORY')
       .then(res => {
       const rows = res.data.epoint_requests;
       if (rows.length >= 20) { this.setState({ next: true, page: pagy }) }
@@ -165,7 +165,7 @@ class Aepoints extends React.Component {
   getIncentives = (str) => {
     this.setState({ cisloaded: false })
     const pagy = this.state.cpage + parseInt(str || 0);
-    api.get(routes.epoint_rewards + '?page=' + pagy)
+    api.get(routes.epoint_rewards + '?page=' + pagy + '&status=PENDING')
       .then(res => {
       const rows = res.data.epoint_rewards;
       if (rows.length >= 20) { this.setState({ cnext: true, cpage: pagy }) }
@@ -182,7 +182,7 @@ class Aepoints extends React.Component {
   getRewards = (str) => {
     this.setState({ hisloaded: false })
     const pagy = this.state.hpage + parseInt(str || 0);
-    api.get(routes.epoint_rewards + '?page=' + pagy)
+    api.get(routes.epoint_rewards + '?page=' + pagy + '&scope=HISTORY')
       .then(res => {
         const rows = res.data.epoint_rewards;
         if (rows.length >= 20) { this.setState({ hnext: true, hpage: pagy }) }
@@ -372,7 +372,7 @@ class Aepoints extends React.Component {
                       <tbody>
                         {this.state.rewardlist.map((u, i) => <tr className={styles.cell_center} key={i}>
                           <th className="pl-4"><input type="checkbox" checked={this.state.reward_check[i]} onChange={() => this.checkOrder(i, 'reward')}/></th>
-                          <td>{u.user_id}</td>
+                          <td>{u.user.username}</td>
                           <td>{u.epoint} Pts</td>
                           <td className="w-50"><button className={styles.status_green} disabled>{u.status}</button></td>
                         </tr>)}
@@ -398,7 +398,7 @@ class Aepoints extends React.Component {
                       </thead>
                       <tbody>
                         {this.state.historylist.map((u, i) => <tr className={styles.cell_center} key={i}>
-                          <td className="pl-4">{u.user_id}</td>
+                          <td className="pl-4">{u.user.username}</td>
                           <td>{dateTime(u.approved_at)}</td>
                           <td>{u.epoint} Pts</td>
                           <td>{u.reward_type}</td>
@@ -444,7 +444,7 @@ class Aepoints extends React.Component {
                 <tr>
                   <td className="pl-4 font-weight-bold">{this.state.view.requested_by.username}</td>
                   <td>{this.state.view.approved_at ? dateTime(this.state.view.approved_at) : dateTime(this.state.view.created_at)}</td>
-                  <td>Maybank<br/>1679379038903</td>
+                  <td>{this.state.view.requested_by.bank_name}<br/>{this.state.view.requested_by.bank_account_number}</td>
                   <td>{this.state.view.epoint} Pts</td>
                   <td>RM 100</td>
                 </tr>

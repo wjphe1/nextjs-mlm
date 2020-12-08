@@ -25,6 +25,7 @@ export const AuthProvider = ({ children }) => {
                 const user = JSON.parse(Cookies.get('user'))
                 if (user) setUser(user);
                 console.log(`Current user ${user.full_name} logged in as ${user.role}`)
+                console.log(user)
             }
             setLoading(false)
         }

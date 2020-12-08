@@ -185,7 +185,7 @@ class Othprod extends React.Component {
   gethistoryOrders = (str) => {
     this.setState({ hisloaded: false })
     const pagy = this.state.hpage + parseInt(str || 0);
-    api.get(routes.orders + '?page=' + pagy + '&status=COMPLETED')
+    api.get(routes.orders + '?page=' + pagy + '&scope=HISTORY')
       .then(res => {
         const rows = res.data.orders
         if (rows.length >= 20) { this.setState({ hnext: true, hpage: pagy }) }

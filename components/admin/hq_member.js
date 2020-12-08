@@ -88,7 +88,7 @@ class HQmembers extends React.Component {
     getUsers = (str) => {
         this.setState({ aisloaded: false })
         const pagy = this.state.apage + parseInt(str || 0);
-        api.get(routes.users + '?page=' + pagy + '&status=ACTIVE')
+        api.get(routes.users + '?page=' + pagy + '&status[]=ACTIVE')
         .then(res => {
             const rows = res.data.users
             if (rows.length >= 20) { this.setState({ anext: true, apage: pagy }) }

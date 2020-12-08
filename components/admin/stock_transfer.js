@@ -48,8 +48,10 @@ class Stocktransfer extends React.Component {
     }
 
     handleChange = (e) => {
+        var value = e.target.value;
+        if (value === null) { value = '' }
         this.setState({
-            [e.target.name]: e.target.value
+            [e.target.name]: value
         });
     }
 

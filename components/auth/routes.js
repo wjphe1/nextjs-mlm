@@ -9,6 +9,9 @@ const routes = {
     epoint_requests: '/epoint_requests',
     epoint_rewards: '/epoint_rewards',
     orders: '/orders',
+    expenses: '/expenses',
+    ecash_payouts: '/ecash_payouts',
+    settings: '/settings',
 };
 
 export default routes;
