@@ -3,6 +3,7 @@ import React from 'react'
 import api from '../auth/api'
 import routes from '../auth/routes'
 import dateTime from '../dateTime'
+import Exports from './pdf_epoints'
 import styles from '../../styles/module/admin/admin.module.scss'
 import utils from '../../styles/module/utils.module.scss'
 import form from '../../styles/module/form.module.scss'
@@ -237,7 +238,7 @@ class Aepoints extends React.Component {
                   <Tab eventKey="list" title="Reimbursement List">
                     <div className={styles.tab_btns}>
                       <button onClick={this.approveRedeem} className={`mr-2 py-2 ${styles.tbtn}`}>Mark as Done</button>
-                      <button className={`ml-2 py-2 ${styles.tbtn_reverse}`}>Download</button>
+                      <Exports list={this.state.pending_selected} />
                     </div>
                     {this.state.pisloaded ? <Table responsive>
                       <thead>
@@ -286,7 +287,7 @@ class Aepoints extends React.Component {
                   </Tab>
                   <Tab eventKey="history" title="Reimbursement History">
                     <div className={styles.tab_btns}>
-                      <button className={`py-2 ${styles.tbtn_reverse}`}>Download</button>
+                      <Exports list={this.state.redeem_selected} />
                     </div>
                     {this.state.isloaded ? <Table responsive>
                       <thead>

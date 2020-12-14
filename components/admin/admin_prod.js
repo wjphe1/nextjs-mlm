@@ -37,6 +37,8 @@ class Admprod extends React.Component {
       pnext: false,
       cpage: 1,
       cnext: false,
+      pquery: '',
+      cquery: '',
     };
   }
 
@@ -51,7 +53,7 @@ class Admprod extends React.Component {
   getProd = (str) => {
     this.setState({ isloaded: false })
     const pagy = this.state.ppage + parseInt(str || 0);
-    api.get(routes.products + '?page=' + pagy)
+    api.get(routes.products + '?page=' + pagy + '&query=' + this.state.pquery)
       .then(res => {
         const rows = res.data.products
         if (rows.length >= 20) { this.setState({ pnext: true, ppage: pagy }) }
@@ -68,7 +70,7 @@ class Admprod extends React.Component {
   getCate = (str) => {
     this.setState({ cisloaded: false })
     const pagy = this.state.cpage + parseInt(str || 0);
-    api.get(routes.categories + '?page=' + pagy)
+    api.get(routes.categories + '?page=' + pagy + '&query=' + this.state.cquery)
       .then(res => {
         const rows = res.data.categories
         if (rows.length >= 20) { this.setState({ cnext: true, cpage: pagy }) }
@@ -121,19 +123,6 @@ class Admprod extends React.Component {
           {/* Head Section */}
           <div className="d-flex align-items-center flex-wrap">
             <div className={utils.h_xl}>Product Management</div>
-            {/* Date Pickers */}
-            <div className="ml-auto d-flex align-items-center flex-wrap">
-              <label className="date-div">
-                <span className="calendar-icon"><FiCalendar/></span>
-                <span className="pl-2 pr-1">From</span>
-                <DatePicker placeholderText="--/--/--" dateFormat="d MMM yyyy" className="start-date" selected={this.state.startDate} onChange={(date) => this.setState({startDate: date})} selectsStart startDate={this.state.startDate} endDate={this.state.endDate} showMonthDropdown showYearDropdown dropdownMode="select" />
-              </label>
-              <label className="date-div">
-                <span className="calendar-icon"><FiCalendar/></span>
-                <span className="pl-2 pr-1">To</span>
-                <DatePicker placeholderText="--/--/--" dateFormat="d MMM yyyy" className="end-date" selected={this.state.endDate} onChange={(date) => this.setState({endDate: date})} selectsEnd startDate={this.state.startDate} endDate={this.state.endDate} minDate={this.state.startDate} showMonthDropdown showYearDropdown dropdownMode="select" />
-              </label>
-            </div>
           </div>
 
           {/* Admin Products Tabs */}
@@ -163,10 +152,10 @@ class Admprod extends React.Component {
                 </div>}
                 <div className={styles.table}>
                   <div className="d-flex align-items-center p-3">
-                    <form className={styles.search_div}>
-                      <input type="text" placeholder="Search product here" className={styles.search}/>
-                      <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
-                    </form>
+                    <div className={styles.search_div}>
+                      <input type="text" placeholder="Search product here" className={styles.search} onChange={(e)=>this.setState({ pquery: e.target.value })}/>
+                      <button onClick={() => this.getProd()} className={styles.submit}><HiOutlineSearch/></button>
+                    </div>
                     <Link to href="/admin/products/new"><a className={`ml-auto ${styles.tbtn}`}>New Product</a></Link>
                   </div>
                   {this.state.isloaded ? <Table responsive>
@@ -249,10 +238,10 @@ class Admprod extends React.Component {
                 </div>}
                 <div className={styles.table}>
                   <div className="d-flex align-items-center p-3">
-                    <form className={styles.search_div}>
-                      <input type="text" placeholder="Search category here" className={styles.search}/>
-                      <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
-                    </form>
+                    <div className={styles.search_div}>
+                      <input type="text" placeholder="Search category here" className={styles.search} onChange={(e)=>this.setState({ cquery: e.target.value })}/>
+                      <button onClick={() => this.getCate()} className={styles.submit}><HiOutlineSearch/></button>
+                    </div>
                     <Link to href="/admin/categories/new"><a className={`ml-auto ${styles.tbtn}`}>New Category</a></Link>
                   </div>
                   {this.state.cisloaded ? <Table responsive>

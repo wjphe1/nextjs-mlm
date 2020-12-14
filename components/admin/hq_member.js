@@ -38,6 +38,8 @@ class HQmembers extends React.Component {
             next: false,
             apage: 1,
             anext: false,
+            pquery: '',
+            aquery: '',
         };
     }
 
@@ -88,7 +90,7 @@ class HQmembers extends React.Component {
     getUsers = (str) => {
         this.setState({ aisloaded: false })
         const pagy = this.state.apage + parseInt(str || 0);
-        api.get(routes.users + '?page=' + pagy + '&status[]=ACTIVE')
+        api.get(routes.users + '?page=' + pagy + '&status[]=ACTIVE&query=' + this.state.aquery)
         .then(res => {
             const rows = res.data.users
             if (rows.length >= 20) { this.setState({ anext: true, apage: pagy }) }
@@ -105,7 +107,7 @@ class HQmembers extends React.Component {
     getpendingUsers = (str) => {
         this.setState({ isloaded: false })
         const pagy = this.state.page + parseInt(str || 0);
-        api.get(routes.users + '?page=' + pagy + '&status=PENDING')
+        api.get(routes.users + '?page=' + pagy + '&status=PENDING&query=' + this.state.pquery)
         .then(res => {
             const rows = res.data.users
             if (rows.length >= 20) { this.setState({ next: true, page: pagy }) }
@@ -168,10 +170,10 @@ class HQmembers extends React.Component {
                             </div>}
                             <div className={styles.table}>
                                 <div className="d-flex align-items-center p-3 flex-wrap">
-                                    <form className={styles.search_div}>
-                                    <input type="text" placeholder="Search user here" className={styles.search}/>
-                                    <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
-                                    </form>
+                                    <div className={styles.search_div}>
+                                        <input type="text" placeholder="Search members here" className={styles.search} onChange={(e)=>this.setState({ pquery: e.target.value })}/>
+                                        <button onClick={() => this.getpendingUsers()} className={styles.submit}><HiOutlineSearch/></button>
+                                    </div>
                                     <div className="d-flex align-items-center ml-auto flex-nowrap py-2">
                                     <div className="font-weight-bold">Action</div>
                                     <button onClick={() => this.markUser(true)} className={`ml-3 mr-2 py-2 ${styles.tbtn}`}>Approve</button>
@@ -233,10 +235,10 @@ class HQmembers extends React.Component {
                             </div>}
                             <div className={styles.table}>
                                 <div className="d-flex align-items-center p-3 flex-wrap">
-                                    <form className={styles.search_div}>
-                                    <input type="text" placeholder="Search user here" className={styles.search}/>
-                                    <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
-                                    </form>
+                                    <div className={styles.search_div}>
+                                        <input type="text" placeholder="Search members here" className={styles.search} onChange={(e)=>this.setState({ aquery: e.target.value })}/>
+                                        <button onClick={() => this.getUsers()} className={styles.submit}><HiOutlineSearch/></button>
+                                    </div>
                                     <Link href="/admin/members/new"><a className={`ml-auto ${styles.tbtn}`}>New Member</a></Link>
                                 </div>
                                 {this.state.aisloaded ? <Table responsive>

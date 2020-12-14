@@ -44,6 +44,10 @@ class Stocktransfer extends React.Component {
             products_check: ['','',''],
             products_selected: [],
             products_selected_quantity: [],
+            ppage: 1,
+            pnext: false,
+            pquery: '',
+            upage: 1,
         };
     }
 
@@ -200,10 +204,14 @@ class Stocktransfer extends React.Component {
         }
     }
 
-    getProd = () => {
-        api.get(routes.inventory)
+    getProd = (str) => {
+        this.setState({ isloaded: false })
+        const pagy = this.state.ppage + parseInt(str || 0);
+        api.get(routes.inventory + '?page=' + pagy + '&query=' + this.state.pquery)
             .then(res => {
                 const rows = res.data.user_inventories
+                if (rows.length >= 20) { this.setState({ pnext: true, ppage: pagy }) }
+                else { this.setState({ pnext: false, ppage: pagy }) }
                 console.log(rows)
                 this.setState({ prodlist: rows, isloaded: true, products_check: Array(rows.length).fill(false), })
             })
@@ -214,10 +222,15 @@ class Stocktransfer extends React.Component {
     }
 
     getUsers = () => {
-        api.get(routes.users)
+        api.get(routes.users + '?page=' + this.state.upage)
         .then(res => {
             const rows = res.data.users
-            const active = rows.filter((u) => u.active)
+            var active = this.state.userlist
+            active = active.concat(rows.filter((u) => u.active))
+            if (rows.length === 20) {
+                this.setState({ upage: this.state.upage + 1 });
+                this.getUsers();
+            }
             console.log(active)
             this.setState({ userlist: active, target_member: active[0].id, target_address: active[0].address, target_phone_number: active[0].phone_number })
         })
@@ -240,10 +253,10 @@ class Stocktransfer extends React.Component {
         return (
             <div className={styles.table}>
                 <div className="d-flex align-items-center p-3">
-                    <form className={styles.search_div}>
-                        <input type="text" placeholder="Search inventory here" className={styles.search}/>
-                        <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
-                    </form>
+                    <div className={styles.search_div}>
+                        <input type="text" placeholder="Search product here" className={styles.search} onChange={(e) => this.setState({ pquery: e.target.value })}/>
+                        <button onClick={() => this.getProd()} className={styles.submit}><HiOutlineSearch/></button>
+                    </div>
                     <div className="ml-auto btn-dropdown">
                         <DropdownButton
                             menuAlign="right"
@@ -295,6 +308,11 @@ class Stocktransfer extends React.Component {
                     </tbody> : <tbody><tr></tr></tbody>}
                 </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
                 {this.state.isloaded && !this.state.prodlist.length && <div className="p-5 text-center">No product inventory found.</div>}
+                {(this.state.pnext || this.state.ppage > 1) && <div className="d-flex align-items-center justify-content-between pb-5">
+                    {this.state.ppage > 1 && <button onClick={() => this.getProd(-1)} className={styles.tbtn}>Prev</button>}
+                    <div>Page {this.state.ppage} Showing {(this.state.ppage - 1)*20 + 1} - {(this.state.ppage - 1)*20 + this.state.prodlist.length}</div>
+                    {this.state.pnext && <button onClick={() => this.getProd(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                </div>}
                 <Modal show={this.state.show} onHide={() => this.setState({ show: false })} size="lg" aria-labelledby="fulfilment-modal" centered>
                     <Modal.Header>
                         <div className={utils.modal_header}>

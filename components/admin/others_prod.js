@@ -54,6 +54,8 @@ class Othprod extends React.Component {
       eerror: false,
       esuccess: false,
       eerr_msg: {},
+      pquery: '',
+      hquery: '',
     };
   }
 
@@ -168,7 +170,7 @@ class Othprod extends React.Component {
   getOrders = (str) => {
     this.setState({ isloaded: false })
     const pagy = this.state.page + parseInt(str || 0);
-    api.get(routes.orders + '?page=' + pagy + '&status=PENDING')
+    api.get(routes.orders + '?page=' + pagy + '&status=PENDING&query=' + this.state.pquery)
       .then(res => {
         const rows = res.data.orders
         if (rows.length >= 20) { this.setState({ next: true, page: pagy }) }
@@ -185,7 +187,7 @@ class Othprod extends React.Component {
   gethistoryOrders = (str) => {
     this.setState({ hisloaded: false })
     const pagy = this.state.hpage + parseInt(str || 0);
-    api.get(routes.orders + '?page=' + pagy + '&scope=HISTORY')
+    api.get(routes.orders + '?page=' + pagy + '&scope=HISTORY&query=' + this.state.hquery)
       .then(res => {
         const rows = res.data.orders
         if (rows.length >= 20) { this.setState({ hnext: true, hpage: pagy }) }
@@ -246,10 +248,10 @@ class Othprod extends React.Component {
                 </div>}
                 <div className={styles.table}>
                   <div className="d-flex align-items-center p-3 flex-wrap">
-                    <form className={styles.search_div}>
-                      <input type="text" placeholder="Search transfer here" className={styles.search}/>
-                      <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
-                    </form>
+                    <div className={styles.search_div}>
+                      <input type="text" placeholder="Search transfer here" className={styles.search} onChange={(e)=>this.setState({ pquery: e.target.value })}/>
+                      <button onClick={() => this.getOrders()} className={styles.submit}><HiOutlineSearch/></button>
+                    </div>
                     {role === 'HQ' && <button onClick={this.shipOrders} className={`ml-auto ${styles.tbtn}`}>Ship Out</button>}
                   </div>
                   {this.state.isloaded ? <Table responsive>
@@ -399,10 +401,10 @@ class Othprod extends React.Component {
                 </div>}
                 <div className={styles.table}>
                   <div className="d-flex align-items-center p-3">
-                    <form className={styles.search_div}>
-                      <input type="text" placeholder="Search transfer here" className={styles.search}/>
-                      <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
-                    </form>
+                    <div className={styles.search_div}>
+                      <input type="text" placeholder="Search transfer here" className={styles.search} onChange={(e)=>this.setState({ hquery: e.target.value })}/>
+                      <button onClick={() => this.gethistoryOrders()} className={styles.submit}><HiOutlineSearch/></button>
+                    </div>
                     <OverlayTrigger trigger="click" placement='top'
                       overlay={
                         <Popover id="popover-positioned-top">

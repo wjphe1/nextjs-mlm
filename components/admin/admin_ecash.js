@@ -93,7 +93,7 @@ class Aecash extends React.Component {
         <div className={utils.h_xl}>Report Overview</div>
         {this.props.links}
 
-        {this.state.error && <div className={`mb-4 ${form.notice_error}`}>
+        {this.state.error && <div className={`mb-2 ${form.notice_error}`}>
           <div className="col-10 d-flex align-items-center">
             <span className={form.nexcl}>!</span> 
             {(this.state.err_msg.error && typeof this.state.err_msg.error === 'string') && <div>{this.state.err_msg.error}</div>}
@@ -105,14 +105,14 @@ class Aecash extends React.Component {
           </div> 
           <div onClick={() => this.setState({ error: false })} className={`col-2 ${form.nclose}`}>Close</div>
         </div>}
-        {this.state.success && <div className={`mb-4 ${form.notice_success}`}>
+        {this.state.success && <div className={`mb-2 ${form.notice_success}`}>
           <div className="col-10 d-flex align-items-center">
             <span className={form.sexcl}>✓</span> 
             <div>{this.state.err_msg.error}</div>
           </div> 
           <div onClick={() => this.setState({ success: false })} className={`col-2 ${form.sclose}`}>Close</div>
         </div>}
-        <div className={styles.table}>
+        <div className={`mt-3 ${styles.table}`}>
           <div className="dn-mb py-4"></div>
           <div className="admin-generic-tabs report-tabs border-0 m-0">
             <Tabs defaultActiveKey="list">

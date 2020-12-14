@@ -31,6 +31,7 @@ class Prodinv extends React.Component {
             pnext: false,
             tpage: 1,
             tnext: false,
+            pquery: '',
         };
     }
 
@@ -45,7 +46,7 @@ class Prodinv extends React.Component {
     getProd = (str) => {
         this.setState({ isloaded: false })
         const pagy = this.state.ppage + parseInt(str || 0);
-        api.get(routes.inventory + '?page=' + pagy)
+        api.get(routes.inventory + '?page=' + pagy + '&query=' + this.state.pquery)
             .then(res => {
                 const rows = res.data.user_inventories
                 if (rows.length >= 20) { this.setState({ pnext: true, ppage: pagy }) }
@@ -112,10 +113,10 @@ class Prodinv extends React.Component {
                 </div>}
                 <div className={`${styles.table} mb-4`}>
                     <div className="d-flex align-items-center p-3">
-                        <form className={styles.search_div}>
-                            <input type="text" placeholder="Search product here" className={styles.search}/>
-                            <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
-                        </form>
+                        <div className={styles.search_div}>
+                            <input type="text" placeholder="Search product here" className={styles.search} onChange={(e) => this.setState({ pquery: e.target.value })}/>
+                            <button onClick={() => this.getProd()} className={styles.submit}><HiOutlineSearch/></button>
+                        </div>
                     </div>
                     {this.state.isloaded ? <Table responsive>
                         <thead>

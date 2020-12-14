@@ -28,13 +28,14 @@ class Othermembers extends React.Component {
             toast: true,
             page: 1,
             next: false,
+            uquery: '',
         };
     }
 
     getUsers = (str) => {
         this.setState({ isloaded: false })
         const pagy = this.state.page + parseInt(str || 0);
-        api.get(routes.users + '?page=' + pagy)
+        api.get(routes.users + '?page=' + pagy + '&query=' + this.state.uquery)
         .then(res => {
             const rows = res.data.users
             if (rows.length >= 20) { this.setState({ next: true, page: pagy }) }
@@ -87,10 +88,10 @@ class Othermembers extends React.Component {
                             </div>}
                             <div className={styles.table}>
                                 <div className="d-flex align-items-center p-3 flex-wrap">
-                                    <form className={styles.search_div}>
-                                    <input type="text" placeholder="Search user here" className={styles.search}/>
-                                    <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
-                                    </form>
+                                    <div className={styles.search_div}>
+                                        <input type="text" placeholder="Search members here" className={styles.search} onChange={(e)=>this.setState({ uquery: e.target.value })}/>
+                                        <button onClick={() => this.getUsers()} className={styles.submit}><HiOutlineSearch/></button>
+                                    </div>
                                     {authorized && <Link href="/admin/members/new"><a className={`ml-auto ${styles.tbtn}`}>New Member</a></Link>}
                                 </div>
                                 {this.state.isloaded ? <Table responsive>

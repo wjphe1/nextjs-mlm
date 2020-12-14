@@ -3,6 +3,7 @@ import React from 'react'
 import cn from 'classnames'
 import api from '../auth/api'
 import routes from '../auth/routes'
+import Exports from './pdf_sales'
 import styles from '../../styles/module/admin/admin.module.scss'
 import utils from '../../styles/module/utils.module.scss'
 import form from '../../styles/module/form.module.scss'
@@ -87,10 +88,10 @@ class Asales extends React.Component {
     render () {
     
         return (<>
-            <div className={styles.table}>
+            <div className={`mt-3 ${styles.table}`}>
                 <div className="d-flex align-items-center p-3 pl-4" style={{ borderBottom: '1px solid #EBEBEB' }}>
                     <div className={styles.thead}>Transaction History</div>
-                    <button className={`ml-auto ${styles.tbtn}`}>Export</button>
+                    <Exports list={this.state.order_selected}/>
                 </div>
                 <div className="py-2">
                     <button disabled className={`my-3 mx-4 ${styles.sale_info}`}>
