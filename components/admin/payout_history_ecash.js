@@ -22,6 +22,8 @@ class Ecashph extends React.Component {
             page: 1,
             next: false,
             payoutlist: [],
+            payout_check: [],
+            payout_selected: [],
             sshow: false,
         };
     }
@@ -31,6 +33,31 @@ class Ecashph extends React.Component {
         this.setState({
             [e.target.name]: value
         });
+    }
+
+    checkPayout = (i) => {
+        var array = this.state.payout_check;
+        var selected = [];
+        const semua = this.state.payoutlist;
+    
+        if (i.target && (i.target.checked === true || i.target.checked === false)) {
+            array = Array(semua.length).fill(i.target.checked) 
+        } else {
+            array[i] = !array[i];
+        }
+        
+        array.forEach(function(part, index) {
+            if (part) { 
+                selected = selected.concat(semua[index]);
+            }
+        });
+    
+        console.log(selected)
+    
+        this.setState({
+            payout_check: array,
+            payout_selected: selected,
+        })
     }
 
     getPayouts = (str) => {
@@ -64,7 +91,7 @@ class Ecashph extends React.Component {
             {this.state.isloaded ? <Table responsive>
                 <thead>
                     <tr>
-                        <th className="pl-4"><input type="checkbox"/></th>
+                        <th className="pl-4"><input type="checkbox" onChange={this.checkPayout}/></th>
                         <th>From Date</th>
                         <th>To Date</th>
                         <th>Minimum E-cash</th>
@@ -75,7 +102,7 @@ class Ecashph extends React.Component {
                 </thead>
                 <tbody>
                     {this.state.payoutlist.map((u, i) => <tr className={styles.cell_center} key={i}>
-                        <td className="pl-4"><input type="checkbox"/></td>
+                        <td className="pl-4"><input type="checkbox" checked={this.state.payout_check[i]} onChange={() => this.checkPayout(i)}/></td>
                         <td>{dateTime(u.start_date, 'date')}</td>
                         <td>{dateTime(u.end_date, 'date')}</td>
                         <td>{u.minimum_ecash}</td>

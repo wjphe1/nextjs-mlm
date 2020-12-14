@@ -269,7 +269,7 @@ class Aepoints extends React.Component {
                           <td>{u.requested_by.username}</td>
                           <td>{dateTime(u.created_at)}</td>
                           <td>{u.epoint} Pts</td>
-                          <td>RM 245.50</td>
+                          <td>RM {((u.epoint/2) - 0.50).toFixed(2)}</td>
                           {u.status === 'PENDING' && <td><button className={`text-capitalize ${styles.status_yellow}`} disabled>{u.status.toLowerCase()}</button></td>}
                           {u.status === 'APPROVED' && <td><button className={`text-capitalize ${styles.status_green}`} disabled>{u.status.toLowerCase()}</button></td>}
                           {u.status === 'CANCELLED' && <td><button className={`text-capitalize ${styles.status_red}`} disabled>{u.status.toLowerCase()}</button></td>}
@@ -318,7 +318,7 @@ class Aepoints extends React.Component {
                           <td>{u.requested_by.username}</td>
                           <td>{dateTime(u.approved_at)}</td>
                           <td>{u.epoint} Pts</td>
-                          <td>RM 245.50</td>
+                          <td>RM {((u.epoint/2) - 0.50).toFixed(2)}</td>
                           {u.status === 'PENDING' && <td><button className={`text-capitalize ${styles.status_yellow}`} disabled>{u.status.toLowerCase()}</button></td>}
                           {u.status === 'APPROVED' && <td><button className={`text-capitalize ${styles.status_green}`} disabled>{u.status.toLowerCase()}</button></td>}
                           {u.status === 'CANCELLED' && <td><button className={`text-capitalize ${styles.status_red}`} disabled>{u.status.toLowerCase()}</button></td>}

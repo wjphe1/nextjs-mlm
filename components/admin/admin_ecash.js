@@ -30,6 +30,8 @@ class Aecash extends React.Component {
       page: 1,
       next: false,
       payoutlist: [],
+      payout_check: [],
+      payout_selected: [],
       fshow: false,
       sshow: false,
       startDate: '',
@@ -43,6 +45,46 @@ class Aecash extends React.Component {
     this.setState({
       [e.target.name]: value
     });
+  }
+
+  checkPayout = (i) => {
+    var array = this.state.payout_check;
+    var selected = [];
+    const semua = this.state.payoutlist;
+
+    if (i.target && (i.target.checked === true || i.target.checked === false)) {
+        array = Array(semua.length).fill(i.target.checked) 
+    } else {
+        array[i] = !array[i];
+    }
+    
+    array.forEach(function(part, index) {
+        if (part) { 
+            selected = selected.concat(semua[index]);
+        }
+    });
+
+    console.log(selected)
+
+    this.setState({
+        payout_check: array,
+        payout_selected: selected,
+    })
+  }
+
+  donePayout = () => {
+    this.setState({ isloaded: false, success: false, })
+    for (var i = 0; i < this.state.payout_selected.length; i ++) {
+      api.put(routes.ecash_payouts + '/' + this.state.payout_selected[i].id + '/approve')
+        .then(res => this.setState({ success: true, err_msg: {error: 'Success - Marked as Done'} }) )
+        .catch(err => { 
+          console.log(err.response); 
+          var msg = { error: err.response.status + ' : ' + err.response.statusText };
+          if (err.response.data) { msg = err.response.data };
+          this.setState({ error: true, err_msg: msg }) 
+        })
+    }
+    setTimeout(() => {this.getPayout();}, 500)
   }
 
   postPayout = () => {
@@ -83,7 +125,7 @@ class Aecash extends React.Component {
   }
 
   componentDidMount() {
-      this.getPayout();
+    this.getPayout();
   }
 
   render () {
@@ -93,7 +135,7 @@ class Aecash extends React.Component {
         <div className={utils.h_xl}>Report Overview</div>
         {this.props.links}
 
-        {this.state.error && <div className={`mb-2 ${form.notice_error}`}>
+        {this.state.error && <div className={`my-2 ${form.notice_error}`}>
           <div className="col-10 d-flex align-items-center">
             <span className={form.nexcl}>!</span> 
             {(this.state.err_msg.error && typeof this.state.err_msg.error === 'string') && <div>{this.state.err_msg.error}</div>}
@@ -105,7 +147,7 @@ class Aecash extends React.Component {
           </div> 
           <div onClick={() => this.setState({ error: false })} className={`col-2 ${form.nclose}`}>Close</div>
         </div>}
-        {this.state.success && <div className={`mb-2 ${form.notice_success}`}>
+        {this.state.success && <div className={`my-2 ${form.notice_success}`}>
           <div className="col-10 d-flex align-items-center">
             <span className={form.sexcl}>✓</span> 
             <div>{this.state.err_msg.error}</div>
@@ -119,12 +161,12 @@ class Aecash extends React.Component {
               <Tab eventKey="list" title="Payout">
                 <div className={styles.tab_btns}>
                   <button onClick={() => this.setState({ fshow: true })} className={`mr-2 py-2 ${styles.tbtn}`}>Generate Payout</button>
-                  <button className={`ml-2 py-2 ${styles.tbtn_reverse}`}>Mark as Done</button>
+                  <button onClick={this.donePayout} className={`ml-2 py-2 ${styles.tbtn_reverse}`}>Mark as Done</button>
                 </div>
                 {this.state.isloaded ? <Table responsive>
                   <thead>
                     <tr>
-                      <th className="pl-4"><input type="checkbox"/></th>
+                      <th className="pl-4"><input type="checkbox" onChange={this.checkPayout}/></th>
                       <th>From Date</th>
                       <th>To Date</th>
                       <th>Minimum E-cash</th>
@@ -135,10 +177,10 @@ class Aecash extends React.Component {
                   </thead>
                   <tbody>
                     {this.state.payoutlist.map((u, i) => <tr className={styles.cell_center} key={i}>
-                      <td className="pl-4"><input type="checkbox"/></td>
+                      <td className="pl-4"><input type="checkbox" checked={this.state.payout_check[i]} onChange={() => this.checkPayout(i)}/></td>
                       <td>{dateTime(u.start_date, 'date')}</td>
                       <td>{dateTime(u.end_date, 'date')}</td>
-                      <td>{u.minimum_ecash}</td>
+                      <td>RM {u.minimum_ecash}</td>
                       <td>{dateTime(u.created_at)}</td>
                       {u.status === 'PENDING' && <td><button className={`text-capitalize ${styles.status_yellow}`} disabled>{u.status.toLowerCase()}</button></td>}
                       {u.status === 'APPROVED' && <td><button className={`text-capitalize ${styles.status_green}`} disabled>{u.status.toLowerCase()}</button></td>}

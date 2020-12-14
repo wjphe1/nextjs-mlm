@@ -24,9 +24,8 @@ class Referral extends React.Component {
     }
 
     handleChange = (e) => {
-        var value = parseFloat(e.target.value);
         this.setState({
-            [e.target.name]: value
+            [e.target.name]: e.target.value
         });
     }
 
@@ -62,10 +61,10 @@ class Referral extends React.Component {
         .then(res => {
             const rows = res.data.settings
             this.setState({
-                one: rows.new_member_level1_ecash_reward, 
-                two: rows.new_member_level2_ecash_reward,
-                three: rows.new_member_level3_ecash_reward, 
-                four: rows.new_member_level4_ecash_reward,
+                one: rows.new_member_level1_ecash_reward.toString(),
+                two: rows.new_member_level2_ecash_reward.toString(),
+                three: rows.new_member_level3_ecash_reward.toString(), 
+                four: rows.new_member_level4_ecash_reward.toString(),
                 isloaded: true,
             })
         })

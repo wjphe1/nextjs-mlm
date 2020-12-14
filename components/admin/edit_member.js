@@ -255,7 +255,7 @@ class Editmemb extends React.Component {
                                 <label>Passwords</label>
                                 <div className="position-relative">
                                     <input type="text" className={form.field_disabled} disabled placeholder="****************"/>
-                                    <div className={`${styles.tbtn} position-absolute text-center`} onClick={() => this.setState({ show: true })} style={{ top: 3, right: 3, userSelect: 'none', cursor: 'pointer' }}>Edit</div>
+                                    {this.state.edit_mode && <div className={`${styles.tbtn} position-absolute text-center`} onClick={() => this.setState({ show: true })} style={{ top: 3, right: 3, userSelect: 'none', cursor: 'pointer' }}>Edit</div>}
                                 </div>
                             </div>
                         </div>
