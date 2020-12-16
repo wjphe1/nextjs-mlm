@@ -96,7 +96,7 @@ class Asales extends React.Component {
                 <div className="py-2">
                     <button disabled className={`my-3 mx-4 ${styles.sale_info}`}>
                         <div className={utils.text_md}>Summary of Sales</div>
-                        <div className={utils.hightext_lg}>RM 1,200.00</div>
+                        <div className={utils.hightext_lg}>RM {this.props.sales}</div>
                     </button>
                 </div>
                 {this.state.error && <div className={`mb-4 ${form.notice_error}`}>

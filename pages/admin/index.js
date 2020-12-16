@@ -3,6 +3,8 @@ import Link from 'next/link'
 import React from 'react'
 import cn from 'classnames'
 import Cookies from 'js-cookie'
+import api from '../../components/auth/api'
+import routes from '../../components/auth/routes'
 import styles from '../../styles/module/admin/admin.module.scss'
 import utils from '../../styles/module/utils.module.scss'
 import Layout from '../../components/admin/layout'
@@ -22,7 +24,8 @@ class Sales extends React.Component {
     super(props);
     this.state = {
       startDate: '',
-      endDate: ''
+      endDate: '',
+      sales: '-',
     };
   }
 
@@ -32,6 +35,21 @@ class Sales extends React.Component {
     this.setState({
       [e.target.name]: value
     });
+  }
+
+  getSales = () => {
+    api.get(routes.reports + '/sales?from_date=' + this.state.startDate + '&to_date=' + this.state.endDate)
+      .then(res => {
+        const sales = res.data.sales;
+        this.setState({ sales: sales })
+      })
+      .catch(err => {
+        this.setState({ sales: '-' })
+      })
+  }
+
+  componentDidMount() {
+    this.getSales();
   }
 
   render () {
@@ -107,7 +125,7 @@ class Sales extends React.Component {
             <div className={styles.huge_btns_div}>
               {tab1svg} {tab2svg} {tab3svg} {tab4svg}
             </div>
-            <Asales/>
+            <Asales sales={this.state.sales}/>
           </section>
         </Layout>
       )

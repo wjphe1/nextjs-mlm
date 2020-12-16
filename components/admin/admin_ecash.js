@@ -37,6 +37,8 @@ class Aecash extends React.Component {
       startDate: '',
       endDate: '',
       minEcash: '',
+      view: {},
+      viewlist: [],
     };
   }
 
@@ -93,7 +95,7 @@ class Aecash extends React.Component {
       const postdata = { ecash_payout: { start_date: this.state.startDate, end_date: this.state.endDate, minimum_ecash: this.state.minEcash }}
       api.post(routes.ecash_payouts, postdata)
         .then(res => {
-          this.setState({ err_msg: { error: 'Expense Created Successully'}, success: true, fshow: false })
+          this.setState({ err_msg: { error: 'Payout Created Successully'}, success: true, fshow: false })
           this.getPayout();
         })
         .catch(err => {
@@ -104,6 +106,21 @@ class Aecash extends React.Component {
     } else {
       this.setState({ err_msg: { error: 'Please fill in all the required fields'}, ferror: true })
     }
+  }
+
+  getUserfromPayout = (u) => {
+    this.setState({ view: u })
+    api.get(routes.ecash_payouts + '/' + u.id + '/user_ecash_payouts')
+      .then(res => {
+        const rows = res.data.user_ecash_payouts || res.data;
+        console.log(rows)
+        this.setState({ viewlist: rows, sshow: true })
+      })
+      .catch(err => {
+        var msg = { error: err.response.status + ' : ' + err.response.statusText };
+        if (err.response.data) { msg = err.response.data };
+        this.setState({ err_msg: msg, error: true })
+      })
   }
 
   getPayout = (str) => {
@@ -185,7 +202,7 @@ class Aecash extends React.Component {
                       {u.status === 'PENDING' && <td><button className={`text-capitalize ${styles.status_yellow}`} disabled>{u.status.toLowerCase()}</button></td>}
                       {u.status === 'APPROVED' && <td><button className={`text-capitalize ${styles.status_green}`} disabled>{u.status.toLowerCase()}</button></td>}
                       {u.status === 'VOID' && <td><button className={`text-capitalize ${styles.status_red}`} disabled>{u.status.toLowerCase()}</button></td>}
-                      <td><button className={styles.modal_btn} onClick={() => this.setState({ sshow: true })}>View</button></td>
+                      <td><button className={styles.modal_btn} onClick={() => this.getUserfromPayout(u)}>View</button></td>
                     </tr>)}
                   </tbody>
                 </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
@@ -252,10 +269,32 @@ class Aecash extends React.Component {
         {/* Eligible Member Modal */}                    
         <Modal show={this.state.sshow} onHide={() => this.setState({ sshow: false })} size="xl" aria-labelledby="fulfilment-modal" centered>
           <Modal.Body>
-            <div className="py-2 px-3 d-flex">
+            <div className={`px-4 ${utils.modal_summary}`}>E-Cash Payout Slip</div>
+            <div className="px-4 pb-2">Min. E-Cash: <b>RM {this.state.view.minimum_ecash}</b></div>
+            <div className="row m-0 align-items-center px-3">
+              <div className="col-lg-6 p-0">       
+                <div className="d-flex align-items-center flex-nowrap overflow-auto">
+                  <div className="date-div mr-2">
+                    <span className="calendar-icon"><FiCalendar/></span>
+                    <span className="pl-2 pr-1">From</span>
+                    <span className="font-weight-bold pl-2 text-nowrap">{dateTime(this.state.view.start_date, 'date')}</span>
+                  </div>
+                  <div className="date-div mr-2">
+                    <span className="calendar-icon"><FiCalendar/></span>
+                    <span className="pl-2 pr-1">To</span>
+                    <span className="font-weight-bold pl-2 text-nowrap">{dateTime(this.state.view.end_date, 'date')}</span>
+                  </div>
+                </div>
+              </div>
+              <div className="col-lg-6 d-flex flex-wrap justify-content-end">       
+                <div className="font-weight-bold">Slip Generated At</div>
+                <div className="pl-2">{dateTime(this.state.view.created_at)}</div>
+              </div>
+            </div>
+            {this.state.viewlist.length ? <div className="py-2 px-3 d-flex">
               <div className={styles.sale_info_green}>
                 <div className="d-flex">   
-                  <div className={utils.text_lg}>56/200 Members</div>
+                  <div className={utils.text_lg}>56/{this.state.viewlist.length} Members</div>
                   <div className="ml-auto">
                     <OverlayTrigger trigger="click" placement='top'
                       overlay={
@@ -269,24 +308,24 @@ class Aecash extends React.Component {
                     </OverlayTrigger>
                   </div>
                 </div>
-                <div className={`py-2 ${utils.text_md}`}>E- Cash pay out had mark as Successful</div>
+                <div className={`py-2 ${utils.text_md}`}>E-Cash Payout has been marked as Successful</div>
               </div>
               <div className={styles.sale_info_red}>
                 <div className="d-flex flex-column justify-content-center">
                   <div className={utils.text_lg}>142 Members</div>
-                  <div className={`py-2 ${utils.text_md}`}>left for E-Cash Pay out</div>
+                  <div className={`py-2 ${utils.text_md}`}>left for E-Cash Payout</div>
                 </div>
                 <div className="ml-auto d-flex align-items-center">
                   <button className={styles.info_btn_red}>Send to History</button>
                 </div>
               </div>
-            </div>
+            </div> : <div className="py-3"></div>}
             <Table responsive>
               <thead>
                 <tr className={styles.modal_table}>
-                  <th className="pl-4"><input type="checkbox"/></th>
-                  <th>Member ID</th>
+                  <th className="pl-4">Member ID</th>
                   <th>Eligible At</th>
+                  <th>Bank Details</th>
                   <th>E-Cash</th>
                   <th className="d-flex align-items-center">Payout 
                     <OverlayTrigger trigger="click" placement='top'
@@ -300,31 +339,21 @@ class Aecash extends React.Component {
                       <button className={`ml-2 ${styles.popover}`}>?</button>
                     </OverlayTrigger>
                   </th>
-                  <th>Status</th>
                   <th><button className={`py-2 ${styles.tbtn}`}>Download</button></th>
                 </tr>
               </thead>
               <tbody>
-                <tr className={styles.modal_table}>
-                  <td className="pl-4"><input type="checkbox"/></td>
-                  <td>Member1234</td>
-                  <td>20 Oct 2020 11:30 AM</td>
-                  <td>RM 200</td>
-                  <td>RM 245.50</td>
-                  <td><button className={styles.status_red} disabled>Pending</button></td>
+                {this.state.viewlist.length ? this.state.viewlist.map((u, i) => <tr className={styles.modal_table} key={i}>
+                  <td className="pl-4">{u.user_id}</td>
+                  <td>{dateTime(u.updated_at)}</td>
+                  <td>Maybank<br/>4538476343628</td>
+                  <td>RM {u.ecash}</td>
+                  <td>RM {(u.ecash - 0.50).toFixed(2)}</td>
                   <td><button className={styles.modal_btn} onClick={() => this.setState({ sshow: true })}>Mark as Successful</button></td>
-                </tr>
-                <tr className={styles.modal_table}>
-                  <td className="pl-4"><input type="checkbox"/></td>
-                  <td>Member1234</td>
-                  <td>20 Oct 2020 11:30 AM</td>
-                  <td>RM 200</td>
-                  <td>RM 245.50</td>
-                  <td><button className={styles.status_red} disabled>Pending</button></td>
-                  <td><button className={styles.modal_btn} onClick={() => this.setState({ sshow: true })}>Mark as Successful</button></td>
-                </tr>
+                </tr>) : <tr></tr>}
               </tbody>
             </Table>
+            {!this.state.viewlist.length && <div className="p-5 text-center">No Eligible Member Found.</div>}
             <button className={styles.modal_closebtn} onClick={() => this.setState({ sshow: false })}><MdCancel/> Close</button>
           </Modal.Body>
         </Modal>

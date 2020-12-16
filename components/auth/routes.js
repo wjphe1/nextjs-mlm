@@ -12,6 +12,7 @@ const routes = {
     expenses: '/expenses',
     ecash_payouts: '/ecash_payouts',
     settings: '/settings',
+    reports: '/reports',
 };
 
 export default routes;
