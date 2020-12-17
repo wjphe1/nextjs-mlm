@@ -8,19 +8,85 @@ const styles = StyleSheet.create({
         paddingTop: 35,
         paddingBottom: 65,
         paddingHorizontal: 35,
-        backgroundColor: '#E4E4E4',
+        backgroundColor: '#FFFFFF',
         fontSize: 10,
     },
+    normal: {
+        color: '#878787',
+        marginBottom: 3,
+        paddingTop: 5,
+        paddingBottom: 5,
+    },
     section: {
-        padding: 10,
         width: '100%',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
     },
+    hcell: {
+        borderTopWidth: 1,
+        borderTopColor: '#E5E5E5',
+        borderTopStyle: 'solid',
+        borderBottomWidth: 1,
+        borderBottomColor: '#E5E5E5',
+        borderBottomStyle: 'solid',
+        width: '20%',
+        padding: 15,
+        fontWeight: 'bold',
+    },
     cell: {
-        width: '20%'
-    }
+        borderBottomWidth: 1,
+        borderBottomColor: '#E5E5E5',
+        borderBottomStyle: 'solid',
+        width: '20%',
+        padding: 15,
+        color: '#787878',
+    },
+    totalpayout: {
+        width: 200,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+        borderBottomRightRadius: 8,
+        borderBottomLeftRadius: 8,
+        backgroundColor: '#FFF6F0',
+        padding: 20,
+        marginLeft: 'auto',
+    },
+    success: {
+        borderTopLeftRadius: 15,
+        borderTopRightRadius: 15,
+        borderBottomRightRadius: 15,
+        borderBottomLeftRadius: 15,
+        backgroundColor: '#ACFFB9',
+        padding: 10,
+        margin: -10,
+        textAlign: 'center',
+        color: '#3A3A3A',
+    },
+    failed: {
+        borderTopLeftRadius: 15,
+        borderTopRightRadius: 15,
+        borderBottomRightRadius: 15,
+        borderBottomLeftRadius: 15,
+        backgroundColor: '#FFCFCF',
+        padding: 10,
+        margin: -10,
+        textAlign: 'center',
+        color: '#3A3A3A',
+    },
+    pageNumber: {
+        position: 'absolute',
+        fontSize: 12,
+        bottom: 30,
+        left: 0,
+        right: 0,
+        textAlign: 'center',
+        color: 'grey',
+    },
 });
 
 class Exports extends React.Component {
@@ -47,12 +113,15 @@ class Exports extends React.Component {
         if (this.state.ready) {
             const MyDoc = <Document title="E-Points Reimbursement" author="Reezqa Global">
                 <Page size="A4" style={styles.page}>
+                    <View style={{ margin: 10 }}>
+                        <Text style={{ fontSize: 14, fontWeight: 700, color: '#FF6202' }}>E-Points Payout Slips</Text>
+                    </View>
                     <View style={styles.section}>
-                        <Text style={styles.cell}>Member ID</Text>
-                        <Text style={styles.cell}>Redeemed At</Text>
-                        <Text style={styles.cell}>Bank Details</Text>
-                        <Text style={styles.cell}>E-Points</Text>
-                        <Text style={styles.cell}>Status</Text>
+                        <Text style={styles.hcell}>Member ID</Text>
+                        <Text style={styles.hcell}>Redeemed At</Text>
+                        <Text style={styles.hcell}>Bank Details</Text>
+                        <Text style={styles.hcell}>E-Points</Text>
+                        <Text style={styles.hcell}>Status</Text>
                     </View>
                     {this.props.list.map((u, i) => 
                         <View key={i} style={styles.section}>
@@ -60,9 +129,17 @@ class Exports extends React.Component {
                             <Text style={styles.cell}>{dateTime(u.created_at, 'date')}</Text>
                             <Text style={styles.cell}>{u.requested_by.bank_name} {u.requested_by.bank_account_number}</Text>
                             <Text style={styles.cell}>{u.epoint} Pts</Text>
-                            <Text style={styles.cell}>{u.status}</Text>
+                            <View style={styles.cell}>{(u.status === 'CANCELLED' || u.status === 'REJECTED') ? <Text style={styles.failed}>{u.status}</Text> : <Text style={styles.success}>{u.status}</Text>}</View>
                         </View>
                     )}
+                    <Text style={styles.normal}>**The payout is after the deduction of RM 0.50 transaction</Text>
+                    <View style={styles.section}>
+                        <View style={styles.totalpayout}>
+                            <Text>Total Payout</Text>
+                            <Text style={{ fontSize: 14, fontWeight: 700, color: '#FF6202' }}>RM {this.props.total}</Text>
+                        </View>
+                    </View>
+                    <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => (`${pageNumber} / ${totalPages}`)} fixed />
                 </Page>
             </Document>
 

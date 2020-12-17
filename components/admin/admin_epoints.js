@@ -42,9 +42,11 @@ class Aepoints extends React.Component {
       pendinglist: [],
       pending_check: [],
       pending_selected: [],
+      pending_total: 0,
       redeemlist: [],
       redeem_check: [],
       redeem_selected: [],
+      redeem_total: 0,
       rewardlist: [],
       reward_check: [],
       reward_selected: [],
@@ -64,6 +66,9 @@ class Aepoints extends React.Component {
     var selected = [];
     var array = [];
     var semua = [];
+    var total = 0;
+    var payam = 0;
+
     if (type === 'redeem') {
       array = this.state.redeem_check;
       semua = this.state.redeemlist;
@@ -84,20 +89,24 @@ class Aepoints extends React.Component {
     array.forEach(function(part, index) {
       if (part) { 
         selected = selected.concat(semua[index]);
+        if (semua[index].status === 'APPROVED' || semua[index].status === 'PENDING' ) { total = total + semua[index].epoint; payam = payam + 1; }
       }
     });
 
+    total = (total * 0.50 - (payam * 0.50)).toFixed(2);
     console.log(selected)
 
     if (type === 'redeem') {
       this.setState({
         redeem_check: array,
         redeem_selected: selected,
+        redeem_total: total,
       })
     } else if (type === 'pending') {
       this.setState({
         pending_check: array,
         pending_selected: selected,
+        pending_total: total,
       })
     } else if (type === 'reward') {
       this.setState({
@@ -238,7 +247,7 @@ class Aepoints extends React.Component {
                   <Tab eventKey="list" title="Reimbursement List">
                     <div className={styles.tab_btns}>
                       <button onClick={this.approveRedeem} className={`mr-2 py-2 ${styles.tbtn}`}>Mark as Done</button>
-                      <Exports list={this.state.pending_selected} />
+                      <Exports list={this.state.pending_selected} total={this.state.pending_total}/>
                     </div>
                     {this.state.pisloaded ? <Table responsive>
                       <thead>
@@ -287,7 +296,7 @@ class Aepoints extends React.Component {
                   </Tab>
                   <Tab eventKey="history" title="Reimbursement History">
                     <div className={styles.tab_btns}>
-                      <Exports list={this.state.redeem_selected} />
+                      <Exports list={this.state.redeem_selected} total={this.state.redeem_total}/>
                     </div>
                     {this.state.isloaded ? <Table responsive>
                       <thead>
