@@ -63,7 +63,7 @@ class Othprod extends React.Component {
     this.setState({ ferror: false })
     api.put(routes.orders + '/' + id, { order: { flag: !boolean } })
       .then(res => {
-        this.getOrders();
+        this.gethistoryOrders();
       })
       .catch(err => {
         console.log(err.response)
@@ -78,6 +78,7 @@ class Othprod extends React.Component {
         .then(res => {
           console.log(res)
           this.getOrders();
+          this.gethistoryOrders();
         })
         .catch(err => {
           console.log(err.response)
@@ -169,7 +170,8 @@ class Othprod extends React.Component {
 
   getOrders = (str) => {
     this.setState({ isloaded: false })
-    const pagy = this.state.page + parseInt(str || 0);
+    var pagy = this.state.page + parseInt(str || 0);
+    if (this.state.pquery && !str) { pagy = 1 }
     api.get(routes.orders + '?page=' + pagy + '&status=PENDING&query=' + this.state.pquery)
       .then(res => {
         const rows = res.data.orders
@@ -186,7 +188,8 @@ class Othprod extends React.Component {
 
   gethistoryOrders = (str) => {
     this.setState({ hisloaded: false })
-    const pagy = this.state.hpage + parseInt(str || 0);
+    var pagy = this.state.hpage + parseInt(str || 0);
+    if (this.state.hquery && !str) { pagy = 1 }
     api.get(routes.orders + '?page=' + pagy + '&scope=HISTORY&query=' + this.state.hquery)
       .then(res => {
         const rows = res.data.orders
@@ -388,7 +391,7 @@ class Othprod extends React.Component {
                 {(this.state.next || this.state.page > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
                   {this.state.page > 1 && <button onClick={() => this.getOrders(-1)} className={styles.tbtn}>Prev</button>}
                   <div>Page {this.state.page} Showing {(this.state.page - 1)*20 + 1} - {(this.state.page - 1)*20 + this.state.pendinglist.length}</div>
-                  {this.state.next && <button onClick={() => this.getOrders(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                  {this.state.next && <button onClick={() => this.getOrders(1)} className={styles.tbtn}>Next</button>}
                 </div>}
               </Tab>
               <Tab eventKey="past" title="● Past Transfer">
@@ -436,7 +439,7 @@ class Othprod extends React.Component {
                         <td><button className={styles.modal_btn} onClick={() => this.setState({ hshow: true, history_view: u })}>View</button></td>
                         <th>{u.status === 'COMPLETED' ? <button className={styles.status_green} disabled>{u.status}</button> : <button className={styles.status_red} disabled>{u.status}</button>}</th>
                         {role === 'HQ' ? 
-                          <td className="text-right"><button className={`mx-3 ${styles.tbtn}`} onClick={() => this.flagOrder(u.flag, u.id)}>{u.flag ? 'Unflag' : 'Flag'}</button></td>
+                          <td className="text-right"><button className={`mx-3 ${cn({[styles.tbtn_reverse]: u.flag, [styles.tbtn]: !u.flag })}`} onClick={() => this.flagOrder(u.flag, u.id)}>{u.flag ? 'Unflag' : 'Flag'}</button></td>
                         :
                           <td className="text-center">{u.flag && <span className={utils.hightext_sm}>Flagged</span>}</td>
                         }
@@ -491,7 +494,7 @@ class Othprod extends React.Component {
                 {(this.state.hnext || this.state.hpage > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
                   {this.state.hpage > 1 && <button onClick={() => this.gethistoryOrders(-1)} className={styles.tbtn}>Prev</button>}
                   <div>Page {this.state.hpage} Showing {(this.state.hpage - 1)*20 + 1} - {(this.state.hpage - 1)*20 + this.state.historylist.length}</div>
-                  {this.state.hnext && <button onClick={() => this.gethistoryOrders(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                  {this.state.hnext && <button onClick={() => this.gethistoryOrders(1)} className={styles.tbtn}>Next</button>}
                 </div>}
               </Tab>
             </Tabs>

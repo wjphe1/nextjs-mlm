@@ -282,7 +282,7 @@ class Aepoints extends React.Component {
                     {(this.state.pnext || this.state.ppage > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
                       {this.state.ppage > 1 && <button onClick={() => this.getPending(-1)} className={styles.tbtn}>Prev</button>}
                       <div>Page {this.state.ppage} Showing {(this.state.ppage - 1)*20 + 1} - {(this.state.ppage - 1)*20 + this.state.pendinglist.length}</div>
-                      {this.state.pnext && <button onClick={() => this.getPending(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                      {this.state.pnext && <button onClick={() => this.getPending(1)} className={styles.tbtn}>Next</button>}
                     </div>}
                   </Tab>
                   <Tab eventKey="history" title="Reimbursement History">
@@ -331,7 +331,7 @@ class Aepoints extends React.Component {
                     {(this.state.next || this.state.page > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
                       {this.state.page > 1 && <button onClick={() => this.getPoints(-1)} className={styles.tbtn}>Prev</button>}
                       <div>Page {this.state.page} Showing {(this.state.page - 1)*20 + 1} - {(this.state.page - 1)*20 + this.state.redeemlist.length}</div>
-                      {this.state.next && <button onClick={() => this.getPoints(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                      {this.state.next && <button onClick={() => this.getPoints(1)} className={styles.tbtn}>Next</button>}
                     </div>}
                   </Tab>
                 </Tabs>
@@ -383,7 +383,7 @@ class Aepoints extends React.Component {
                     {(this.state.cnext || this.state.cpage > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
                       {this.state.cpage > 1 && <button onClick={() => this.getIncentives(-1)} className={styles.tbtn}>Prev</button>}
                       <div>Page {this.state.cpage} Showing {(this.state.cpage - 1)*20 + 1} - {(this.state.cpage - 1)*20 + this.state.rewardlist.length}</div>
-                      {this.state.cnext && <button onClick={() => this.getIncentives(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                      {this.state.cnext && <button onClick={() => this.getIncentives(1)} className={styles.tbtn}>Next</button>}
                     </div>}
                   </Tab>
                   <Tab eventKey="history" title="History">
@@ -411,10 +411,10 @@ class Aepoints extends React.Component {
                     {(this.state.hnext || this.state.hpage > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
                       {this.state.hpage > 1 && <button onClick={() => this.getRewards(-1)} className={styles.tbtn}>Prev</button>}
                       <div>Page {this.state.hpage} Showing {(this.state.hpage - 1)*20 + 1} - {(this.state.hpage - 1)*20 + this.state.rewardlist.length}</div>
-                      {this.state.hnext && <button onClick={() => this.getRewards(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                      {this.state.hnext && <button onClick={() => this.getRewards(1)} className={styles.tbtn}>Next</button>}
                     </div>}
                   </Tab>
-                  <Tab eventKey="settings" title="Monthly Incentives Settings">
+                  {/* <Tab eventKey="settings" title="Monthly Incentives Settings">
                     <div className="d-flex flex-column p-5 border-top">
                       <label className="pb-2">Minimum Points to be Eligible for Monthly incentives</label>
                       <form className="position-relative" style={{ maxWidth: 400 }}>
@@ -422,7 +422,7 @@ class Aepoints extends React.Component {
                         <input type="submit" value="Save" className={styles.tbtn} style={{ position: 'absolute', top: 3, right: 3 }}/>
                       </form>
                     </div>
-                  </Tab>
+                  </Tab> */}
                 </Tabs>
               </div>
             </div>

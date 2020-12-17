@@ -89,7 +89,8 @@ class HQmembers extends React.Component {
 
     getUsers = (str) => {
         this.setState({ aisloaded: false })
-        const pagy = this.state.apage + parseInt(str || 0);
+        var pagy = this.state.apage + parseInt(str || 0);
+        if (this.state.aquery && !str) { pagy = 1 }
         api.get(routes.users + '?page=' + pagy + '&status[]=ACTIVE&query=' + this.state.aquery)
         .then(res => {
             const rows = res.data.users
@@ -106,7 +107,8 @@ class HQmembers extends React.Component {
 
     getpendingUsers = (str) => {
         this.setState({ isloaded: false })
-        const pagy = this.state.page + parseInt(str || 0);
+        var pagy = this.state.page + parseInt(str || 0);
+        if (this.state.pquery && !str) { pagy = 1 }
         api.get(routes.users + '?page=' + pagy + '&status=PENDING&query=' + this.state.pquery)
         .then(res => {
             const rows = res.data.users
@@ -215,7 +217,7 @@ class HQmembers extends React.Component {
                             {(this.state.next || this.state.page > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
                                 {this.state.page > 1 && <button onClick={() => this.getpendingUsers(-1)} className={styles.tbtn}>Prev</button>}
                                 <div>Page {this.state.page} Showing {(this.state.page - 1)*20 + 1} - {(this.state.page - 1)*20 + this.state.pendinglist.length}</div>
-                                {this.state.next && <button onClick={() => this.getpendingUsers(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                                {this.state.next && <button onClick={() => this.getpendingUsers(1)} className={styles.tbtn}>Next</button>}
                             </div>}
                         </Tab>
                         <Tab eventKey="list" title="● Member List">
@@ -274,7 +276,7 @@ class HQmembers extends React.Component {
                             {(this.state.anext || this.state.apage > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
                                 {this.state.apage > 1 && <button onClick={() => this.getUsers(-1)} className={styles.tbtn}>Prev</button>}
                                 <div>Page {this.state.apage} Showing {(this.state.apage - 1)*20 + 1} - {(this.state.apage - 1)*20 + this.state.userlist.length}</div>
-                                {this.state.anext && <button onClick={() => this.getUsers(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                                {this.state.anext && <button onClick={() => this.getUsers(1)} className={styles.tbtn}>Next</button>}
                             </div>}
                         </Tab>
                     </Tabs>

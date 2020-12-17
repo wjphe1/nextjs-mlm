@@ -34,7 +34,8 @@ class Othermembers extends React.Component {
 
     getUsers = (str) => {
         this.setState({ isloaded: false })
-        const pagy = this.state.page + parseInt(str || 0);
+        var pagy = this.state.page + parseInt(str || 0);
+        if (this.state.uquery && !str) { pagy = 1 }
         api.get(routes.users + '?page=' + pagy + '&query=' + this.state.uquery)
         .then(res => {
             const rows = res.data.users
@@ -125,7 +126,7 @@ class Othermembers extends React.Component {
                             {(this.state.next || this.state.page > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
                                 {this.state.page > 1 && <button onClick={() => this.getUsers(-1)} className={styles.tbtn}>Prev</button>}
                                 <div>Page {this.state.page} Showing {(this.state.page - 1)*20 + 1} - {(this.state.page - 1)*20 + this.state.userlist.length}</div>
-                                {this.state.next && <button onClick={() => this.getUsers(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                                {this.state.next && <button onClick={() => this.getUsers(1)} className={styles.tbtn}>Next</button>}
                             </div>}
                         </Tab>
                     </Tabs>

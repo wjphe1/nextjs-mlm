@@ -52,7 +52,8 @@ class Admprod extends React.Component {
 
   getProd = (str) => {
     this.setState({ isloaded: false })
-    const pagy = this.state.ppage + parseInt(str || 0);
+    var pagy = this.state.ppage + parseInt(str || 0);
+    if (this.state.pquery && !str) { pagy = 1 }
     api.get(routes.products + '?page=' + pagy + '&query=' + this.state.pquery)
       .then(res => {
         const rows = res.data.products
@@ -69,7 +70,8 @@ class Admprod extends React.Component {
 
   getCate = (str) => {
     this.setState({ cisloaded: false })
-    const pagy = this.state.cpage + parseInt(str || 0);
+    var pagy = this.state.cpage + parseInt(str || 0);
+    if (this.state.cquery && !str) { pagy = 1 }
     api.get(routes.categories + '?page=' + pagy + '&query=' + this.state.cquery)
       .then(res => {
         const rows = res.data.categories
@@ -211,7 +213,7 @@ class Admprod extends React.Component {
                 {(this.state.pnext || this.state.ppage > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
                   {this.state.ppage > 1 && <button onClick={() => this.getProd(-1)} className={styles.tbtn}>Prev</button>}
                   <div>Page {this.state.ppage} Showing {(this.state.ppage - 1)*20 + 1} - {(this.state.ppage - 1)*20 + this.state.prodlist.length}</div>
-                  {this.state.pnext && <button onClick={() => this.getProd(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                  {this.state.pnext && <button onClick={() => this.getProd(1)} className={styles.tbtn}>Next</button>}
                 </div>}
               </Tab>
               <Tab eventKey="category" title="● Product Category">
@@ -278,7 +280,7 @@ class Admprod extends React.Component {
                 {(this.state.cnext || this.state.cpage > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
                   {this.state.cpage > 1 && <button onClick={() => this.getCate(-1)} className={styles.tbtn}>Prev</button>}
                   <div>Page {this.state.cpage} Showing {(this.state.cpage - 1)*20 + 1} - {(this.state.cpage - 1)*20 + this.state.catelist.length}</div>
-                  {this.state.cnext && <button onClick={() => this.getCate(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                  {this.state.cnext && <button onClick={() => this.getCate(1)} className={styles.tbtn}>Next</button>}
                 </div>}
               </Tab>
             </Tabs>

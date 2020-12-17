@@ -3,15 +3,10 @@ import Link from 'next/link'
 import React from 'react'
 import cn from 'classnames'
 import Cookies from 'js-cookie'
-import api from '../../components/auth/api'
-import routes from '../../components/auth/routes'
 import styles from '../../styles/module/admin/admin.module.scss'
-import utils from '../../styles/module/utils.module.scss'
 import Layout from '../../components/admin/layout'
 import Asales from '../../components/admin/admin_sales'
 import Othrpt from '../../components/admin/others_report'
-import DatePicker from "react-datepicker";
-import { FiCalendar } from 'react-icons/fi';
 import { FaUserAlt } from 'react-icons/fa'
 import { RiShoppingBagFill } from 'react-icons/ri'
 
@@ -23,33 +18,7 @@ class Sales extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      startDate: '',
-      endDate: '',
-      sales: '-',
     };
-  }
-
-  handleChange = (e) => {
-    console.log(e)
-    const value = parseInt(e.target.value);
-    this.setState({
-      [e.target.name]: value
-    });
-  }
-
-  getSales = () => {
-    api.get(routes.reports + '/sales?from_date=' + this.state.startDate + '&to_date=' + this.state.endDate)
-      .then(res => {
-        const sales = res.data.sales;
-        this.setState({ sales: sales })
-      })
-      .catch(err => {
-        this.setState({ sales: '-' })
-      })
-  }
-
-  componentDidMount() {
-    this.getSales();
   }
 
   render () {
@@ -97,6 +66,10 @@ class Sales extends React.Component {
       <rect x="28" y="30" width="12" height="12" fill="#FFD9C2"/>
     </svg><span className="pt-2">P&amp;L</span></a></Link>
 
+    const tablinks = <div className={styles.huge_btns_div}>
+      {tab1svg} {tab2svg} {tab3svg} {tab4svg}
+    </div>
+
     if (role && role === 'SUPERADMIN') {
       return (
         <Layout page={'reports'} {...this.props}>
@@ -105,27 +78,7 @@ class Sales extends React.Component {
           </Head>
   
           <section className="py-5 px-4">
-            <div className="d-flex align-items-center flex-wrap">
-              <div className={utils.h_xl}>Report Overview</div>
-              {/* Date Pickers */}
-              <div className="ml-auto d-flex align-items-center flex-wrap">
-                <label className="date-div">
-                  <span className="calendar-icon"><FiCalendar/></span>
-                  <span className="pl-2 pr-1">From</span>
-                  <DatePicker placeholderText="--/--/--" dateFormat="d MMM yyyy" className="start-date" selected={this.state.startDate} onChange={(date) => this.setState({startDate: date})} selectsStart startDate={this.state.startDate} endDate={this.state.endDate} showMonthDropdown showYearDropdown dropdownMode="select" />
-                </label>
-                <label className="date-div">
-                  <span className="calendar-icon"><FiCalendar/></span>
-                  <span className="pl-2 pr-1">To</span>
-                  <DatePicker placeholderText="--/--/--" dateFormat="d MMM yyyy" className="end-date" selected={this.state.endDate} onChange={(date) => this.setState({endDate: date})} selectsEnd startDate={this.state.startDate} endDate={this.state.endDate} minDate={this.state.startDate} showMonthDropdown showYearDropdown dropdownMode="select" />
-                </label>
-              </div>
-            </div>
-  
-            <div className={styles.huge_btns_div}>
-              {tab1svg} {tab2svg} {tab3svg} {tab4svg}
-            </div>
-            <Asales sales={this.state.sales}/>
+            <Asales tablinks={tablinks}/>
           </section>
         </Layout>
       )

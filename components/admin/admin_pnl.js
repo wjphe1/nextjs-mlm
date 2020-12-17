@@ -3,6 +3,7 @@ import React from 'react'
 import api from '../auth/api'
 import routes from '../auth/routes'
 import dateTime from '../dateTime'
+import Exports from './pdf_profit_loss'
 import styles from '../../styles/module/admin/admin.module.scss'
 import utils from '../../styles/module/utils.module.scss'
 import form from '../../styles/module/form.module.scss'
@@ -288,7 +289,7 @@ class Apnl extends React.Component {
                         <Tab eventKey="pnl" title="All Profit &amp; Loss">
                             <div className={styles.tab_btns}>
                                 <button onClick={() => this.setState({ pnlshow: true })} className={`mr-2 py-2 ${styles.tbtn}`}>Generate Statement</button>
-                                <button className={`ml-2 py-2 ${styles.tbtn_reverse}`}>Download</button>
+                                <Exports list={this.state.report_selected} />
                             </div>
                             {this.state.isloaded ? <Table responsive>
                                 <thead>
@@ -330,7 +331,7 @@ class Apnl extends React.Component {
                             {(this.state.next || this.state.page > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
                                 {this.state.page > 1 && <button onClick={() => this.getReports(-1)} className={styles.tbtn}>Prev</button>}
                                 <div>Page {this.state.page} Showing {(this.state.page - 1)*20 + 1} - {(this.state.page - 1)*20 + this.state.redeemlist.length}</div>
-                                {this.state.next && <button onClick={() => this.getReports(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                                {this.state.next && <button onClick={() => this.getReports(1)} className={styles.tbtn}>Next</button>}
                             </div>}
                         </Tab>
                         <Tab eventKey="expenses" title="All Expenses">
@@ -371,7 +372,7 @@ class Apnl extends React.Component {
                             {(this.state.exnext || this.state.expage > 1) && <div className="d-flex align-items-center justify-content-between p-3">
                                 {this.state.expage > 1 && <button onClick={() => this.getExpenses(-1)} className={styles.tbtn}>Prev</button>}
                                 <div>Page {this.state.expage} Showing {(this.state.expage - 1)*20 + 1} - {(this.state.expage - 1)*20 + this.state.explist.length}</div>
-                                {this.state.exnext && <button onClick={() => this.getExpenses(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                                {this.state.exnext && <button onClick={() => this.getExpenses(1)} className={styles.tbtn}>Next</button>}
                             </div>}
                         </Tab>
                     </Tabs>

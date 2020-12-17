@@ -5,7 +5,7 @@ import utils from '../../styles/module/utils.module.scss'
 import form from '../../styles/module/form.module.scss'
 import api from '../auth/api'
 import routes from '../auth/routes'
-import Cookies from 'js-cookie'
+import cn from 'classnames'
 import dateTime from '../dateTime'
 import Ecashph from './payout_history_ecash'
 import Referral from './referral_ecash'
@@ -19,6 +19,7 @@ import { FiCalendar } from 'react-icons/fi'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Popover from 'react-bootstrap/Popover'
 import Spinner from 'react-bootstrap/Spinner'
+import Router from 'next/router'
 
 class Aecash extends React.Component {
   constructor(props) {
@@ -27,6 +28,8 @@ class Aecash extends React.Component {
       isloaded: false,
       error: false,
       success: false,
+      ecisloaded: true,
+      ecerror: false,
       page: 1,
       next: false,
       payoutlist: [],
@@ -39,6 +42,8 @@ class Aecash extends React.Component {
       minEcash: '',
       view: {},
       viewlist: [],
+      ppaid: 0,
+      shshow: false,
     };
   }
 
@@ -74,11 +79,20 @@ class Aecash extends React.Component {
     })
   }
 
-  donePayout = () => {
-    this.setState({ isloaded: false, success: false, })
-    for (var i = 0; i < this.state.payout_selected.length; i ++) {
-      api.put(routes.ecash_payouts + '/' + this.state.payout_selected[i].id + '/approve')
-        .then(res => this.setState({ success: true, err_msg: {error: 'Success - Marked as Done'} }) )
+  donePayout = (force) => {
+    this.setState({ isloaded: false, success: false, sshow: false, shshow: false })
+    var arr = [];
+    if (force) {
+      arr = arr.concat(force)
+    } else {
+      arr = this.state.payout_selected
+    }
+    for (var i = 0; i < arr.length; i ++) {
+      api.put(routes.ecash_payouts + '/' + arr[i].id + '/approve')
+        .then(res => {
+          this.setState({ sshow: false, success: true, err_msg: {error: 'Success - Marked as Done'} });
+          setTimeout(() => {Router.reload()}, 300);
+        })
         .catch(err => { 
           console.log(err.response); 
           var msg = { error: err.response.status + ' : ' + err.response.statusText };
@@ -86,7 +100,7 @@ class Aecash extends React.Component {
           this.setState({ error: true, err_msg: msg }) 
         })
     }
-    setTimeout(() => {this.getPayout();}, 500)
+    this.setState({ isloaded: true })
   }
 
   postPayout = () => {
@@ -114,12 +128,32 @@ class Aecash extends React.Component {
       .then(res => {
         const rows = res.data.user_ecash_payouts || res.data;
         console.log(rows)
-        this.setState({ viewlist: rows, sshow: true })
+        var paid = 0;
+        for (var i = 0; i < rows.length; i++) {
+          if (rows[0].paid) { paid = paid + 1 }
+        }
+        //if (paid === rows.length) { var arr = []; arr = arr.concat(u); this.setState({ payout_selected: arr });this.donePayout(); alert('You have no pending members on this payout left, this payout is automatically marked as approved.') }
+        this.setState({ viewlist: rows, sshow: true, ppaid: paid, ecisloaded: true })
       })
       .catch(err => {
         var msg = { error: err.response.status + ' : ' + err.response.statusText };
         if (err.response.data) { msg = err.response.data };
         this.setState({ err_msg: msg, error: true })
+      })
+  }
+
+  markUser = (u) => {
+    this.setState({ ecisloaded: false, ecerror: false })
+    api.put(routes.ecash_payouts + '/' + u.ecash_payout_id + '/user_ecash_payouts/' + u.id, {
+      user_ecash_payout: { paid: true }
+    })
+      .then(res => {
+        this.getUserfromPayout(this.state.view);
+      })
+      .catch(err => {
+        var msg = { error: err.response.status + ' : ' + err.response.statusText };
+        if (err.response.data) { msg = err.response.data };
+        this.setState({ err_msg: msg, ecerror: true })
       })
   }
 
@@ -178,7 +212,7 @@ class Aecash extends React.Component {
               <Tab eventKey="list" title="Payout">
                 <div className={styles.tab_btns}>
                   <button onClick={() => this.setState({ fshow: true })} className={`mr-2 py-2 ${styles.tbtn}`}>Generate Payout</button>
-                  <button onClick={this.donePayout} className={`ml-2 py-2 ${styles.tbtn_reverse}`}>Mark as Done</button>
+                  <button onClick={() => this.donePayout()} className={`ml-2 py-2 ${styles.tbtn_reverse}`}>Mark as Done</button>
                 </div>
                 {this.state.isloaded ? <Table responsive>
                   <thead>
@@ -210,7 +244,7 @@ class Aecash extends React.Component {
                 {(this.state.next || this.state.page > 1) && <div className="d-flex align-items-center justify-content-between p-3">
                   {this.state.page > 1 && <button onClick={() => this.getPayout(-1)} className={styles.tbtn}>Prev</button>}
                   <div>Page {this.state.page} Showing {(this.state.page - 1)*20 + 1} - {(this.state.page - 1)*20 + this.state.payoutlist.length}</div>
-                  {this.state.next && <button onClick={() => this.getPayout(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                  {this.state.next && <button onClick={() => this.getPayout(1)} className={styles.tbtn}>Next</button>}
                 </div>}
               </Tab>
               <Tab eventKey="history" title="Payout History">
@@ -291,10 +325,22 @@ class Aecash extends React.Component {
                 <div className="pl-2">{dateTime(this.state.view.created_at)}</div>
               </div>
             </div>
+            {this.state.ecerror && <div className={`my-2 ${form.notice_error}`}>
+              <div className="col-10 d-flex align-items-center">
+                <span className={form.nexcl}>!</span> 
+                {(this.state.err_msg.error && typeof this.state.err_msg.error === 'string') && <div>{this.state.err_msg.error}</div>}
+                {(this.state.err_msg.error && typeof this.state.err_msg.error === 'object') && <ul className="m-0 pl-4">
+                  {Object.keys(this.state.err_msg.error).map(key =>
+                    <li value={key} key={key}>{`${key}: ${this.state.err_msg.error[key][0]}`}</li>
+                  )}
+                </ul>}
+              </div> 
+              <div onClick={() => this.setState({ ecerror: false })} className={`col-2 ${form.nclose}`}>Close</div>
+            </div>}
             {this.state.viewlist.length ? <div className="py-2 px-3 d-flex">
               <div className={styles.sale_info_green}>
                 <div className="d-flex">   
-                  <div className={utils.text_lg}>56/{this.state.viewlist.length} Members</div>
+                  <div className={utils.text_lg}>{this.state.ppaid}/{this.state.viewlist.length} Members</div>
                   <div className="ml-auto">
                     <OverlayTrigger trigger="click" placement='top'
                       overlay={
@@ -312,15 +358,15 @@ class Aecash extends React.Component {
               </div>
               <div className={styles.sale_info_red}>
                 <div className="d-flex flex-column justify-content-center">
-                  <div className={utils.text_lg}>142 Members</div>
+                  <div className={utils.text_lg}>{this.state.viewlist.length - this.state.ppaid} Members</div>
                   <div className={`py-2 ${utils.text_md}`}>left for E-Cash Payout</div>
                 </div>
                 <div className="ml-auto d-flex align-items-center">
-                  <button className={styles.info_btn_red}>Send to History</button>
+                  <button onClick={() => this.setState({ shshow: true })} className={styles.info_btn_red}>Send to History</button>
                 </div>
               </div>
             </div> : <div className="py-3"></div>}
-            <Table responsive>
+            {this.state.ecisloaded ? <Table responsive>
               <thead>
                 <tr className={styles.modal_table}>
                   <th className="pl-4">Member ID</th>
@@ -339,22 +385,32 @@ class Aecash extends React.Component {
                       <button className={`ml-2 ${styles.popover}`}>?</button>
                     </OverlayTrigger>
                   </th>
-                  <th><button className={`py-2 ${styles.tbtn}`}>Download</button></th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
-                {this.state.viewlist.length ? this.state.viewlist.map((u, i) => <tr className={styles.modal_table} key={i}>
-                  <td className="pl-4">{u.user_id}</td>
+                {this.state.viewlist.length ? this.state.viewlist.map((u, i) => <tr className={`${cn({['flagged']: u.paid})} ${styles.modal_table}`} key={i}>
+                  <td className="pl-4">{u.username}</td>
                   <td>{dateTime(u.updated_at)}</td>
-                  <td>Maybank<br/>4538476343628</td>
+                  <td>{u.bank_name}<br/>{u.bank_account_number}</td>
                   <td>RM {u.ecash}</td>
                   <td>RM {(u.ecash - 0.50).toFixed(2)}</td>
-                  <td><button className={styles.modal_btn} onClick={() => this.setState({ sshow: true })}>Mark as Successful</button></td>
+                  <td>{!u.paid ? <button className={styles.modal_btn} onClick={() => this.markUser(u)}>Mark as Successful</button> : <span className={styles.modal_btn} style={{ fontStyle: 'italic' }}>Paid</span>}</td>
                 </tr>) : <tr></tr>}
               </tbody>
-            </Table>
+            </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
             {!this.state.viewlist.length && <div className="p-5 text-center">No Eligible Member Found.</div>}
             <button className={styles.modal_closebtn} onClick={() => this.setState({ sshow: false })}><MdCancel/> Close</button>
+          </Modal.Body>
+        </Modal>
+        <Modal show={this.state.shshow} onHide={() => this.setState({ shshow: false })} size="sm" aria-labelledby="confirm-approve" centered>
+          <Modal.Body>
+            <div className="font-weight-bold pb-2 text-center">Mark as Approved and Send to History?</div>
+            <div className="pb-3 text-justify" style={{ fontSize: '0.9rem' }}>If there are still members left with unsettled e-cash payout, those members will be skipped and this payout batch will be marked as approved.</div>
+            <div className="d-flex flex-column align-items-center" style={{fontSize: '1.2rem'}}>
+              <button onClick={() => this.donePayout(this.state.view)} className={`w-100 ${styles.tbtn}`}>Confirm</button>
+              <button onClick={() => this.setState({ shshow: false })} className={`w-100 ${styles.tbtn_reverse_borderless}`}><MdCancel/> Go Back</button>
+            </div>
           </Modal.Body>
         </Modal>
       </>

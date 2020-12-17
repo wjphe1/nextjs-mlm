@@ -7,6 +7,8 @@ import Exports from './pdf_sales'
 import styles from '../../styles/module/admin/admin.module.scss'
 import utils from '../../styles/module/utils.module.scss'
 import form from '../../styles/module/form.module.scss'
+import DatePicker from "react-datepicker";
+import { FiCalendar } from 'react-icons/fi';
 import { FaUsers } from 'react-icons/fa';
 import { MdCancel } from 'react-icons/md'
 import { RiErrorWarningLine } from 'react-icons/ri';
@@ -19,6 +21,9 @@ class Asales extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            startDate: '',
+            endDate: '',
+            sales: '-',
             show: false,
             isloaded: false,
             error: false,
@@ -37,6 +42,17 @@ class Asales extends React.Component {
         this.setState({
         [e.target.name]: value
         });
+    }
+
+    getSales = () => {
+      api.get(routes.reports + '/sales?from_date=' + this.state.startDate + '&to_date=' + this.state.endDate)
+        .then(res => {
+          const sales = res.data.sales;
+          this.setState({ sales: sales })
+        })
+        .catch(err => {
+          this.setState({ sales: '-' })
+        })
     }
 
     checkOrder = (i) => {
@@ -83,11 +99,31 @@ class Asales extends React.Component {
     
     componentDidMount() {
         this.getOrders();
+        this.getSales();
     }
 
     render () {
     
         return (<>
+            <div className="d-flex align-items-center flex-wrap">
+              <div className={utils.h_xl}>Report Overview</div>
+              {/* Date Pickers */}
+              <div className="ml-auto d-flex align-items-center flex-wrap">
+                <label className="date-div">
+                  <span className="calendar-icon"><FiCalendar/></span>
+                  <span className="pl-2 pr-1">From</span>
+                  <DatePicker placeholderText="--/--/--" dateFormat="d MMM yyyy" className="start-date" selected={this.state.startDate} onChange={(date) => this.setState({startDate: date})} selectsStart startDate={this.state.startDate} endDate={this.state.endDate} showMonthDropdown showYearDropdown dropdownMode="select" />
+                </label>
+                <label className="date-div">
+                  <span className="calendar-icon"><FiCalendar/></span>
+                  <span className="pl-2 pr-1">To</span>
+                  <DatePicker placeholderText="--/--/--" dateFormat="d MMM yyyy" className="end-date" selected={this.state.endDate} onChange={(date) => this.setState({endDate: date})} selectsEnd startDate={this.state.startDate} endDate={this.state.endDate} minDate={this.state.startDate} showMonthDropdown showYearDropdown dropdownMode="select" />
+                </label>
+              </div>
+            </div>
+
+            {this.props.tablinks}
+
             <div className={`mt-3 ${styles.table}`}>
                 <div className="d-flex align-items-center p-3 pl-4" style={{ borderBottom: '1px solid #EBEBEB' }}>
                     <div className={styles.thead}>Transaction History</div>
@@ -96,7 +132,7 @@ class Asales extends React.Component {
                 <div className="py-2">
                     <button disabled className={`my-3 mx-4 ${styles.sale_info}`}>
                         <div className={utils.text_md}>Summary of Sales</div>
-                        <div className={utils.hightext_lg}>RM {this.props.sales}</div>
+                        <div className={utils.hightext_lg}>RM {this.state.sales}</div>
                     </button>
                 </div>
                 {this.state.error && <div className={`mb-4 ${form.notice_error}`}>
@@ -178,7 +214,7 @@ class Asales extends React.Component {
             {(this.state.next || this.state.page > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
                 {this.state.page > 1 && <button onClick={() => this.getOrders(-1)} className={styles.tbtn}>Prev</button>}
                 <div>Page {this.state.page} Showing {(this.state.page - 1)*20 + 1} - {(this.state.page - 1)*20 + this.state.orderlist.length}</div>
-                {this.state.next && <button onClick={() => this.getOrders(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                {this.state.next && <button onClick={() => this.getOrders(1)} className={styles.tbtn}>Next</button>}
             </div>}
         </>)
     }

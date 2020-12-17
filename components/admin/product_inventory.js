@@ -45,7 +45,8 @@ class Prodinv extends React.Component {
 
     getProd = (str) => {
         this.setState({ isloaded: false })
-        const pagy = this.state.ppage + parseInt(str || 0);
+        var pagy = this.state.ppage + parseInt(str || 0);
+        if (this.state.pquery && !str) { pagy = 1 }
         api.get(routes.inventory + '?page=' + pagy + '&query=' + this.state.pquery)
             .then(res => {
                 const rows = res.data.user_inventories
@@ -139,7 +140,7 @@ class Prodinv extends React.Component {
                 {(this.state.pnext || this.state.ppage > 1) && <div className="d-flex align-items-center justify-content-between pb-5">
                     {this.state.ppage > 1 && <button onClick={() => this.getProd(-1)} className={styles.tbtn}>Prev</button>}
                     <div>Page {this.state.ppage} Showing {(this.state.ppage - 1)*20 + 1} - {(this.state.ppage - 1)*20 + this.state.prodlist.length}</div>
-                    {this.state.pnext && <button onClick={() => this.getProd(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                    {this.state.pnext && <button onClick={() => this.getProd(1)} className={styles.tbtn}>Next</button>}
                 </div>}
 
                 <div className={styles.table}>
@@ -167,7 +168,7 @@ class Prodinv extends React.Component {
                 {(this.state.tnext || this.state.tpage > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
                     {this.state.tpage > 1 && <button onClick={() => this.getTrans(-1)} className={styles.tbtn}>Prev</button>}
                     <div>Page {this.state.tpage} Showing {(this.state.tpage - 1)*20 + 1} - {(this.state.tpage - 1)*20 + this.state.translist.length}</div>
-                    {this.state.tnext && <button onClick={() => this.getTrans(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                    {this.state.tnext && <button onClick={() => this.getTrans(1)} className={styles.tbtn}>Next</button>}
                 </div>}
 
                 <Modal show={this.state.show} onHide={() => this.setState({ show: false })} size="md" aria-labelledby="confirm-log-out" centered>

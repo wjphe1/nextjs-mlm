@@ -486,6 +486,31 @@
     padding: 1.5rem;
 }
 
+.autocomplete {
+    position: absolute;
+    top: 35px;
+    left: 0;
+    width: 100%;
+    background: white;
+    z-index: 3;
+    max-height: 250px;
+    overflow: auto;
+    border-radius: 8px;
+    border: 1px solid #FF6202;
+
+    .selection {
+        border-bottom: 1px solid #E5E5E5;
+        padding: 10px 50px;
+        color: #FF6202;
+        cursor: pointer;
+    }
+
+    .selection:hover {
+        background: #FFF6F0;
+        font-weight: bold;
+    }
+}
+
 @media (max-width: 991px) {
     .submitdiv {
         width: calc(100% + 30px);

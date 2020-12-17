@@ -34,6 +34,11 @@ class Othrpt extends React.Component {
       pnext: false,
       cpage: 1,
       cnext: false,
+      sales: '-',
+      upage: 1,
+      referral_no: 0,
+      epage: 1,
+      ecash: 0,
     };
   }
 
@@ -102,6 +107,36 @@ class Othrpt extends React.Component {
     })
   }
 
+  getSales = () => {
+    api.get(routes.reports + '/sales?from_date=' + this.state.startDate + '&to_date=' + this.state.endDate)
+      .then(res => {
+        const sales = res.data.sales;
+        this.setState({ sales: sales })
+      })
+      .catch(err => {
+        this.setState({ sales: '-' })
+      })
+  }
+
+  getUsers = () => {
+    api.get(routes.users + '?page=' + this.state.upage)
+    .then(res => {
+        var rows = res.data.users;
+        const ori_length = rows.length;
+        rows = rows.filter((u) => u.active);
+        const length = rows.length + this.state.referral_no;
+        if (ori_length === 20) {
+          this.setState({ upage: this.state.upage + 1 });
+          this.getUsers();
+        }
+        this.setState({ referral_no: length })
+    })
+    .catch(err => {
+        console.log(err.response)
+        this.setState({ error: true, err_msg: { error: 'Error' } })
+    })
+  }
+
   getPoints = (str) => {
     this.setState({ isloaded: false })
     const pagy = this.state.ppage + parseInt(str || 0);
@@ -119,9 +154,34 @@ class Othrpt extends React.Component {
     })
   }
 
+  getEcash = () => {
+    api.get(routes.users + '/' + this.props.user.id + '/user_ecash_payouts?page=' + this.state.epage)
+    .then(res => {
+      const rows = res.data.user_ecash_payouts;
+      const length = rows.length;
+      var ec = 0;
+      for (var i = 0; i < length; i++) {
+        ec = ec + rows[i].ecash;
+      }
+      if (length === 20) {
+        this.setState({ epage: this.state.epage + 1, ecash: this.state.ecash + ec });
+        this.getEcash();
+      } else {
+        this.setState({ ecash: this.state.ecash + ec });
+      }
+    })
+    .catch(err => {
+        console.log(err.response)
+        this.setState({ error: true, err_msg: { error: 'Error' } })
+    })
+  }
+
   componentDidMount() {
     this.getIncentives();
     this.getPoints();
+    this.getSales();
+    this.getUsers();
+    this.getEcash();
     console.log(this.props.user)
   }
 
@@ -158,7 +218,7 @@ class Othrpt extends React.Component {
                 <circle cx="4" cy="26" r="4" fill="#FFB82E"/>
               </svg>
               <div className={`pt-2 ${utils.text_md}`}>Total Sales</div>
-              <div className={`m-0 ${utils.h_lg}`}>RM 200</div>
+              <div className={`m-0 ${utils.h_lg}`}>RM {this.state.sales}</div>
             </div>
           </div>
           <div className="col-md-4 px-2 mb-3">
@@ -172,7 +232,7 @@ class Othrpt extends React.Component {
                 <path d="M26.7177 23.1129C26.6744 22.5562 26.5867 21.9489 26.4576 21.3076C26.3273 20.6615 26.1595 20.0507 25.9587 19.4924C25.751 18.9154 25.4691 18.3456 25.1201 17.7996C24.7584 17.2328 24.3332 16.7393 23.8561 16.3332C23.3572 15.9084 22.7464 15.5668 22.04 15.3176C21.3362 15.0698 20.5561 14.9442 19.7217 14.9442C19.394 14.9442 19.077 15.0639 18.465 15.4186C18.0883 15.6372 17.6477 15.89 17.1559 16.1697C16.7354 16.4082 16.1657 16.6316 15.4621 16.8339C14.7756 17.0316 14.0785 17.1319 13.3903 17.1319C12.7026 17.1319 12.0056 17.0316 11.3186 16.8339C10.6157 16.6318 10.0457 16.4084 9.62596 16.1699C9.13882 15.8929 8.69797 15.64 8.31565 15.4183C7.7041 15.0637 7.38717 14.944 7.05948 14.944C6.2248 14.944 5.44499 15.0698 4.74134 15.3178C4.03549 15.5666 3.42442 15.9081 2.92504 16.3334C2.44794 16.7397 2.02277 17.233 1.66127 17.7996C1.31275 18.3456 1.03061 18.9152 0.82292 19.4926C0.622333 20.0509 0.454565 20.6615 0.32427 21.3076C0.194954 21.948 0.107518 22.5555 0.0641682 23.1136C0.0215527 23.6592 0 24.227 0 24.8007C0 26.2922 0.532694 27.4996 1.58314 28.39C2.62061 29.2687 3.99312 29.7143 5.66272 29.7143H21.1199C22.789 29.7143 24.1615 29.2687 25.1992 28.39C26.2499 27.5002 26.7826 26.2924 26.7826 24.8005C26.7824 24.2248 26.7606 23.657 26.7177 23.1129Z" fill="#FF6202"/>
               </svg>
               <div className={`pt-2 ${utils.text_md}`}>Total Members Referred</div>
-              <div className={`m-0 ${utils.h_lg}`}>10</div>
+              <div className={`m-0 ${utils.h_lg}`}>{this.state.referral_no}</div>
             </div>
           </div>
           <div className="col-md-4 px-2 mb-3">
@@ -185,7 +245,7 @@ class Othrpt extends React.Component {
                 <circle cx="40.5" cy="31.5" r="9.25" stroke="#FF6202" strokeWidth="0.5"/>
               </svg>
               <div className={`pt-2 ${utils.text_md}`}>E-Cash Earned</div>
-              <div className={`m-0 ${utils.hightext_sm}`}>Filter date to view your E-Cash</div>
+              <div className={`m-0 ${utils.h_lg}`}>RM {this.state.ecash}</div>
             </div>
           </div>
         </div>
@@ -246,7 +306,7 @@ class Othrpt extends React.Component {
                 {(this.state.pnext || this.state.ppage > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
                   {this.state.ppage > 1 && <button onClick={() => this.getProd(-1)} className={styles.tbtn}>Prev</button>}
                   <div>Page {this.state.ppage} Showing {(this.state.ppage - 1)*20 + 1} - {(this.state.ppage - 1)*20 + this.state.redeemlist.length}</div>
-                  {this.state.pnext && <button onClick={() => this.getProd(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                  {this.state.pnext && <button onClick={() => this.getProd(1)} className={styles.tbtn}>Next</button>}
                 </div>}
               </Tab>
               <Tab eventKey="incentive" title="Monthly Incentive">
@@ -276,7 +336,7 @@ class Othrpt extends React.Component {
                 {(this.state.cnext || this.state.cpage > 1) && <div className="d-flex align-items-center justify-content-between pt-4">
                   {this.state.cpage > 1 && <button onClick={() => this.getCate(-1)} className={styles.tbtn}>Prev</button>}
                   <div>Page {this.state.cpage} Showing {(this.state.cpage - 1)*20 + 1} - {(this.state.cpage - 1)*20 + this.state.rewardlist.length}</div>
-                  {this.state.cnext && <button onClick={() => this.getCate(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                  {this.state.cnext && <button onClick={() => this.getCate(1)} className={styles.tbtn}>Next</button>}
                 </div>}
               </Tab>
             </Tabs>

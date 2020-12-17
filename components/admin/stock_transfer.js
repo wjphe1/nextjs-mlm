@@ -41,13 +41,13 @@ class Stocktransfer extends React.Component {
             target_customer: '',
             target_phone_number: '',
             target_role: 3,
-            products_check: ['','',''],
+            products_check: [],
             products_selected: [],
             products_selected_quantity: [],
             ppage: 1,
             pnext: false,
             pquery: '',
-            upage: 1,
+            uquery: '',
         };
     }
 
@@ -57,6 +57,8 @@ class Stocktransfer extends React.Component {
         this.setState({
             [e.target.name]: value
         });
+
+        if (e.target.name === 'uquery') { this.getUsers(); }
     }
 
     checkProduct = (i) => {
@@ -89,19 +91,21 @@ class Stocktransfer extends React.Component {
         })
     }
 
-    selectMember = (e) => {
-        const i = e.target.value;
-        const role = this.state.userlist[i].role;
+    selectMember = (i) => {
+        const selected = this.state.userlist[i];
+        const role = selected.role;
         var index = 3;
         if (role === 'MASTER_STOKIS') { index = 0 }
         else if (role === 'STOKIS') { index = 1 }
         else if ( role === 'AGENT' ) { index = 2 }
 
         this.setState({
-            target_member: this.state.userlist[i].id,
-            target_address: this.state.userlist[i].address,
-            target_phone_number: this.state.userlist[i].phone_number,
+            target_member: selected.id,
+            target_address: selected.address,
+            target_phone_number: selected.phone_number,
             target_role: index,
+            userlist: [],
+            uquery: selected.username
         });
     }
 
@@ -206,7 +210,8 @@ class Stocktransfer extends React.Component {
 
     getProd = (str) => {
         this.setState({ isloaded: false })
-        const pagy = this.state.ppage + parseInt(str || 0);
+        var pagy = this.state.ppage + parseInt(str || 0);
+        if (this.state.pquery && !str) { pagy = 1 }
         api.get(routes.inventory + '?page=' + pagy + '&query=' + this.state.pquery)
             .then(res => {
                 const rows = res.data.user_inventories
@@ -222,16 +227,10 @@ class Stocktransfer extends React.Component {
     }
 
     getUsers = () => {
-        api.get(routes.users + '?page=' + this.state.upage)
+        api.get(routes.users + '?query=' + this.state.uquery)
         .then(res => {
-            const rows = res.data.users
-            var active = this.state.userlist
-            active = active.concat(rows.filter((u) => u.active))
-            if (rows.length === 20) {
-                this.setState({ upage: this.state.upage + 1 });
-                this.getUsers();
-            }
-            console.log(active)
+            const rows = res.data.users;
+            const active = rows.filter((u) => u.active);
             this.setState({ userlist: active, target_member: active[0].id, target_address: active[0].address, target_phone_number: active[0].phone_number })
         })
         .catch(err => {
@@ -241,7 +240,6 @@ class Stocktransfer extends React.Component {
     }
 
     componentDidMount = () => {
-        this.getUsers();
         this.getProd();
 
         const current = JSON.parse(Cookies.get('user'))
@@ -311,7 +309,7 @@ class Stocktransfer extends React.Component {
                 {(this.state.pnext || this.state.ppage > 1) && <div className="d-flex align-items-center justify-content-between pb-5">
                     {this.state.ppage > 1 && <button onClick={() => this.getProd(-1)} className={styles.tbtn}>Prev</button>}
                     <div>Page {this.state.ppage} Showing {(this.state.ppage - 1)*20 + 1} - {(this.state.ppage - 1)*20 + this.state.prodlist.length}</div>
-                    {this.state.pnext && <button onClick={() => this.getProd(1)} className={`ml-auto ${styles.tbtn}`}>Next</button>}
+                    {this.state.pnext && <button onClick={() => this.getProd(1)} className={styles.tbtn}>Next</button>}
                 </div>}
                 <Modal show={this.state.show} onHide={() => this.setState({ show: false })} size="lg" aria-labelledby="fulfilment-modal" centered>
                     <Modal.Header>
@@ -342,13 +340,14 @@ class Stocktransfer extends React.Component {
                         <div className={styles.target_info}>
                             <div className="row m-0 flex-nowrap align-items-center">
                                 <div className="font-weight-bold px-2" style={{ minWidth: 80 }}>To</div>
-                                <div className="position-relative pl-0" style={{ flex: 'auto'}}>{this.state.member ? 
-                                        <select onChange={this.selectMember} className={styles.info_input}>
+                                <div className="position-relative pl-0" style={{ flex: 'auto'}}>{this.state.member ? <>
+                                        <input onChange={this.handleChange} name="uquery" className={styles.info_input} placeholder="Name" value={this.state.uquery}/>
+                                        {this.state.userlist.length ? <div className={styles.autocomplete}>
                                             {this.state.userlist.map((u, i) =>
-                                                <option key={i} value={i}>{u.username}</option>
+                                                <div onClick={() => this.selectMember(i)} key={i} className={styles.selection}>{u.username}</div>
                                             )}
-                                        </select> 
-                                    : <input onChange={this.handleChange} name="target_customer" className={styles.info_input} placeholder="Name"/>}
+                                        </div> : <div></div>}
+                                    </>: <input onChange={this.handleChange} name="target_customer" className={styles.info_input} placeholder="Name"/>}
                                     <div className={styles.info_icon}><FaUsers/></div>
                                 </div>
                             </div>
