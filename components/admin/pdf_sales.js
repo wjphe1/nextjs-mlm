@@ -168,6 +168,7 @@ class Exports extends React.Component {
                         <Text style={styles.cell}>{v.quantity}</Text>
                         <Text style={styles.cell}>RM {v.unit_price}</Text>
                     </View>)}
+                    {!u.order_items.length && <Text style={{ margin: 20, textAlign: 'center'}}>No Order Items Found</Text>}
                     <View style={styles.tsection}>
                         <Text style={styles.tcell_big}>Subtotal</Text>
                         <Text style={styles.tcell}>{u.order_items.length}</Text>

@@ -77,9 +77,9 @@ class Ecashph extends React.Component {
             api.get(routes.ecash_payouts + '/' + zrows[i].id + '/user_ecash_payouts')
                 .then(res => {
                     var arows = res.data.user_ecash_payouts;
+                    arows = arows.filter( chk => chk.paid )
                     var total_ecash = 0;
                     for (var j = 0; j < arows.length; j++) { total_ecash = total_ecash + arows[j].ecash - 0.50 }
-                    arows = arows.filter( chk => chk.paid )
                     const row = { payoutlist: arows, total_ecash: total_ecash.toFixed(2) };
                     app_rows = app_rows.concat(row)
                     if (last) { this.setState({ userlist: app_rows, isloaded: true })}
@@ -133,7 +133,7 @@ class Ecashph extends React.Component {
                         <td className="pl-4"><input type="checkbox" checked={this.state.payout_check[i]} onChange={() => this.checkPayout(i)}/></td>
                         <td>{dateTime(u.start_date, 'date')}</td>
                         <td>{dateTime(u.end_date, 'date')}</td>
-                        <td>{u.minimum_ecash}</td>
+                        <td>RM {u.minimum_ecash}</td>
                         <td>{dateTime(u.created_at)}</td>
                         {u.status === 'PENDING' && <td><button className={`text-capitalize ${styles.status_yellow}`} disabled>{u.status.toLowerCase()}</button></td>}
                         {u.status === 'APPROVED' && <td><button className={`text-capitalize ${styles.status_green}`} disabled>{u.status.toLowerCase()}</button></td>}

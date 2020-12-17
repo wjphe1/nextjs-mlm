@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFF6F0',
         padding: 20,
         marginLeft: 'auto',
+        marginTop: 20,
     },
     success: {
         borderTopLeftRadius: 15,
@@ -132,6 +133,7 @@ class Exports extends React.Component {
                             <View style={styles.cell}>{(u.status === 'CANCELLED' || u.status === 'REJECTED') ? <Text style={styles.failed}>{u.status}</Text> : <Text style={styles.success}>{u.status}</Text>}</View>
                         </View>
                     )}
+                    {!this.props.list.length && <Text style={{ margin: 20, textAlign: 'center'}}>No Payout Found</Text>}
                     <Text style={styles.normal}>**The payout is after the deduction of RM 0.50 transaction</Text>
                     <View style={styles.section}>
                         <View style={styles.totalpayout}>

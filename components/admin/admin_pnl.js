@@ -39,6 +39,7 @@ class Apnl extends React.Component {
             reportlist: [],
             report_check: [],
             report_selected: [],
+            report_total: [],
             sshow: false,
             pnlshow: false,
             exshow: false,
@@ -90,6 +91,8 @@ class Apnl extends React.Component {
         var array = this.state.report_check;
         var selected = [];
         const semua = this.state.reportlist;
+        var total = [];
+        let vm = this;
     
         if (i.target && (i.target.checked === true || i.target.checked === false)) {
             array = Array(semua.length).fill(i.target.checked) 
@@ -100,14 +103,17 @@ class Apnl extends React.Component {
         array.forEach(function(part, index) {
             if (part) { 
                 selected = selected.concat(semua[index]);
+                total = total.concat(vm.pandL(semua[index].expenses, semua[index].revenue));
             }
         });
     
         console.log(selected)
+        console.log(total)
     
         this.setState({
             report_check: array,
             report_selected: selected,
+            report_total: total,
         })
     }
 
@@ -289,7 +295,7 @@ class Apnl extends React.Component {
                         <Tab eventKey="pnl" title="All Profit &amp; Loss">
                             <div className={styles.tab_btns}>
                                 <button onClick={() => this.setState({ pnlshow: true })} className={`mr-2 py-2 ${styles.tbtn}`}>Generate Statement</button>
-                                <Exports list={this.state.report_selected} />
+                                <Exports list={this.state.report_selected} total={this.state.report_total}/>
                             </div>
                             {this.state.isloaded ? <Table responsive>
                                 <thead>
