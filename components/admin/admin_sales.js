@@ -147,6 +147,7 @@ class Asales extends React.Component {
                         <tr>
                             <th className="pl-4"><input type="checkbox" onChange={this.checkOrder}/></th>
                             <th>Transfer ID</th>
+                            <th>Transferred By</th>
                             <th>Transferred At</th>
                             <th>Amount</th>
                             <th>Status</th>
@@ -157,6 +158,7 @@ class Asales extends React.Component {
                         {this.state.orderlist.map((u, i) => <tr className={`${cn({['flagged']: u.flag})} ${styles.cell_center}`} key={i}>
                             <td className="pl-4"><input type="checkbox" checked={this.state.order_check[i]} onChange={() => this.checkOrder(i)}/></td>
                             <td>{u.order_number}</td>
+                            <td>{u.sales_by.username}</td>
                             <td>{dateTime(u.created_at)}</td>
                             <td>RM {u.total_price}</td>
                             {u.status === 'COMPLETED' && <td><button className={`text-capitalize ${styles.status_green}`} disabled>{u.status.toLowerCase()}</button></td>}
