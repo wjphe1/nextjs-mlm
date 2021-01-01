@@ -199,9 +199,9 @@ class Editprod extends React.Component {
                     ecashtwoid: rows.product_ecash_rewards[1].id,
                     ecashthreeid: rows.product_ecash_rewards[2].id,
                     imgData: rows.photo.url,
-                    desc: EditorState.createWithContent(ContentState.createFromBlockArray(convertFromHTML(rows.description))),
-                    deli: EditorState.createWithContent(ContentState.createFromBlockArray(convertFromHTML(rows.delivery_description))),
-                    order: EditorState.createWithContent(ContentState.createFromBlockArray(convertFromHTML(rows.order_description))),
+                    desc: EditorState.createWithContent(ContentState.createFromBlockArray(convertFromHTML(rows.description || ''))),
+                    deli: EditorState.createWithContent(ContentState.createFromBlockArray(convertFromHTML(rows.delivery_description || ''))),
+                    order: EditorState.createWithContent(ContentState.createFromBlockArray(convertFromHTML(rows.order_description || ''))),
                     isloaded: true,
                 })
             } else {

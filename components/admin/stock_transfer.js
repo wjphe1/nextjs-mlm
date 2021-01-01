@@ -341,7 +341,7 @@ class Stocktransfer extends React.Component {
                             <div className="row m-0 flex-nowrap align-items-center">
                                 <div className="font-weight-bold px-2" style={{ minWidth: 80 }}>To</div>
                                 <div className="position-relative pl-0" style={{ flex: 'auto'}}>{this.state.member ? <>
-                                        <input onChange={this.handleChange} name="uquery" className={styles.info_input} placeholder="Name" value={this.state.uquery}/>
+                                        <input onChange={this.handleChange} name="uquery" className={styles.info_input} placeholder="Name" value={this.state.uquery} autocomplete="chrome-off"/>
                                         {this.state.userlist.length ? <div className={styles.autocomplete}>
                                             {this.state.userlist.map((u, i) =>
                                                 <div onClick={() => this.selectMember(i)} key={i} className={styles.selection}>{u.username}</div>
