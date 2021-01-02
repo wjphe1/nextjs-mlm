@@ -9,12 +9,25 @@ export default function dateTime(str, type) {
 
         if (type === 'date') {
             var date = da + ' ' + mo + ' ' + ye;
+        } else if (type === 'si') {
+            var month = '' + (d.getMonth() + 1);
+            var day = '' + d.getDate();
+            var year = d.getFullYear();
+
+            if (month.length < 2) 
+                month = '0' + month;
+            if (day.length < 2) 
+                day = '0' + day;
+
+            var date = [year, month, day].join('-');
         } else {
             var date = da + ' ' + mo + ' ' + ye + ' ' + ztime;
         }
         
 
         return date;
+    } else if (type === 'si') {
+        return ''
     } else {
         return ' - '
     }

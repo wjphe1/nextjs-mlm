@@ -3,8 +3,7 @@ import Layout from '../components/layout'
 import styles from '../styles/module/home.module.scss'
 import utils from '../styles/module/utils.module.scss'
 import React from 'react';
-import Link from 'next/link';
-import { FiShoppingBag } from 'react-icons/fi';
+import Allprod from '../components/allProducts'
 // Import Swiper React components
 import SwiperCore, { Navigation, Pagination, A11y, Autoplay } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -63,7 +62,7 @@ class Home extends React.Component {
             </Swiper>
           </div>
 
-          <div className="row py-5">
+          {/* <div className="row py-5">
             <div className="col-3">
               <div className={styles.popular_nav}>
                 <span>PRODUK POPULER</span>
@@ -211,74 +210,10 @@ class Home extends React.Component {
                 <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
               </div>
             </div>
-          </div>
+          </div> */}
           
           <div className={`${utils.h_xl} pt-5`}>SEMUA PRODUK</div>
-          <div className={styles.productwrap}>
-            <div className={styles.prodcard}>
-              <Link href="/products/generic"><a><div className={styles.prod_imgdiv}><img src="/images/sample-2.png" alt="Reezqa-banner"/></div></a></Link>
-              <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
-              <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
-              <div className="d-flex align-items-center mt-auto flex-wrap">
-                <Link href="/products/generic"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
-                <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
-              </div>
-            </div>
-            <div className={styles.prodcard}>
-              <Link href="/products/generic"><a><div className={styles.prod_imgdiv}><img src="/images/sample-2.png" alt="Reezqa-banner"/></div></a></Link>
-              <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
-              <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
-              <div className="d-flex align-items-center mt-auto flex-wrap">
-                <Link href="/products/generic"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
-                <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
-              </div>
-            </div>
-            <div className={styles.prodcard}>
-              <Link href="/products/generic"><a><div className={styles.prod_imgdiv}><img src="/images/sample-2.png" alt="Reezqa-banner"/></div></a></Link>
-              <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
-              <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
-              <div className="d-flex align-items-center mt-auto flex-wrap">
-                <Link href="/products/generic"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
-                <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
-              </div>
-            </div>
-            <div className={styles.prodcard}>
-              <Link href="/products/generic"><a><div className={styles.prod_imgdiv}><img src="/images/sample-2.png" alt="Reezqa-banner"/></div></a></Link>
-              <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
-              <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
-              <div className="d-flex align-items-center mt-auto flex-wrap">
-                <Link href="/products/generic"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
-                <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
-              </div>
-            </div>
-            <div className={styles.prodcard}>
-              <Link href="/products/generic"><a><div className={styles.prod_imgdiv}><img src="/images/sample-2.png" alt="Reezqa-banner"/></div></a></Link>
-              <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
-              <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
-              <div className="d-flex align-items-center mt-auto flex-wrap">
-                <Link href="/products/generic"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
-                <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
-              </div>
-            </div>
-            <div className={styles.prodcard}>
-              <Link href="/products/generic"><a><div className={styles.prod_imgdiv}><img src="/images/sample-2.png" alt="Reezqa-banner"/></div></a></Link>
-              <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
-              <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
-              <div className="d-flex align-items-center mt-auto flex-wrap">
-                <Link href="/products/generic"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
-                <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
-              </div>
-            </div>
-            <div className={styles.prodcard}>
-              <Link href="/products/generic"><a><div className={styles.prod_imgdiv}><img src="/images/sample-2.png" alt="Reezqa-banner"/></div></a></Link>
-              <Link href="/products/generic"><a><div className={styles.prodtitle}>Kopi Reezqa</div></a></Link>
-              <p>KOPI PRACAMPURAN KOPI ARBICA GOJI EKSTRAK DURIAN...</p>
-              <div className="d-flex align-items-center mt-auto flex-wrap">
-                <Link href="/products/generic"><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
-                <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
-              </div>
-            </div>
-          </div>
+          <Allprod/>
         </section>
       </Layout>
     )
