@@ -44,11 +44,11 @@ class Allprod extends React.Component {
         return (<>
             {this.state.isloaded ? <div className={styles.productwrap}>
                 {this.state.prodlist.map((u, i) => <div className={styles.prodcard} key={i}>
-                    <Link href={"/products/" + u.id}><a><div className={styles.prod_imgdiv}>{u.photo.url ? <img src={'http://13.212.45.145'+ u.photo.url} alt="product Photo"/> : <img src="/images/placeholder.png" alt="product Photo"/>}</div></a></Link>
-                    <Link href={"/products/" + u.id}><a><div className={styles.prodtitle}>{u.name}</div></a></Link>
+                    <a href={"/products/" + u.id}><div className={styles.prod_imgdiv}>{u.photo.url ? <img src={'http://13.212.45.145'+ u.photo.url} alt="product Photo"/> : <img src="/images/placeholder.png" alt="product Photo"/>}</div></a>
+                    <a href={"/products/" + u.id}><div className={styles.prodtitle}>{u.name}</div></a>
                     <div dangerouslySetInnerHTML={{__html: u.description}} />
                     <div className="d-flex align-items-center mt-auto flex-wrap">
-                        <Link href={"/products/" + u.id}><a className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a></Link>
+                        <a href={"/products/" + u.id} className={styles.keranjang}><FiShoppingBag/><span className="pl-2 db-mn">Keranjang</span></a>
                         <div className={`${styles.prodprice} ml-auto`}>RM 34.90</div>
                     </div>
                 </div>)}
