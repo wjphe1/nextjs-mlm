@@ -3,11 +3,26 @@ import utils from '../styles/module/utils.module.scss'
 import Meta from './_meta'
 import Link from 'next/link'
 import cn from 'classnames'
+import Cookies from 'js-cookie'
 import { HiOutlineShoppingCart, HiOutlineUser, HiOutlineSearch } from 'react-icons/hi';
+import { useEffect, useState } from 'react'
 
 export const siteTitle = 'REEZQA GLOBAL'
 
-export default function Layout({ children, page, name, cart }) {
+export default function Layout({ children, page, name }) {
+
+    const [product_count, setCount] = useState(0);
+
+    useEffect(() => {
+        const cart = Cookies.get('cart');
+        if (cart) {
+            const pcart = JSON.parse(cart);
+            const count = pcart.length;
+            setCount(count)
+            console.log(pcart)
+        }
+    })
+
     return (
         <div className="main-container">
             <Meta/>
@@ -24,10 +39,10 @@ export default function Layout({ children, page, name, cart }) {
                             <Link href="/admin"><a className={`${cn({[styles.activeLogin]: page === 'login'})} ${styles.login_btn}`}><HiOutlineUser/> <span className="pl-2 db-mn">MEMBERS LOGIN</span></a></Link>
                             <span className="px-3" style={{ fontSize: '1.4rem', lineHeight: 1 }}>|</span>
                             <Link href="/cart">
-                                <a className={`${cn({[styles.activeCart]: cart && cart > 0})} d-flex align-items-center`}>
+                                <a className={`${cn({[styles.activeCart]: product_count > 0})} d-flex align-items-center`}>
                                     <HiOutlineShoppingCart/>
                                     <span className="pl-2 db-mn">KERANJANG</span> 
-                                    {cart > 0 && <span className={styles.cartCount}>{cart}</span>}
+                                    {product_count > 0 && <span className={styles.cartCount}>{product_count}</span>}
                                 </a>
                             </Link>
                         </div>

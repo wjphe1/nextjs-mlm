@@ -27,11 +27,9 @@ class Allprod extends React.Component {
             const rows = res.data.products
             if (rows.length >= 20) { this.setState({ pnext: true, ppage: pagy }) }
             else { this.setState({ pnext: false, ppage: pagy }) }
-            console.log(rows)
             this.setState({ prodlist: rows, isloaded: true })
         })
         .catch(err => {
-            console.log(err.response)
             this.setState({ isloaded: true, error: true })
         })
     }
