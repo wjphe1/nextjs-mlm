@@ -121,6 +121,8 @@ class Editprod extends React.Component {
         let file = e.target.files[0];
     
         reader.onloadend = async () => {
+            console.log(file)
+            console.log(reader.result)
             this.setState({
                 image: file,
                 imgData: reader.result
@@ -177,8 +179,8 @@ class Editprod extends React.Component {
         api.get(routes.products + '/' + this.props.pid)
           .then(res => {
             const rows = res.data.product
-            console.log(rows)
             if (rows.id) {
+                console.log(rows)
                 this.setState({
                     name: rows.name,
                     category: rows.category_id,
