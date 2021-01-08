@@ -185,7 +185,7 @@ class Apnl extends React.Component {
             }
             api.post(routes.reports, rdata)
                 .then(res => {
-                    this.setState({ pnlshow: false, sshow: true, view: res.data.report })
+                    this.setState({ pnlshow: false, sshow: true, view: res.data.report, risloaded: true })
                     this.getReports();
                 })
                 .catch(err => {

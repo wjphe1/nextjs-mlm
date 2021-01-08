@@ -15,13 +15,13 @@ export default function Layout({ children, page, name, cart }) {
             <div className="sticky-top">
                 <header className={styles.header}>
                     <div className={`${styles.container} ${styles.flexcontent}`}>
-                        <Link href="/"><a className={utils.site_header}>{name}</a></Link>
+                        <Link href="/"><a className={utils.site_header}>{name || 'REEZQA GLOBAL'}</a></Link>
                         <form className="position-relative db-mn">
                             <input type="text" placeholder="Search product here" className={styles.search}/>
                             <button type="submit" className={styles.submit} value="Submit"><HiOutlineSearch/></button>
                         </form>
                         <div className="d-flex" style={{ fontSize: '0.9rem', lineHeight: 1 }}>
-                            <Link href="/user/login"><a className={`${cn({[styles.activeLogin]: page === 'login'})} ${styles.login_btn}`}><HiOutlineUser/> <span className="pl-2 db-mn">MEMBERS LOGIN</span></a></Link>
+                            <Link href="/admin"><a className={`${cn({[styles.activeLogin]: page === 'login'})} ${styles.login_btn}`}><HiOutlineUser/> <span className="pl-2 db-mn">MEMBERS LOGIN</span></a></Link>
                             <span className="px-3" style={{ fontSize: '1.4rem', lineHeight: 1 }}>|</span>
                             <Link href="/cart">
                                 <a className={`${cn({[styles.activeCart]: cart && cart > 0})} d-flex align-items-center`}>
@@ -78,7 +78,7 @@ export default function Layout({ children, page, name, cart }) {
                         <Link href="#"><a className={styles.foot_link}>SABUN EMAS</a></Link>
                     </div>
                     <div className="ml-auto">
-                        <Link href="#"><a className={styles.foot_login_btn}><HiOutlineUser/><span className="pl-2">MEMBERS LOGIN</span></a></Link>
+                        <Link href="/admin"><a className={styles.foot_login_btn}><HiOutlineUser/><span className="pl-2">MEMBERS LOGIN</span></a></Link>
                     </div>
                 </div>
                 <div className="border-top text-center pt-3">2020 HAK CIPTA TERPELIHARA <Link href="/"><a>REEZQA GLOBAL</a></Link></div>

@@ -185,9 +185,9 @@ class Admprod extends React.Component {
                               </Accordion.Toggle>
                               <Accordion.Collapse eventKey="0">
                                 <Card.Body>
-                                  {u.product_prices[1].price} For S<br/>
-                                  {u.product_prices[2].price} For A<br/>
-                                  {u.product_prices[3].price} For C<br/>
+                                  {u.product_prices[1] && u.product_prices[1].price} For S<br/>
+                                  {u.product_prices[2] && u.product_prices[2].price} For A<br/>
+                                  {u.product_prices[3] && u.product_prices[3].price} For C<br/>
                                 </Card.Body>
                               </Accordion.Collapse>
                             </Card>

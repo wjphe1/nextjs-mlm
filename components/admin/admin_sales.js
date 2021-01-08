@@ -45,7 +45,7 @@ class Asales extends React.Component {
     }
 
     getSales = () => {
-      api.get(routes.reports + '/sales?from_date=' + this.state.startDate + '&to_date=' + this.state.endDate)
+      api.get(routes.reports + '/sales?from_date=' + dateTime(this.state.startDate, 'si') + '&to_date=' + dateTime(this.state.endDate, 'si'))
         .then(res => {
           const sales = res.data.sales;
           this.setState({ sales: sales })
@@ -83,7 +83,7 @@ class Asales extends React.Component {
     getOrders = (str) => {
         this.setState({ isloaded: false })
         const pagy = this.state.page + parseInt(str || 0);
-        api.get(routes.orders + '?page=' + pagy)
+        api.get(routes.orders + '?page=' + pagy + '&from_date=' + dateTime(this.state.startDate, 'si') + '&to_date=' + dateTime(this.state.endDate, 'si'))
             .then(res => {
                 const rows = res.data.orders
                 if (rows.length >= 20) { this.setState({ next: true, page: pagy }) }
@@ -95,6 +95,17 @@ class Asales extends React.Component {
                 console.log(err.response)
                 this.setState({ isloaded: true, error: true })
             })
+    }
+
+    changeDate = (date, type) => {
+        if (type === 'start') {
+            this.setState({ startDate: date })
+        } else {
+            this.setState({ endDate: date })
+        }
+
+        setTimeout(() => {this.getOrders()}, 300);
+        setTimeout(() => {this.getSales()}, 300);
     }
     
     componentDidMount() {
@@ -112,12 +123,12 @@ class Asales extends React.Component {
                 <label className="date-div">
                   <span className="calendar-icon"><FiCalendar/></span>
                   <span className="pl-2 pr-1">From</span>
-                  <DatePicker placeholderText="--/--/--" dateFormat="d MMM yyyy" className="start-date" selected={this.state.startDate} onChange={(date) => this.setState({startDate: date})} selectsStart startDate={this.state.startDate} endDate={this.state.endDate} showMonthDropdown showYearDropdown dropdownMode="select" />
+                  <DatePicker placeholderText="--/--/--" dateFormat="d MMM yyyy" className="start-date" selected={this.state.startDate} onChange={(date) => this.changeDate(date, 'start')} selectsStart startDate={this.state.startDate} endDate={this.state.endDate} showMonthDropdown showYearDropdown dropdownMode="select" />
                 </label>
                 <label className="date-div">
                   <span className="calendar-icon"><FiCalendar/></span>
                   <span className="pl-2 pr-1">To</span>
-                  <DatePicker placeholderText="--/--/--" dateFormat="d MMM yyyy" className="end-date" selected={this.state.endDate} onChange={(date) => this.setState({endDate: date})} selectsEnd startDate={this.state.startDate} endDate={this.state.endDate} minDate={this.state.startDate} showMonthDropdown showYearDropdown dropdownMode="select" />
+                  <DatePicker placeholderText="--/--/--" dateFormat="d MMM yyyy" className="end-date" selected={this.state.endDate} onChange={(date) => this.changeDate(date, 'end')} selectsEnd startDate={this.state.startDate} endDate={this.state.endDate} minDate={this.state.startDate} showMonthDropdown showYearDropdown dropdownMode="select" />
                 </label>
               </div>
             </div>
