@@ -42,7 +42,7 @@ export default function Layout({ children, page, name }) {
                 <div className={styles.main}>
                     <nav className={styles.navbar}>
                         <button onClick={() => setShow(!show)} className={styles.burger}><HiMenu/></button>
-                        {user.role === 'HQ' ? <Link href="/admin/products"><a className={styles.brand}>REEZQA GLOBAL</a></Link> : <Link href="/admin"><a className={styles.brand}>REEZQA GLOBAL</a></Link>}
+                        <Link href="/admin"><a className={styles.brand}>REEZQA GLOBAL</a></Link>
                         <div className={styles.username}>{user.full_name}</div>
                         <div className="table-cell-dropdown ml-3 nav-icon">
                             <Dropdown>
@@ -57,7 +57,7 @@ export default function Layout({ children, page, name }) {
                         </div>
                     </nav>
                     <div className={`${cn({[styles.expand]: show})} ${styles.sidebar}`}>
-                        {user.role !== 'HQ' && <Link href="/admin"><a><div className={`${cn({[styles.ractive]: page === 'reports'})} ${styles.sidenav}`}><div className={styles.rc}><RiPieChart2Fill/></div><span>Reports</span></div></a></Link>}
+                        <Link href="/admin"><a><div className={`${cn({[styles.ractive]: page === 'reports'})} ${styles.sidenav}`}><div className={styles.rc}><RiPieChart2Fill/></div><span>{user.role === 'HQ' ? 'Enquiries' : 'Reports'}</span></div></a></Link>
                         <Link href="/admin/products"><a><div className={`${cn({[styles.pactive]: page === 'products'})} ${styles.sidenav}`}><div className={styles.pc}><RiShoppingBagFill/></div><span>Products</span></div></a></Link>
                         <Link href="/admin/members"><a><div className={`${cn({[styles.uactive]: page === 'users'})} ${styles.sidenav}`}><div className={styles.uc}><HiUserGroup/></div><span>Members</span></div></a></Link>
                     </div>

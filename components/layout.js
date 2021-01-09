@@ -3,7 +3,6 @@ import utils from '../styles/module/utils.module.scss'
 import Meta from './_meta'
 import Link from 'next/link'
 import cn from 'classnames'
-import Cookies from 'js-cookie'
 import { HiOutlineShoppingCart, HiOutlineUser, HiOutlineSearch } from 'react-icons/hi';
 import { useEffect, useState } from 'react'
 
@@ -14,7 +13,7 @@ export default function Layout({ children, page, name }) {
     const [product_count, setCount] = useState(0);
 
     useEffect(() => {
-        const cart = Cookies.get('cart');
+        const cart = localStorage.getItem('cart');
         if (cart) {
             const pcart = JSON.parse(cart);
             const count = pcart.length;

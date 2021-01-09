@@ -6,6 +6,7 @@ import Cookies from 'js-cookie'
 import styles from '../../styles/module/admin/admin.module.scss'
 import Layout from '../../components/admin/layout'
 import Asales from '../../components/admin/admin_sales'
+import Hqenq from '../../components/admin/hq_enquiries'
 import Othrpt from '../../components/admin/others_report'
 import { FaUserAlt } from 'react-icons/fa'
 import { RiShoppingBagFill } from 'react-icons/ri'
@@ -85,10 +86,13 @@ class Sales extends React.Component {
     } else if (role && role === 'HQ') {
       return (
         <Layout>
-          <div className="pt-5 d-flex align-items-center justify-content-center">
-            <Link href="/admin/products"><a className={styles.gigantic_btns}><RiShoppingBagFill/> Products</a></Link>
-            <Link href="/admin/members"><a className={styles.gigantic_btns}><FaUserAlt/> Members</a></Link>
-          </div>
+          <Head>
+            <title>{this.props.name} - Customer Enquiries</title>
+          </Head>
+  
+          <section className="py-5 px-4">
+            <Hqenq/>
+          </section>
         </Layout>
       )
     } else {

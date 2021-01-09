@@ -13,6 +13,7 @@ const routes = {
     ecash_payouts: '/ecash_payouts',
     settings: '/settings',
     reports: '/reports',
+    enquiries: '/enquiries',
 };
 
 export default routes;
