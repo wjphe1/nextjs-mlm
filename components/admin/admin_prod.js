@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { withRouter } from 'next/router'
 import React from 'react'
+import cn from 'classnames'
 import styles from '../../styles/module/admin/admin.module.scss'
 import utils from '../../styles/module/utils.module.scss'
 import form from '../../styles/module/form.module.scss'
@@ -86,6 +87,20 @@ class Admprod extends React.Component {
       })
   }
 
+  activeProd = (id, bool) => {
+    api.put(routes.products + '/' + id, { product: {
+      active: !bool
+    }})
+    .then(res => {
+      console.log('Updated successfully')
+      this.getProd();
+    })
+    .catch(err => {
+      console.log(err.response)
+      this.setState({ toast: true, error: true })
+    })
+  }
+
   deleteProd = (id) => {
     this.setState({ isloaded: false });
     api.delete(routes.products + '/' + id)
@@ -163,18 +178,17 @@ class Admprod extends React.Component {
                   {this.state.isloaded ? <Table responsive>
                     <thead>
                       <tr>
-                        <th className="pl-4"><input type="checkbox"/></th>
-                        <th>Product Name</th>
+                        <th className="pl-4">Product Name</th>
                         <th>Created At</th>
                         <th>E-Points (Pts)</th>
                         <th>Pricing (MYR)</th>
                         <th>Action</th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
-                      {this.state.prodlist.map((u, i) => <tr key={i}>
-                        <td className="pl-4"><input type="checkbox"/></td>
-                        <td className="font-weight-bold">{u.name}</td>
+                      {this.state.prodlist.map((u, i) => <tr key={i} className={cn({['flagged']: !u.active})}>
+                        <td className="pl-4 font-weight-bold">{u.name}</td>
                         <td>{dateTime(u.created_at)}</td>
                         <td className="table-cell-collapse">{u.epoint}</td>
                         <td className="table-cell-collapse">
@@ -200,11 +214,14 @@ class Admprod extends React.Component {
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
+                              {u.active ? <Dropdown.Item as="button" onClick={() => this.activeProd(u.id, u.active)}>Inactivate</Dropdown.Item>
+                              : <Dropdown.Item as="button" onClick={() => this.activeProd(u.id, u.active)}>Activate</Dropdown.Item>}
                               <Dropdown.Item href={'/admin/products/'+ u.id}>Edit</Dropdown.Item>
                               <Dropdown.Item as="button" onClick={() => this.deleteProd(u.id)}>Delete</Dropdown.Item>
                             </Dropdown.Menu>
                           </Dropdown>
                         </td>
+                        <td className={utils.hightext_sm}>{!u.active ? 'Inactive' : ''}</td>
                       </tr>)}
                     </tbody>
                   </Table> : <div className="p-5 d-flex justify-content-center"><Spinner animation="border" size='lg'/></div>}
