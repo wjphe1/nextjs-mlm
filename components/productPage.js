@@ -4,10 +4,8 @@ import React from 'react';
 import api from './auth/api'
 import routes from './auth/routes'
 import Layout from './layout'
-import Cookies from 'js-cookie'
 import styles from '../styles/module/blog.module.scss'
 import utils from '../styles/module/utils.module.scss'
-import homes from '../styles/module/home.module.scss'
 import Tabs from 'react-bootstrap/Tabs'
 import Tab from 'react-bootstrap/Tab'
 import {BsCaretRightFill} from 'react-icons/bs';
@@ -46,8 +44,7 @@ class Productpage extends React.Component {
         } else {
             console.log('added')
             current = current.concat(this.state.product)
-            console.log(current)
-            Cookies.set('cart', current)
+            localStorage.setItem('cart', JSON.stringify(current))
             this.getCookies();
         }
         if (type === 'cart') { 
@@ -77,9 +74,9 @@ class Productpage extends React.Component {
     }
 
     getCookies = () => {   
-        var cart = Cookies.get('cart');
+        var cart = localStorage.getItem('cart');
         var truecart = [];
-        if (cart) { truecart = JSON.parse(cart); }
+        if (cart) { truecart = JSON.parse(cart);console.log(truecart) }
         this.setState({ cart: truecart });
     }
 
