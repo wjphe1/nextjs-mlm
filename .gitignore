@@ -28,3 +28,16 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Sitemap
+public/robots.txt
+public/sitemap.xml
+
+# Service workers
+public/workbox-*.js
+public/sw.js
+public/worker-*.js
+public/workbox-*.js.map
+public/sw.js.map
+public/worker-*.js.map
+public/service-worker.js
