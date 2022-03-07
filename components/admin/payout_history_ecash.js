@@ -97,7 +97,7 @@ class Ecashph extends React.Component {
                 this.getUserfromPayout(rows)
                 if (rows.length >= 20) { this.setState({ next: true, page: pagy }) }
                 else { this.setState({ next: false, page: pagy }) }
-                this.setState({ payoutlist: rows })
+                this.setState({ payoutlist: rows, isloaded: true })
             })
             .catch(err => {
                 console.log(err.response)
@@ -149,7 +149,7 @@ class Ecashph extends React.Component {
                 {this.state.next && <button onClick={() => this.getPayouts(1)} className={styles.tbtn}>Next</button>}
             </div>}
 
-            {this.state.payoutlist.length && this.state.userlist.length && <Modal show={this.state.sshow} onHide={() => this.setState({ sshow: false })} size="xl" aria-labelledby="fulfilment-modal" centered>
+            {this.state.payoutlist.length > 0 && this.state.userlist.length > 0 && <Modal show={this.state.sshow} onHide={() => this.setState({ sshow: false })} size="xl" aria-labelledby="fulfilment-modal" centered>
                 <Modal.Body>
                     <div className={`px-4 ${utils.modal_summary}`}>E-Cash Payout Slip</div>
                     <div className="px-4 pb-2">Min. E-Cash: <b>RM {this.state.payoutlist[this.state.view].minimum_ecash}</b></div>
@@ -193,7 +193,7 @@ class Ecashph extends React.Component {
                             </tr>) : <tr></tr>}
                         </tbody>
                     </Table>
-                    {!this.state.userlist[this.state.view].payoutlist.length && <div className="p-5 text-center">No Eligible Member Found.</div>}
+                    {this.state.userlist[this.state.view]?.payoutlist?.length > 0 && <div className="p-5 text-center">No Eligible Member Found.</div>}
                     <div style={{ color: '#787878', padding: '15px 0' }}>**The payout is after the deduction of RM 0.50 transaction</div>
                     <div className="d-flex py-2 px-3">
                         <div className={`ml-auto ${styles.payout_total}`}>

@@ -3299,10 +3299,10 @@ side-channel@^1.0.4:
     get-intrinsic "^1.0.2"
     object-inspect "^1.9.0"
 
-simple-react-lightbox@^3.3.4-2:
-  version "3.6.8"
-  resolved "https://registry.yarnpkg.com/simple-react-lightbox/-/simple-react-lightbox-3.6.8.tgz#50dd0c9465f0bc48ca4189085739a890998918af"
-  integrity sha512-HgJllSx3x+iCtWPuFDXvilUYvvi6do/XVSpcvrcr3ddOcqbauabONm1T3Cns9M7UQnuglfb518/dRk1tlOqYJQ==
+simple-react-lightbox@^3.6.9-0:
+  version "3.6.9-0"
+  resolved "https://registry.yarnpkg.com/simple-react-lightbox/-/simple-react-lightbox-3.6.9-0.tgz#5913b7746e545a20f6581d05408a0017ed721743"
+  integrity sha512-AZfsdaMJEak4bTJfO1H6MHOW/ma3ay9yp/5IZQodSC7aTOqTdS1ZqfyceVs3R/FZ/CevxepEgG/YGrwK9J6xww==
   dependencies:
     body-scroll-lock "^3.1.5"
     fast-deep-equal "^3.1.3"
