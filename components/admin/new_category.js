@@ -39,9 +39,11 @@ class Newcate extends React.Component {
       })
     })
     .catch(err => {
-        //console.log(err.response.data)
-        var msg = { error: err.response.status + ' : ' + err.response.statusText };
-        if (err.response.data) { msg = err.response.data };
+      var msg = err.response?.data?.error ||
+        err.response?.data?.error_messages ||
+        err.response?.data?.message ||
+        err.message ||
+        "An unexpected error has occurred"
         setTimeout(() => {vm.setState({ err_msg: msg, isloaded: true, error: true })}, 100)
     })
 }
@@ -53,10 +55,10 @@ class Newcate extends React.Component {
           {this.state.error && <div className={`mb-4 ${form.notice_error}`}>
             <div className="col-10 d-flex align-items-center">
               <span className={form.nexcl}>!</span> 
-              {(this.state.err_msg.error && typeof this.state.err_msg.error === 'string') && <div>{this.state.err_msg.error}</div>}
-              {(this.state.err_msg.error && typeof this.state.err_msg.error === 'object') && <ul className="m-0 pl-4">
-                {Object.keys(this.state.err_msg.error).map(key =>
-                  <li value={key} key={key}>{`${key}: ${this.state.err_msg.error[key][0]}`}</li>
+              {(this.state.err_msg && typeof this.state.err_msg === 'string') && <div>{this.state.err_msg}</div>}
+              {(this.state.err_msg && typeof this.state.err_msg === 'object') && <ul className="m-0 pl-4">
+                {Object.keys(this.state.err_msg).map(key =>
+                  <li value={key} key={key}>{`${key}: ${this.state.err_msg[key][0]}`}</li>
                 )}
               </ul>}
             </div> 

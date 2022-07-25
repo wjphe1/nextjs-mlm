@@ -27,6 +27,7 @@ class Asales extends React.Component {
             show: false,
             isloaded: false,
             error: false,
+            err_msg: "",
             orderlist: [],
             order_check: [],
             order_selected: [],
@@ -39,9 +40,7 @@ class Asales extends React.Component {
     handleChange = (e) => {
         console.log(e)
         const value = parseInt(e.target.value);
-        this.setState({
-        [e.target.name]: value
-        });
+        this.setState({ [e.target.name]: value });
     }
 
     getSales = () => {
@@ -92,8 +91,12 @@ class Asales extends React.Component {
                 this.setState({ orderlist: rows, isloaded: true, order_check: Array(rows.length).fill(false) })
             })
             .catch(err => {
-                console.log(err.response)
-                this.setState({ isloaded: true, error: true })
+                var msg = err.response?.data?.error ||
+                  err.response?.data?.error_messages ||
+                  err.response?.data?.message ||
+                  err.message ||
+                  "An unexpected error has occurred"
+                this.setState({ isloaded: true, error: true, err_msg: msg })
             })
     }
 
@@ -149,7 +152,12 @@ class Asales extends React.Component {
                 {this.state.error && <div className={`mb-4 ${form.notice_error}`}>
                   <div className="col-10 d-flex align-items-center">
                     <span className={form.nexcl}>!</span>
-                    <div><b>Error - </b> Some Error Occurred</div>
+                    {(this.state.err_msg && typeof this.state.err_msg === 'string') && <div>{this.state.err_msg}</div>}
+                    {(this.state.err_msg && typeof this.state.err_msg === 'object') && <ul className="m-0 pl-4">
+                        {Object.keys(this.state.err_msg).map(key =>
+                        <li value={key} key={key}>{`${key}: ${this.state.err_msg[key][0]}`}</li>
+                        )}
+                    </ul>}
                   </div> 
                   <div onClick={() => this.setState({ error: false })} className={`col-2 ${form.nclose}`}>Close</div>
                 </div>}

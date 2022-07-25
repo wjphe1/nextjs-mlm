@@ -26,6 +26,7 @@ class Othrpt extends React.Component {
       rerr_msg: {},
       rsuccess: false,
       error: false,
+      err_msg: {},
       isloaded: false,
       redeemlist: [],
       rewardlist: [],
@@ -65,9 +66,11 @@ class Othrpt extends React.Component {
           this.getPoints();
         })
         .catch(err => {
-          console.log(err.response)
-          var msg = { error: err.response.status + ' : ' + err.response.statusText };
-          if (err.response.data) { msg = err.response.data };
+          var msg = err.response?.data?.error ||
+            err.response?.data?.error_messages ||
+            err.response?.data?.message ||
+            err.message ||
+            "An unexpected error has occurred"
           this.setState({ rerror: true, risloaded: true, rerr_msg: msg })
         })
     }
@@ -82,9 +85,11 @@ class Othrpt extends React.Component {
           this.getPoints();
         })
         .catch(err => {
-          console.log(err.response)
-          var msg = { error: err.response.status + ' : ' + err.response.statusText };
-          if (err.response.data) { msg = err.response.data };
+          var msg = err.response?.data?.error ||
+            err.response?.data?.error_messages ||
+            err.response?.data?.message ||
+            err.message ||
+            "An unexpected error has occurred"
           this.setState({ error: true, isloaded: true, err_msg: msg })
         })
     }
@@ -102,8 +107,12 @@ class Othrpt extends React.Component {
       this.setState({ rewardlist: rows })
     })
     .catch(err => {
-      console.log(err.response)
-      this.setState({ error: true, isloaded: true })
+      var msg = err.response?.data?.error ||
+        err.response?.data?.error_messages ||
+        err.response?.data?.message ||
+        err.message ||
+        "An unexpected error has occurred"
+      this.setState({ error: true, isloaded: true, err_msg: msg })
     })
   }
 
@@ -132,8 +141,12 @@ class Othrpt extends React.Component {
         this.setState({ referral_no: length })
     })
     .catch(err => {
-        console.log(err.response)
-        this.setState({ error: true, err_msg: { error: 'Error' } })
+      var msg = err.response?.data?.error ||
+        err.response?.data?.error_messages ||
+        err.response?.data?.message ||
+        err.message ||
+        "An unexpected error has occurred"
+      this.setState({ error: true, err_msg: msg })
     })
   }
 
@@ -149,8 +162,12 @@ class Othrpt extends React.Component {
       this.setState({ isloaded: true, redeemlist: rows })
     })
     .catch(err => {
-      console.log(err.response)
-      this.setState({ error: true, isloaded: true })
+      var msg = err.response?.data?.error ||
+        err.response?.data?.error_messages ||
+        err.response?.data?.message ||
+        err.message ||
+        "An unexpected error has occurred"
+      this.setState({ error: true, isloaded: true, err_msg: msg })
     })
   }
 
@@ -171,8 +188,12 @@ class Othrpt extends React.Component {
       }
     })
     .catch(err => {
-        console.log(err.response)
-        this.setState({ error: true, err_msg: { error: 'Error' } })
+      var msg = err.response?.data?.error ||
+        err.response?.data?.error_messages ||
+        err.response?.data?.message ||
+        err.message ||
+        "An unexpected error has occurred"
+      this.setState({ error: true, err_msg: msg })
     })
   }
 
@@ -182,7 +203,6 @@ class Othrpt extends React.Component {
     this.getSales();
     this.getUsers();
     this.getEcash();
-    console.log(this.props.user)
   }
 
   render () {
@@ -253,10 +273,10 @@ class Othrpt extends React.Component {
         {this.state.error && <div className={`w-100 mb-4 ${form.notice_error}`}>
           <div className="col-10 d-flex align-items-center">
             <span className={form.nexcl}>!</span> 
-            {(this.state.err_msg.error && typeof this.state.err_msg.error === 'string') && <div>{this.state.err_msg.error}</div>}
-            {(this.state.err_msg.error && typeof this.state.err_msg.error === 'object') && <ul className="m-0 pl-4">
-              {Object.keys(this.state.err_msg.error).map(key =>
-                <li value={key} key={key}>{`${key}: ${this.state.err_msg.error[key][0]}`}</li>
+            {(this.state.err_msg && typeof this.state.err_msg === 'string') && <div>{this.state.err_msg}</div>}
+            {(this.state.err_msg && typeof this.state.err_msg === 'object') && <ul className="m-0 pl-4">
+              {Object.keys(this.state.err_msg).map(key =>
+                <li value={key} key={key}>{`${key}: ${this.state.err_msg[key][0]}`}</li>
               )}
             </ul>}
           </div> 
@@ -352,10 +372,10 @@ class Othrpt extends React.Component {
             {this.state.rerror && <div className={`w-100 mb-4 ${form.notice_error}`}>
               <div className="col-10 d-flex align-items-center">
                 <span className={form.nexcl}>!</span> 
-                {(this.state.rerr_msg.error && typeof this.state.rerr_msg.error === 'string') && <div>{this.state.rerr_msg.error}</div>}
-                {(this.state.rerr_msg.error && typeof this.state.rerr_msg.error === 'object') && <ul className="m-0 pl-4">
-                  {Object.keys(this.state.rerr_msg.error).map(key =>
-                    <li value={key} key={key}>{`${key}: ${this.state.rerr_msg.error[key][0]}`}</li>
+                {(this.state.rerr_msg && typeof this.state.rerr_msg === 'string') && <div>{this.state.rerr_msg}</div>}
+                {(this.state.rerr_msg && typeof this.state.rerr_msg === 'object') && <ul className="m-0 pl-4">
+                  {Object.keys(this.state.rerr_msg).map(key =>
+                    <li value={key} key={key}>{`${key}: ${this.state.rerr_msg[key][0]}`}</li>
                   )}
                 </ul>}
               </div> 

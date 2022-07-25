@@ -67,9 +67,11 @@ class Cartpage extends React.Component {
                     this.getCookies();
                 })
                 .catch(err => {
-                    console.log(err.response)
-                    var msg = { error: err.response.status + ' : ' + err.response.statusText };
-                    if (err.response.data) { msg = err.response.data };
+                    var msg = err.response?.data?.error ||
+                    err.response?.data?.error_messages ||
+                    err.response?.data?.message ||
+                    err.message ||
+                    "An unexpected error has occurred"
                     this.setState({ mmsg: msg, misloaded: true, merror: true })
                 })
         } else {

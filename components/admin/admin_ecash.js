@@ -26,6 +26,7 @@ class Aecash extends React.Component {
     super(props);
     this.state = {
       isloaded: false,
+      ferror: false,
       error: false,
       success: false,
       ecisloaded: true,
@@ -93,10 +94,12 @@ class Aecash extends React.Component {
           this.setState({ sshow: false, success: true, err_msg: {error: 'Success - Marked as Done'} });
           setTimeout(() => {Router.reload()}, 300);
         })
-        .catch(err => { 
-          console.log(err.response); 
-          var msg = { error: err.response.status + ' : ' + err.response.statusText };
-          if (err.response.data) { msg = err.response.data };
+        .catch(err => {
+          var msg = err.response?.data?.error ||
+            err.response?.data?.error_messages ||
+            err.response?.data?.message ||
+            err.message ||
+            "An unexpected error has occurred"
           this.setState({ error: true, err_msg: msg }) 
         })
     }
@@ -113,8 +116,11 @@ class Aecash extends React.Component {
           this.getPayout();
         })
         .catch(err => {
-          var msg = { error: err.response.status + ' : ' + err.response.statusText };
-          if (err.response.data) { msg = err.response.data };
+          var msg = err.response?.data?.error ||
+            err.response?.data?.error_messages ||
+            err.response?.data?.message ||
+            err.message ||
+            "An unexpected error has occurred"
           this.setState({ err_msg: msg, fisloaded: true, ferror: true })
         })
     } else {
@@ -136,8 +142,11 @@ class Aecash extends React.Component {
         this.setState({ viewlist: rows, sshow: true, ppaid: paid, ecisloaded: true })
       })
       .catch(err => {
-        var msg = { error: err.response.status + ' : ' + err.response.statusText };
-        if (err.response.data) { msg = err.response.data };
+        var msg = err.response?.data?.error ||
+          err.response?.data?.error_messages ||
+          err.response?.data?.message ||
+          err.message ||
+          "An unexpected error has occurred"
         this.setState({ err_msg: msg, error: true })
       })
   }
@@ -151,8 +160,11 @@ class Aecash extends React.Component {
         this.getUserfromPayout(this.state.view);
       })
       .catch(err => {
-        var msg = { error: err.response.status + ' : ' + err.response.statusText };
-        if (err.response.data) { msg = err.response.data };
+        var msg = err.response?.data?.error ||
+          err.response?.data?.error_messages ||
+          err.response?.data?.message ||
+          err.message ||
+          "An unexpected error has occurred"
         this.setState({ err_msg: msg, ecerror: true })
       })
   }
@@ -169,8 +181,11 @@ class Aecash extends React.Component {
         this.setState({ payoutlist: rows, isloaded: true })
       })
       .catch(err => {
-        var msg = { error: err.response.status + ' : ' + err.response.statusText };
-        if (err.response.data) { msg = err.response.data };
+        var msg = err.response?.data?.error ||
+          err.response?.data?.error_messages ||
+          err.response?.data?.message ||
+          err.message ||
+          "An unexpected error has occurred"
         this.setState({ err_msg: msg, isloaded: true, error: true })
       })
   }
@@ -189,10 +204,10 @@ class Aecash extends React.Component {
         {this.state.error && <div className={`my-2 ${form.notice_error}`}>
           <div className="col-10 d-flex align-items-center">
             <span className={form.nexcl}>!</span> 
-            {(this.state.err_msg.error && typeof this.state.err_msg.error === 'string') && <div>{this.state.err_msg.error}</div>}
-            {(this.state.err_msg.error && typeof this.state.err_msg.error === 'object') && <ul className="m-0 pl-4">
-              {Object.keys(this.state.err_msg.error).map(key =>
-                <li value={key} key={key}>{`${key}: ${this.state.err_msg.error[key][0]}`}</li>
+            {(this.state.err_msg && typeof this.state.err_msg === 'string') && <div>{this.state.err_msg}</div>}
+            {(this.state.err_msg && typeof this.state.err_msg === 'object') && <ul className="m-0 pl-4">
+              {Object.keys(this.state.err_msg).map(key =>
+                <li value={key} key={key}>{`${key}: ${this.state.err_msg[key][0]}`}</li>
               )}
             </ul>}
           </div> 
@@ -201,7 +216,7 @@ class Aecash extends React.Component {
         {this.state.success && <div className={`my-2 ${form.notice_success}`}>
           <div className="col-10 d-flex align-items-center">
             <span className={form.sexcl}>✓</span> 
-            <div>{this.state.err_msg.error}</div>
+            <div>{this.state.err_msg}</div>
           </div> 
           <div onClick={() => this.setState({ success: false })} className={`col-2 ${form.sclose}`}>Close</div>
         </div>}
@@ -264,10 +279,10 @@ class Aecash extends React.Component {
               {this.state.ferror && <div className={`mb-4 ${form.notice_error}`}>
                 <div className="col-10 d-flex align-items-center">
                   <span className={form.nexcl}>!</span> 
-                  {(this.state.err_msg.error && typeof this.state.err_msg.error === 'string') && <div>{this.state.err_msg.error}</div>}
-                  {(this.state.err_msg.error && typeof this.state.err_msg.error === 'object') && <ul className="m-0 pl-4">
-                    {Object.keys(this.state.err_msg.error).map(key =>
-                      <li value={key} key={key}>{`${key}: ${this.state.err_msg.error[key][0]}`}</li>
+                  {(this.state.err_msg && typeof this.state.err_msg === 'string') && <div>{this.state.err_msg}</div>}
+                  {(this.state.err_msg && typeof this.state.err_msg === 'object') && <ul className="m-0 pl-4">
+                    {Object.keys(this.state.err_msg).map(key =>
+                      <li value={key} key={key}>{`${key}: ${this.state.err_msg[key][0]}`}</li>
                     )}
                   </ul>}
                 </div> 
@@ -328,10 +343,10 @@ class Aecash extends React.Component {
             {this.state.ecerror && <div className={`my-2 ${form.notice_error}`}>
               <div className="col-10 d-flex align-items-center">
                 <span className={form.nexcl}>!</span> 
-                {(this.state.err_msg.error && typeof this.state.err_msg.error === 'string') && <div>{this.state.err_msg.error}</div>}
-                {(this.state.err_msg.error && typeof this.state.err_msg.error === 'object') && <ul className="m-0 pl-4">
-                  {Object.keys(this.state.err_msg.error).map(key =>
-                    <li value={key} key={key}>{`${key}: ${this.state.err_msg.error[key][0]}`}</li>
+                {(this.state.err_msg && typeof this.state.err_msg === 'string') && <div>{this.state.err_msg}</div>}
+                {(this.state.err_msg && typeof this.state.err_msg === 'object') && <ul className="m-0 pl-4">
+                  {Object.keys(this.state.err_msg).map(key =>
+                    <li value={key} key={key}>{`${key}: ${this.state.err_msg[key][0]}`}</li>
                   )}
                 </ul>}
               </div> 

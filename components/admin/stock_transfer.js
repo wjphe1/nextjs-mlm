@@ -200,9 +200,11 @@ class Stocktransfer extends React.Component {
                     setTimeout(() => {Router.reload()}, 600)
                 })
                 .catch(err => {
-                    console.log(err.response)
-                    var msg = { error: err.response.status + ' : ' + err.response.statusText };
-                    if (err.response.data) { msg = err.response.data };
+                    var msg = err.response?.data?.error ||
+                      err.response?.data?.error_messages ||
+                      err.response?.data?.message ||
+                      err.message ||
+                      "An unexpected error has occurred"
                     this.setState({ oerr_msg: msg, oisloaded: true, oerror: true })
                 })
         }
@@ -321,10 +323,10 @@ class Stocktransfer extends React.Component {
                         {this.state.oerror && <div className={`w-100 mb-4 ${form.notice_error}`}>
                             <div className="col-10 d-flex align-items-center">
                                 <span className={form.nexcl}>!</span> 
-                                {(this.state.oerr_msg.error && typeof this.state.oerr_msg.error === 'string') && <div>{this.state.oerr_msg.error}</div>}
-                                {(this.state.oerr_msg.error && typeof this.state.oerr_msg.error === 'object') && <ul className="m-0 pl-4">
-                                {Object.keys(this.state.oerr_msg.error).map(key =>
-                                    <li value={key} key={key}>{`${key}: ${this.state.oerr_msg.error[key][0]}`}</li>
+                                {(this.state.oerr_msg && typeof this.state.oerr_msg === 'string') && <div>{this.state.oerr_msg}</div>}
+                                {(this.state.oerr_msg && typeof this.state.oerr_msg === 'object') && <ul className="m-0 pl-4">
+                                {Object.keys(this.state.oerr_msg).map(key =>
+                                    <li value={key} key={key}>{`${key}: ${this.state.oerr_msg[key][0]}`}</li>
                                 )}
                                 </ul>}
                             </div>

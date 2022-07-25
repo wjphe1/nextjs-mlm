@@ -81,9 +81,11 @@ class Othprod extends React.Component {
           this.gethistoryOrders();
         })
         .catch(err => {
-          console.log(err.response)
-          var msg = { error: err.response.status + ' : ' + err.response.statusText };
-          if (err.response.data) { msg = err.response.data };
+          var msg = err.response?.data?.error ||
+            err.response?.data?.error_messages ||
+            err.response?.data?.message ||
+            err.message ||
+            "An unexpected error has occurred"
           this.setState({ error: true, isloaded: true, err_msg: msg })
         })
     }
@@ -125,9 +127,11 @@ class Othprod extends React.Component {
         this.getOrders();
       })
       .catch(err => {
-        console.log(err.response)
-        var msg = { error: err.response.status + ' : ' + err.response.statusText };
-        if (err.response.data) { msg = err.response.data };
+        var msg = err.response?.data?.error ||
+          err.response?.data?.error_messages ||
+          err.response?.data?.message ||
+          err.message ||
+          "An unexpected error has occurred"
         this.setState({ eerror: true, eisloaded: true, eerr_msg: msg })
       })
   }
@@ -294,10 +298,10 @@ class Othprod extends React.Component {
                       {this.state.eerror && <div className={`mb-4 ${form.notice_error}`}>
                         <div className="col-10 d-flex align-items-center">
                           <span className={form.nexcl}>!</span>
-                          {(this.state.eerr_msg.error && typeof this.state.eerr_msg.error === 'string') && <div>{this.state.eerr_msg.error}</div>}
-                          {(this.state.eerr_msg.error && typeof this.state.eerr_msg.error === 'object') && <ul className="m-0 pl-4">
-                            {Object.keys(this.state.eerr_msg.error).map(key =>
-                              <li value={key} key={key}>{`${key}: ${this.state.eerr_msg.error[key][0]}`}</li>
+                          {(this.state.eerr_msg && typeof this.state.eerr_msg === 'string') && <div>{this.state.eerr_msg}</div>}
+                          {(this.state.eerr_msg && typeof this.state.eerr_msg === 'object') && <ul className="m-0 pl-4">
+                            {Object.keys(this.state.eerr_msg).map(key =>
+                              <li value={key} key={key}>{`${key}: ${this.state.eerr_msg[key][0]}`}</li>
                             )}
                           </ul>}
                         </div>
