@@ -157,10 +157,10 @@ class Stocktransfer extends React.Component {
         console.log(orderitems)
 
         if (itemerror) {
-            const msg = { error: 'Please select product(s) and valid quantity' }
+            const msg = 'Please select product(s) and valid quantity'
             this.setState({ oerror: true, oerr_msg: msg })
         } else if ((!this.state.target_member && !this.state.target_customer) || (this.state.fulfilment && !this.state.target_address) || !this.state.target_phone_number) {
-            const msg = { error: 'Please fill in all the order details' }
+            const msg = 'Please fill in all the order details'
             this.setState({ oerror: true, oerr_msg: msg })
         } else {
             this.setState({ oisloaded: false, oerror: false, osuccess: false })
@@ -232,7 +232,7 @@ class Stocktransfer extends React.Component {
         api.get(routes.users + '?query=' + this.state.uquery)
         .then(res => {
             const rows = res.data.users;
-            const active = rows.filter((u) => u.active);
+            const active = rows.filter((u) => u.active && u.id !== this.state.current_user.id );
             this.setState({ userlist: active, target_member: active[0].id, target_address: active[0].address, target_phone_number: active[0].phone_number })
         })
         .catch(err => {

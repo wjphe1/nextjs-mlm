@@ -91,7 +91,7 @@ class Aecash extends React.Component {
     for (var i = 0; i < arr.length; i ++) {
       api.put(routes.ecash_payouts + '/' + arr[i].id + '/approve')
         .then(res => {
-          this.setState({ sshow: false, success: true, err_msg: {error: 'Success - Marked as Done'} });
+          this.setState({ sshow: false, success: true, err_msg: 'Success - Marked as Done' });
           setTimeout(() => {Router.reload()}, 300);
         })
         .catch(err => {
@@ -112,7 +112,7 @@ class Aecash extends React.Component {
       const postdata = { ecash_payout: { start_date: this.state.startDate, end_date: this.state.endDate, minimum_ecash: this.state.minEcash }}
       api.post(routes.ecash_payouts, postdata)
         .then(res => {
-          this.setState({ err_msg: { error: 'Payout Created Successully'}, success: true, fshow: false })
+          this.setState({ err_msg: 'Payout Created Successully', success: true, fshow: false })
           this.getPayout();
         })
         .catch(err => {
@@ -124,7 +124,7 @@ class Aecash extends React.Component {
           this.setState({ err_msg: msg, fisloaded: true, ferror: true })
         })
     } else {
-      this.setState({ err_msg: { error: 'Please fill in all the required fields'}, ferror: true })
+      this.setState({ err_msg: 'Please fill in all the required fields', ferror: true })
     }
   }
 

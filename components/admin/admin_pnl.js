@@ -121,7 +121,7 @@ class Apnl extends React.Component {
         this.setState({ isloaded: false, success: false, error: false });
         api.delete(routes.reports + '/' + id)
         .then(res => {
-            this.setState({ err_msg: { error: 'Deleted Successfully'}, success: true })
+            this.setState({ err_msg: 'Deleted Successfully', success: true })
             this.getReports();
         })
         .catch(err => {
@@ -138,7 +138,7 @@ class Apnl extends React.Component {
         this.setState({ exisloaded: false })
         api.delete(routes.expenses + '/' + eid)
             .then(res => {
-                this.setState({ err_msg: { error: 'Deleted Successfully'}, success: true })
+                this.setState({ err_msg: 'Deleted Successfully', success: true })
                 this.getExpenses();
             })
             .catch(err => {
@@ -164,7 +164,7 @@ class Apnl extends React.Component {
             }
             api.put(routes.expenses + '/' + this.state.exid, expdata)
                 .then(res => {
-                    this.setState({ err_msg: { error: 'Expense Updated Successully'}, success: true, exshow: false })
+                    this.setState({ err_msg: 'Expense Updated Successully', success: true, exshow: false })
                     this.getExpenses();
                 })
                 .catch(err => {
@@ -204,7 +204,7 @@ class Apnl extends React.Component {
                     this.setState({ err_msg: msg, risloaded: true, rerror: true })
                 })
         } else {
-            this.setState({ err_msg: { error: 'Please fill in all required fields' }, rerror: true })
+            this.setState({ err_msg: 'Please fill in all required fields', rerror: true })
         }
     }
 
@@ -221,7 +221,7 @@ class Apnl extends React.Component {
             }
             api.post(routes.expenses, expdata)
                 .then(res => {
-                    this.setState({ err_msg: { error: 'Expense Created Successully'}, exsuccess: true })
+                    this.setState({ err_msg: 'Expense Created Successully', exsuccess: true })
                     this.getExpenses();
                 })
                 .catch(err => {
@@ -233,7 +233,7 @@ class Apnl extends React.Component {
                     this.setState({ err_msg: msg, exisloaded: true, exerror: true })
                 })
         } else {
-            this.setState({ err_msg: { error: 'Please fill in all required fields' }, exisloaded: true, exerror: true })
+            this.setState({ err_msg: 'Please fill in all required fields', exisloaded: true, exerror: true })
         }
     }
 

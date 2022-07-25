@@ -85,7 +85,7 @@ class Sales extends React.Component {
       )
     } else if (role && role === 'HQ') {
       return (
-        <Layout>
+        <Layout page={'reports'} {...this.props}>
           <Head>
             <title>{this.props.name} - Customer Enquiries</title>
           </Head>

@@ -32,7 +32,7 @@ class Referral extends React.Component {
     postSettings = () => {
         this.setState({ error: false, success: false })
         if (!this.state.one && !this.state.two && !this.state.three && !this.state.four) {
-            const msg = { error: 'Please fill in all the settings' }
+            const msg = 'Please fill in all the settings'
             this.setState({ error: true, err_msg: msg })
         } else {
             this.setState({ isloaded: false })

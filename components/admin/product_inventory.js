@@ -40,7 +40,6 @@ class Prodinv extends React.Component {
             next: false,
             pisloaded: false,
             perror: false,
-            pmsg: { error: '' },
         };
     }
 

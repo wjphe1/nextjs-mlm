@@ -54,9 +54,9 @@ class Othrpt extends React.Component {
     const points = parseInt(this.state.points);
 
     if (!points) {
-      this.setState({ rerror: true, rerr_msg: { error: 'Please enter desired E-Points to Reimburse'}})
+      this.setState({ rerror: true, rerr_msg: 'Please enter desired E-Points to Reimburse'})
     } else if (this.props.user && points > this.props.user.epoint) {
-      this.setState({ rerror: true, rerr_msg: { error: 'You do not have enough E-points to Reimburse'}})
+      this.setState({ rerror: true, rerr_msg: 'You do not have enough E-points to Reimburse'})
     } else {
       this.setState({ risloaded: false, rerror: false, rsuccess: false })
       api.post(routes.epoint_requests, { epoint_request: { epoint: this.state.points }})

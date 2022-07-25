@@ -82,7 +82,7 @@ class Editmemb extends React.Component {
                 this.setState({ perr_msg: msg, pisloaded: true, perror: true })
             })
         } else {
-            this.setState({ perror: true, perr_msg: { error: 'Passwords do not match' } })
+            this.setState({ perror: true, perr_msg: 'Passwords do not match'})
         }
     }
 

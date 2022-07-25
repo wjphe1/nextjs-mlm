@@ -28,7 +28,7 @@ class Cartpage extends React.Component {
             misloaded: true,
             merror: false,
             msuccess: false,
-            mmsg: { error: '' },
+            mmsg: "",
         };
     }
 
@@ -68,10 +68,10 @@ class Cartpage extends React.Component {
                 })
                 .catch(err => {
                     var msg = err.response?.data?.error ||
-                    err.response?.data?.error_messages ||
-                    err.response?.data?.message ||
-                    err.message ||
-                    "An unexpected error has occurred"
+                        err.response?.data?.error_messages ||
+                        err.response?.data?.message ||
+                        err.message ||
+                        "An unexpected error has occurred"
                     this.setState({ mmsg: msg, misloaded: true, merror: true })
                 })
         } else {
@@ -174,10 +174,10 @@ class Cartpage extends React.Component {
                     {this.state.merror && <div className={`mx-5 my-3 ${form.notice_error}`}>
                         <div className="col-10 d-flex align-items-center">
                             <span className={form.nexcl}>!</span> 
-                            {(this.state.mmsg.error && typeof this.state.mmsg.error === 'string') && <div>{this.state.mmsg.error}</div>}
-                                {(this.state.mmsg.error && typeof this.state.mmsg.error === 'object') && <ul className="m-0 pl-4">
-                                {Object.keys(this.state.mmsg.error).map(key =>
-                                    <li value={key} key={key}>{`${key}: ${this.state.mmsg.error[key][0]}`}</li>
+                            {(this.state.mmsg && typeof this.state.mmsg === 'string') && <div>{this.state.mmsg}</div>}
+                                {(this.state.mmsg && typeof this.state.mmsg === 'object') && <ul className="m-0 pl-4">
+                                {Object.keys(this.state.mmsg).map(key =>
+                                    <li value={key} key={key}>{`${key}: ${this.state.mmsg[key][0]}`}</li>
                                 )}
                             </ul>}
                         </div>
